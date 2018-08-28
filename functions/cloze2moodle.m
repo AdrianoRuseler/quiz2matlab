@@ -43,10 +43,16 @@ else
 end
 
 
+% Compatibilidade
+if ~isfield(quizstruct,'comb')
+  quizstruct.comb=1:quizstruct.questionnumbers;
+end
+
+
 file=1;
 n=1;
-for q=1:quizstruct.questionnumbers %
-    
+for co=1:length(quizstruct.comb)
+    q=quizstruct.comb(co);
     question = docNode.createElement('question');
     question.setAttribute('type',quizstruct.question.type);
     quiz.appendChild(question);
