@@ -23,30 +23,50 @@
 % *** SOFTWARE.
 % ***
 % =========================================================================
+%  Combinações de resistores
+% resistor = combres(2,[10 100],'E12')
 
-function psimdata(circuit)
+function R = permutres(Rn,Mult,EXX)
 
-if nargin < 1
-    disp('Dados do conversor não foram fornecidos!')
-    return
+% Rn - Numero de Resistores
+% Mult - Array com multiplicadores
+% EXX - String com série E12, E24...
+% colorname={'Preto','Marrom','Vermelho','Laranja','Amarelo','Verde','Azul','Violeta','Cinza','Branco','Dourado','Prata','Ausente'};
+
+% Mult=10;
+
+% multiplier=[0.01 0.1 1 10 100 1e3 10e3 100e3 1e6 10e6 100e6 1e9];
+% torelancia=[0.05 0.1 0.25 0.5 1 2 5 10 20];
+% f3={12,11,1,2,3,4,5,6,7,8,9,10}; % Cor do Multiplicador
+% f4={9,8,7,6,2,3,11,12,13}; %Cor da Tolerância
+
+% Saída: R{n} = [R1 R2 R3 ... Rn]
+
+switch EXX
+    case 'E06'
+        E=[10 15 22 33 47 68]; % 
+    case 'E12'
+        E=[10 12 15 18 22 27 33 39 47 56 68 82]; % 
+    case 'E24'
+        E=[10 11 12 13 15 16 18 20 22 24 27 30 33 36 39 43 47 51 56 62 68 75 82 91]; % E24 series (tolerance 5% and 1%)
+    case 'E48'
+        E=[100 105 110 115 121 127 133 140 147 154 162 169 178 187 196 205 215 226 237 249 261 274 287 301 316 332 348 365 383 402 422 442 464 487 511 536 562 590 619 649 681 715 750 787 825 866 909 953];      
+    otherwise
+        E=[10 12 15 18 22 27 33 39 47 56 68 82]; % 10%
 end
 
-circuit.PSIMCMD.paramfile=[circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '_params.txt'];
-% names = fieldnames(circuit);
-% call fprintf to print the updated text strings
-fid = fopen(circuit.PSIMCMD.paramfile,'w');
-if fid==-1
-    disp('Erro ao abrir o arquivo para escrita!')
-    return
-end
-
-for ind=1:length(circuit.PSIMCMD.params)    
-    if isfield(circuit,circuit.PSIMCMD.params{ind}) % Apenas imprime o que for numerico
-        strdata=[char(circuit.PSIMCMD.params(ind)) ' = ' num2str(getfield(circuit,circuit.PSIMCMD.params{ind}),'%10.8e')];
-        fprintf(fid, '%s%c%c', strdata,13,10);
+n=1;
+for mx=1:length(Mult) % Resistor multiplier
+    for ex=1:length(E)
+        Rs(n)=Mult(mx)*E(ex);
+        n=n+1;
     end
 end
-fclose(fid);
 
-% winopen(circuit.PSIMCMD.paramfile ) % Abre arquivo criado
+R = nchoosek(Rs,Rn)';
+
+
+
+
+
 

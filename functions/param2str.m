@@ -24,8 +24,20 @@
 % ***
 % =========================================================================
 
-function [clozeXcell]=clozeXcalc(varcalc,calctol,mult)
-Xres=max([abs(varcalc*calctol*mult) 0.5]);
-clozeXcell=['{1:NUMERICAL:~%100%' num2str(varcalc*mult,'%03.3f') ':' num2str(Xres,'%03.3f') '}'];
+% str=param2str(Valor,parname,parunit)
+function [parstr]=param2str(valor,parname,parunit)
+
+parstr=[ parname{1} '=' strrep(num2eng(valor(1),1),'.',',') parunit{1} ','];
+for a=2:length(valor)
+    if a==length(valor)
+        parstr= strcat(parstr, [' ' parname{a} '=' strrep(num2eng(valor(a),1),'.',',') parunit{a} '.'] );
+    elseif a==length(valor)-1
+        parstr= strcat(parstr, [' ' parname{a} '=' strrep(num2eng(valor(a),1),'.',',') parunit{a} ' e'] );
+    else
+        parstr= strcat(parstr, [' ' parname{a} '=' strrep(num2eng(valor(a),1),'.',',') parunit{a} ','] );
+    end
+end
+
+
 
 

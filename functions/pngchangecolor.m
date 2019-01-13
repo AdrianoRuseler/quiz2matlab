@@ -23,9 +23,36 @@
 % *** SOFTWARE.
 % ***
 % =========================================================================
+% pngchangewhite(imgin,imgout,217,237,247) % UTFPR
+% pngchangewhite(imgin,imgout,222,242,248) % AWS
 
-function [clozeXcell]=clozeXcalc(varcalc,calctol,mult)
-Xres=max([abs(varcalc*calctol*mult) 0.5]);
-clozeXcell=['{1:NUMERICAL:~%100%' num2str(varcalc*mult,'%03.3f') ':' num2str(Xres,'%03.3f') '}'];
+% oldcolor=[255,255,255];
+% newcolor=[222,242,248];
 
 
+function pngchangecolor(imgin,imgout,newcolor,oldcolor)
+
+A = imread(imgin);
+Rin = A(:,:,1); 
+Gin = A(:,:,2); 
+Bin = A(:,:,3); 
+
+if margin < 4
+    oldcolor=[255,255,255];
+end
+
+RB=find(Rin==oldcolor(1));
+Rin(RB)=newcolor(1);
+
+GB=find(Gin==oldcolor(1));
+Gin(GB)=newcolor(2);
+
+BB=find(Bin==oldcolor(1));
+Bin(BB)=newcolor(3);
+
+A2(:,:,1) =Rin;
+A2(:,:,2) =Gin;
+A2(:,:,3) =Bin;
+% imshow(I)
+
+imwrite(A2,imgout)

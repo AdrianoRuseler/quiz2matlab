@@ -20,7 +20,8 @@ function [header,variables,data] = rawspice6(filename)
 % Create cell array containing each line in the file
 fid = fopen(filename, 'rt');
 n=1;
-while feof(fid) == 0
+
+while ~feof(fid)
     line = fgets(fid);
     s{n}=line(1:end-1);
     n = n+1;
@@ -29,10 +30,12 @@ end
 %Pre-allocate space for header info
 header = cell(6,1);
 
+
+
 %Strip out header information--first 6 lines
 for k=1:6
     locs=findstr(s{k},':');       %Find the colon after the title
-    [nl, n2]=size(s{k});
+    [~, n2]=size(s{k});
     header{k}=s{k}(locs(1)+2:n2); %Save everything after the colon
 end
 
@@ -40,7 +43,7 @@ end
 nvars=str2num(header{5});   %Number of variables is in header line 5
 variables = cell(nvars,1);  %Create space for variables info
 for k=8:8+nvars-1           %Variables info starts in line 8
-    [nl, n2]=size(s{k});
+    [~, n2]=size(s{k});
     variables{k-7}=s{k}(2:n2);
 end     %k loop
 
@@ -53,7 +56,7 @@ if strncmp(header{4},'complex',4)	 %Identify data type
     for k=1:npts
         for k2=1:nvars
             tabs=findstr(s{line},char(9)); %Locate tabs
-            [nl, n2]=size(s{line});
+            [~, n2]=size(s{line});
             comma=findstr(s{line},',');	%Locate the comma
             data(k,k2)=sscanf(s{line}(tabs(1)+1:comma(1)-1),'%e') + 1i*(sscanf(s{line}(comma(1)+1:n2),'%e'));  %Store data in complex form
             line=line+1;
@@ -67,7 +70,7 @@ else
     for k=1:npts
         for k2=1:nvars
             tabs=findstr(s{line},char(9)); %Locate tabs
-            [nl, n2]=size(s{line});
+            [~, n2]=size(s{line});
             data(k,k2)=sscanf(s{line}(tabs(1)+1:n2),'%e');
             line=line+1;
         end             %k2 loop

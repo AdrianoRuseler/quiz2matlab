@@ -42,7 +42,7 @@ for a=1:length(escalaVstr)
 end
 escalatext = strcat(strVe,'}');
 
-Vres=max([varmed*medtol resolucaoVnum(indp(1)) 10e-6]);
+Vres=max([abs(varmed*medtol) resolucaoVnum(indp(1)) 10e-6]);
 clozeVcell=['{1:NUMERICAL:~%100%' num2str(varmed,'%03.3f') ':' num2str(Vres,'%03.3f') '}' escalatext ];
 
 

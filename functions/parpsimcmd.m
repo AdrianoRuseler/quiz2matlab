@@ -23,9 +23,9 @@
 % *** SOFTWARE.
 % ***
 % =========================================================================
+% Parallel implementation
 
-
-function  circuit = psimfromcmd(circuit)
+function  dataout = parpsimcmd(parname,parvalue,simfilebase,totaltime,steptime,printtime,printstep)
 
 
 % Copyright ® 2006-2018 Powersim Inc.  All Rights Reserved.
@@ -54,61 +54,100 @@ function  circuit = psimfromcmd(circuit)
 % -SP  or -SPICE : Run Spice simulation. (Requires Spice module)
 % -LT : Run LTspice simulation. (Requires Spice module)
 
+%  varstrcmd -v "VarName1=VarValue"  -v "VarName2=VarValue"
+varstrcmd='';
+for ind=1:length(parname)    
+        varstrcmd=[varstrcmd ' -v "' parname{ind} '=' num2str(parvalue(ind),'%10.8e') '"'];
+end
 
-% circuit.fullfilename = [ circuit.basefilename  circuit.prefixname]; % Atualiza nome do arquivo
+% simfilebase=[pwd '\LAB07PSIMa.psimsch'];
 
-circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.psimsch'];
-circuit.PSIMCMD.outfile = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.txt'];
-circuit.PSIMCMD.msgfile = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '_msg.txt'];
-circuit.PSIMCMD.inifile = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.ini']; % Arquivo ini simview
-circuit.PSIMCMD.extracmd = '';
+% [pathstr, name, ext] = fileparts(simfilebase);
+% filename=[name char(floor(26*rand(1, 10)) + 97)]; % Gera nome aleatorio
+% simfile= [pathstr '\' filename ext];
+
+[simdir, name, ext] = fileparts(simfilebase);
+tmpname=[name strrep(char(java.util.UUID.randomUUID),'-','')];
+simfile = fullfile(simdir, [tmpname ext]); % Generate temp sim filename
+
+
+
+copyfile(simfilebase,simfile) % Copia arquivo
+
+outfile = [simdir '\' tmpname '.txt'];
+% msgfile = [pathstr '\' filename '_msg.txt'];
+% extracmd = ''; % Comando extra
 
 
 % Cria string de comando
-infile = ['"' circuit.PSIMCMD.infile '"'];
-outfile = ['"' circuit.PSIMCMD.outfile '"'];
-msgfile = ['"' circuit.PSIMCMD.msgfile '"'];
-totaltime = ['"' num2str(circuit.PSIMCMD.totaltime,'%10.8e') '"'];  %   -t :  Followed by total time of the simulation.
-steptime = ['"' num2str(circuit.PSIMCMD.steptime,'%10.8e') '"']; %   -s :  Followed by time step of the simulation.
-printtime = ['"' num2str(circuit.PSIMCMD.printtime,'%10.8e') '"']; %   -pt : Followed by print time of the simulation.
-printstep = ['"' num2str(circuit.PSIMCMD.printstep,'%10.8e') '"']; %   -ps : Followed by print step of the simulation.
+infilestr = ['"' simfile '"'];
+outfilestr = ['"' outfile '"'];
+% msgfilestr = ['"' msgfile '"'];
+ttime = ['"' num2str(totaltime,'%10.8e') '"'];  %   -t :  Followed by total time of the simulation.
+stime = ['"' num2str(steptime,'%10.8e') '"']; %   -s :  Followed by time step of the simulation.
+ptime = ['"' num2str(printtime,'%10.8e') '"']; %   -pt : Followed by print time of the simulation.
+pstep = ['"' num2str(printstep,'%10.8e') '"']; %   -ps : Followed by print step of the simulation. ' -m ' msgfilestr 
 
-PsimCmdsrt= ['-i ' infile ' -o ' outfile ' -m ' msgfile ' -t ' totaltime ' -s ' steptime ' -pt ' printtime ' -ps ' printstep ' ' circuit.PSIMCMD.extracmd];
+PsimCmdsrt= ['-i ' infilestr ' -o ' outfilestr ' -t ' ttime ' -s ' stime ' -pt ' ptime ' -ps ' pstep ' ' varstrcmd];
 
-tic
-disp(PsimCmdsrt)
-disp('Simulando conversor...')
-[~,cmdout] = system(['PsimCmd ' PsimCmdsrt]); % Executa simulação
-disp(cmdout)
-circuit.PSIMCMD.cmdout=cmdout;
+system(['PsimCmd ' PsimCmdsrt]); % Executa simulação
+disp([name ' simulado!'])
 
-if verLessThan('matlab', '9.1')
-    if ~contains(cmdout,'Failed')
-        circuit.PSIMCMD.status=0;
-        disp('Importando dados simulados do conversor...')
-        circuit = psimread(circuit); % Importa pontos simulados
-    else
-        disp('Ocorreu algum erro!')
-        circuit.PSIMCMD.status=1;
-    end
-else
-    if contains(cmdout,'Error')||contains(cmdout,'Failed') % Verifica se houve error durante a simulação
-        disp('Ocorreu algum erro!')
-        circuit.PSIMCMD.status=1;
-    else
-        circuit.PSIMCMD.status=0;
-        disp('Importando dados simulados do conversor...')
-        circuit = psimread(circuit); % Importa pontos simulados
-        %     conv = psimini2struct(conv);  % Atualiza a estrutura conv com dados do arquivo .ini
-    end
+[fileID,errmsg] = fopen(outfile);
+t=0; 
+while fileID < 0 
+   t=t+1;
+   disp(['Erro ao abrir o arquivo ' name ' para escrita!'])
+   disp(errmsg)
+   [fileID,errmsg] = fopen(outfile);
+   if t==10
+       data.time=[];
+       data.Ts=[];
+       data.signals=[];
+       data.blockName=name;
+       dataout=data;
+       return
+   end
 end
 
-disp(cmdout)
-circuit.PSIMCMD.simtime=toc; % Tempo total de simulação
+% BufSize -> Maximum string length in bytes -> 4095
+tline = fgetl(fileID);
+[header] = strread(tline,'%s','delimiter',' ');
 
-disp(circuit.PSIMCMD)
+fstr='%f';
+for tt=2:length(header)
+    fstr=[fstr '%f'];
+end
+ 
+M = cell2mat(textscan(fileID,fstr));            
+fclose(fileID);
 
 
+
+ data.time=M(:,1);
+ data.Ts=M(2,1)-M(1,1); % Time step
+ 
+ % Verifies header name
+ for i=2:length(header)
+     if verLessThan('matlab', '8.2.0')
+         U = genvarname(header{i});
+     else
+         [U, ~] = matlab.lang.makeValidName(header{i},'ReplacementStyle','delete');
+     end
+
+     data.signals(i-1).label=U;
+     data.signals(i-1).values=M(:,i);
+     data.signals(i-1).medio=mean(M(:,i));
+     data.signals(i-1).dimensions=1;   
+     data.signals(i-1).title=U;
+     data.signals(i-1).plotStyle=[0,0];
+ end
+  
+data.blockName=name;
+dataout=data;
+
+delete(simfile) % Deleta arquivo de simulação
+delete(outfile) % Deleta arquivo de dados
 
 
 
