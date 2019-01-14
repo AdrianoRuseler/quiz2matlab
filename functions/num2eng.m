@@ -128,7 +128,7 @@ function str = num2eng(number,varargin)
     %% Subroutines    
     function str = num2eng_part1(number)
         if ~isreal(number)
-        %% handle imaginary numbers
+        % handle imaginary numbers
             if imag(number)==0
                 str = num2eng_part2(real(number));
             else
@@ -148,7 +148,7 @@ function str = num2eng(number,varargin)
                 return
             end
         else  
-        %% handle all other cases
+        % handle all other cases
             str = num2eng_part2(number);
         end
     end
