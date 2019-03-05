@@ -23,8 +23,8 @@
 % *** SOFTWARE.
 % ***
 % =========================================================================
-% Generate Quiz Struct for Resistor measurement.
-function  [quizstruct] = genqs4rm(Values,tol,EXX,name) % Values can be a vector
+% Generate Quiz Struct for Resistor
+function  [quizstruct] = genqs4rf(Values,tol,EXX,name) % Values can be a vector
 
 quizstruct.name = name;
 quizstruct.question.type = 'cloze';
@@ -34,11 +34,9 @@ for n=1:length(Values)
     
     [~,quiz,valuestr,~] = rbandcolorid(Values(n),tol,EXX);
        
-    quizstruct.question.name{n}=[name ' genqs4rm(' valuestr ')'];
+    quizstruct.question.name{n}=[name ' genqs4rf(' valuestr ')'];
     
-    quizstruct.question.text{n}=['<p>Qual a sequência de cores do resistor de ' valuestr '?</p>' quiz.tableMULTICHOICE ...
-        '<br><p>Com um multímetro, meça o resistor de ' valuestr ' e preencha os campos abaixo:</p>'...
-        '<p>Valor medido é: ' quiz.valorNUMERICAL '&Omega; na escala de ' quiz.escalaMULTICHOICE '</p>'];
+    quizstruct.question.text{n}=['<p>Qual a sequência de cores do resistor de ' valuestr '?</p>' quiz.tableMULTICHOICE ];
     
     disp(quizstruct.question.name{n})
     quizstruct.question.generalfeedback{n}='';
