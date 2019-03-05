@@ -26,7 +26,7 @@
 % ***
 % =========================================================================
 
-function cloze2moodle(quizstruct)
+function cloze2moodle(quizstruct) % Generate xml file
 
 % Create the document node and root element, toc:
 docNode = com.mathworks.xml.XMLUtils.createDocument('quiz');

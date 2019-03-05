@@ -24,15 +24,15 @@
 % ***
 % =========================================================================
 
-function  [band,bandidstr,valuestr,colornamestr] = rbandcolorid(Value,tol,EXX)
+function  [band,quiz,valuestr,colornamestr] = rbandcolorid(Value,tol,EXX)
 
 % Value = Resistor value
 % tol = Resistor tolerance in %
 % EXX = Resistor E group, E06, E12 E24 E48...
 
 % Ex:
-% [band,bandidstr,valuestr,colornamestr] = rbandcolorid(1e3,5,'E24')
-% [band,bandidstr,valuestr,colornamestr] = rbandcolorid(1e3,1,'E48')
+% [band,quiz,valuestr,colornamestr] = rbandcolorid(1e3,5,'E24')
+% [band,quiz,valuestr,colornamestr] = rbandcolorid(1e3,1,'E48')
 
 switch EXX
     case 'E06'
@@ -91,6 +91,7 @@ if isempty(tind) % Resistor not found
 end
 
 
+
 f123 = dec2base(E(eind),10) - '0';
 f123 = f123+1; % Gera a sequência numérica
 
@@ -116,8 +117,8 @@ elseif length(band)==6 % Somente com coeficiente de temperatura
 end
 
 
-
-for b=1:length(band) % Não testado ainda!
+% Creates color multichoice string
+for b=1:length(band) % multichoicestrresistor
     bandidstr{b}='{1:MULTICHOICE_S:';    
     
     for a=1:length(colorname)
@@ -129,10 +130,64 @@ for b=1:length(band) % Não testado ainda!
     end    
    bandidstr{b} = strcat(bandidstr{b},'}');    
 end
+% quiz.coresMULTICHOICE=bandidstr;
+
+
+if length(band)==4 
+quiz.tableMULTICHOICE=[ '<table>'...
+    '<thead>'...
+    '<tr><th scope="col">Faixa 1</th><th scope="col">Faixa 2</th><th scope="col">Faixa 3</th><th scope="col">Faixa 4</th></tr>'...
+    '</thead>'...
+    '<tbody>'...
+    '<tr>'...
+    '<td>' bandidstr{1} '</td>'...
+    '<td>' bandidstr{2} '</td>'...
+    '<td>' bandidstr{3} '</td>'...
+    '<td>' bandidstr{4} '</td>'...
+    '</tr>'...
+    '</tbody>'...
+    '</table>']; 
+
+elseif length(band)==5
+    quiz.tableMULTICHOICE=[ '<table>'...
+    '<thead>'...
+    '<tr><th scope="col">Faixa 1</th><th scope="col">Faixa 2</th><th scope="col">Faixa 3</th><th scope="col">Faixa 4</th></tr><th scope="col">Faixa 5</th></tr>'...
+    '</thead>'...
+    '<tbody>'...
+    '<tr>'...
+    '<td>' bandidstr{1} '</td>'...
+    '<td>' bandidstr{2} '</td>'...
+    '<td>' bandidstr{3} '</td>'...
+    '<td>' bandidstr{4} '</td>'...
+    '<td>' bandidstr{5} '</td>'...
+    '</tr>'...
+    '</tbody>'...
+    '</table>']; 
+
+end
 
     
-valuestr= [ num2eng(Value,1) '&Omega; ±' num2str(torelancia(tind)) '%'];    
-    
+valuestr= [ num2eng(Value,1) '&Omega; ±' num2str(torelancia(tind)) '%']; 
+% Qual a melhor escala para medir o resistor
+escalasR={'200 &Omega;','2 k&Omega;','20 k&Omega;','200 k&Omega;','2 M&Omega;','20 M&Omega;','200 M&Omega;'};
+escala=[200 2e3 20e3 200e3 2e6 20e6 200e6];
+torelancia=[0.05 0.1 0.25 0.5 1 2 5 10 20]/100; % emt(3)
+
+quiz.valorNUMERICAL = ['{1:NUMERICAL:~%100%' num2str(Value) ':' ceil(num2str(Value*torelancia(tind))) '}'];
+ 
+ 
+indp=find((escala-Value)>0);
+
+
+strf5='{1:MULTICHOICE_S:';
+for a=1:length(escalasR)
+    if a==indp(1)
+        strf5 = strcat(strf5,['~%100%' escalasR{a} ]);
+    else
+        strf5 = strcat(strf5,['~' escalasR{a} ]);
+    end
+end
+quiz.escalaMULTICHOICE = strcat(strf5,'}');
 
 
 
