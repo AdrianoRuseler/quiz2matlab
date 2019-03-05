@@ -1,0 +1,73 @@
+% =========================================================================
+% ***
+% *** The MIT License (MIT)
+% ***
+% *** Copyright (c) 2019 AdrianoRuseler
+% ***
+% *** Permission is hereby granted, free of charge, to any person obtaining a copy
+% *** of this software and associated documentation files (the "Software"), to deal
+% *** in the Software without restriction, including without limitation the rights
+% *** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+% *** copies of the Software, and to permit persons to whom the Software is
+% *** furnished to do so, subject to the following conditions:
+% ***
+% *** The above copyright notice and this permission notice shall be included in all
+% *** copies or substantial portions of the Software.
+% ***
+% *** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+% *** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+% *** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+% *** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+% *** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+% *** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+% *** SOFTWARE.
+% ***
+% =========================================================================
+% Generate Quiz Struct for Resistor Choice.
+function  [quizstruct] = genqs4re(Values,tol,EXX,name,theme) % Values can be a vector
+% [quizstruct] = genqs4re(15e3,5,'E24','LAB01Q02a','clean')
+% [band,quiz,valuestr,colornamestr] = rbandcolorid(15e3,5,'E24');
+
+quizstruct.name = name;
+quizstruct.question.type = 'cloze';
+
+ colorname={'Preto','Marrom','Vermelho','Laranja','Amarelo','Verde','Azul','Violeta','Cinza','Branco','Dourado','Prata','Ausente'};
+ 
+for n=1:length(Values) 
+    [band,~,valuestr,colornamestr] = rbandcolorid(Values(n),tol,EXX);  
+    [Yc,~] = printresistor(band,theme);
+    Rfig{1}=['<p style="text-align: center;"><img src="data:image/png;base64,' Yc '" alt="" width="325" height="59"></p><p style="text-align: center;">(' colornamestr ')</p>'];
+    
+    for r=2:5 % Generates more 4 dump resistors            
+        
+        if length(band)==4
+            dband = randi([1 12],1,4);
+            dcolornamestr=[ colorname{dband(1)} ', ' colorname{dband(2)} ', ' colorname{dband(3)} ' e ' colorname{dband(4)} ];
+        elseif length(band)==5
+            dband = randi([1 12],1,5);
+            dcolornamestr=[ colorname{dband(1)} ', ' colorname{dband(2)} ', ' colorname{dband(3)} ', ' colorname{dband(4)} ' e ' colorname{dband(5)} ];
+        end
+        
+        [Yc,~] = printresistor(dband,theme);
+        Rfig{r}=['<p style="text-align: center;"><img src="data:image/png;base64,' Yc ' " alt="" width="325" height="59"></p><p style="text-align: center;">(' dcolornamestr ')</p>'];
+        
+    end
+    pergunta=['Qual dos resistores abaixo possui uma resistência de ' valuestr '? ']; 
+    quizstruct.question.text{n}=['<p style="text-align: center;">' pergunta '<br></p>  <p style="text-align: center;">{1:MULTICHOICE_V:~%100%' Rfig{1} '~' Rfig{2} '~' Rfig{3} '~' Rfig{4} '~' Rfig{5} '}</p>'];    
+    
+    quizstruct.question.name{n}=[name ' genqs4re(' valuestr ')'];    
+     
+    disp(quizstruct.question.name{n})
+    
+    quizstruct.question.generalfeedback{n}='';
+    quizstruct.question.penalty{n}='0.25';
+    quizstruct.question.hidden{n}='0'; 
+            
+end
+
+quizstruct.questionnumbers = n; % Numero de questoes geradas.
+quizstruct.questionMAX=500;
+
+
+
+
