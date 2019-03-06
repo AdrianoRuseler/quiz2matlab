@@ -63,6 +63,11 @@ switch EXX
         E=[10 12 15 18 22 27 33 39 47 56 68 82]; % 10%
 end
 
+if Mult==0 % if mult is 0, use all multipliers
+    Mult=[0.01 0.1 1 10 100 1e3 10e3 100e3 1e6 10e6 100e6 1e9];
+end
+
+
 n=1;
 for mx=1:length(Mult) % Resistor multiplier
     for ex=1:length(E)
