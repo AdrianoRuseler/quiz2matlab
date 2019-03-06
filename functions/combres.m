@@ -67,10 +67,13 @@ if Mult==0 % if mult is 0, use all multipliers
     Mult=[0.01 0.1 1 10 100 1e3 10e3 100e3 1e6 10e6 100e6 1e9];
 end
 
+x=length(Mult);
+y=length(E);
 
+Rs=zeros(1,x*y);
 n=1;
-for mx=1:length(Mult) % Resistor multiplier
-    for ex=1:length(E)
+for mx=1:x % Resistor multiplier
+    for ex=1:y
         Rs(n)=Mult(mx)*E(ex);
         n=n+1;
     end
