@@ -36,7 +36,6 @@ quizstruct.question.type = 'multichoice';
  for n=1:length(Values)
      [band,~,valuestr,colornamestr] = rbandcolorid(Values(n),tol,EXX);
      [Yc,~] = printresistor(band,theme);
-     %     Rfig{1}=['<p style="text-align: center;"><img src="data:image/png;base64,' Yc '" alt="" width="325" height="59"></p><p style="text-align: center;">(' colornamestr ')</p>'];
      quizstruct.question.answer{n}{1}=['<p style="text-align: center;"><img src="data:image/png;base64,' Yc '" alt="" width="325" height="59"></p><p style="text-align: center;">(' colornamestr ')</p><br><p></p>'];
      
      quizstruct.question.text{n}=['Qual dos resistores abaixo possui uma resistência de ' valuestr '?'];
@@ -55,16 +54,14 @@ quizstruct.question.type = 'multichoice';
          
          [Yc,~] = printresistor(dband,theme);
          quizstruct.question.answer{n}{r}=['<p style="text-align: center;"><img src="data:image/png;base64,' Yc '" alt="" width="325" height="59"></p><p style="text-align: center;">(' dcolornamestr ')</p><br><p></p>'];
-         %         Rfig{r}=['<p style="text-align: center;"><img src="data:image/png;base64,' Yc ' " alt="" width="325" height="59"></p><p style="text-align: center;">(' dcolornamestr ')</p>'];
-         quizstruct.question.answerfraction{n}{r}='0';
+         quizstruct.question.answerfraction{n}{r}='0'; % Pontuação
          quizstruct.question.answerfeedback{n}{r}='';
      end
-     %     pergunta=['Qual dos resistores abaixo possui uma resistência de ' valuestr '? '];
-     %     quizstruct.question.text{n}=['<p style="text-align: center;">' pergunta '<br></p>  <p style="text-align: center;">{1:MULTICHOICE_V:~%100%' Rfig{1} '~' Rfig{2} '~' Rfig{3} '~' Rfig{4} '~' Rfig{5} '}</p>'];
+
      
-     quizstruct.question.name{n}=[name ' genqs4remc(' valuestr ')'];
+     quizstruct.question.name{n}=[name ' genqs4remc(' valuestr ')'];     
+     disp(quizstruct.question.name{n}) % Mostra nome da questão
      
-     disp(quizstruct.question.name{n})
      quizstruct.question.generalfeedback{n}='';
      
      quizstruct.question.defaultgrade{n}='5';
@@ -73,7 +70,7 @@ quizstruct.question.type = 'multichoice';
      
      quizstruct.question.unitgradingtype{n} = '0';
      quizstruct.question.unitpenalty{n} = '0.1000000';
-     quizstruct.question.showunits{n}='3';
+     quizstruct.question.showunits{n}= '3';
      quizstruct.question.unitsleft{n} = '0';
      
      quizstruct.question.single{n} = 'true';
@@ -82,12 +79,12 @@ quizstruct.question.type = 'multichoice';
      
  end
 
-quizstruct.question.correctfeedback = 'Sua resposta está correta.';
-quizstruct.question.partiallycorrectfeedback = 'Sua resposta está parcialmente correta.';
-quizstruct.question.incorrectfeedback = 'Sua resposta está incorreta.';
+quizstruct.question.correctfeedback = 'Sua resposta está correta!';
+quizstruct.question.partiallycorrectfeedback = 'Sua resposta está parcialmente correta!';
+quizstruct.question.incorrectfeedback = 'Sua resposta está incorreta!';
 
 quizstruct.questionnumbers = n; % Numero de questoes geradas.
-quizstruct.questionMAX=500;
+quizstruct.questionMAX=500; % Numero máximo de questões por arquivo.
 
 
 

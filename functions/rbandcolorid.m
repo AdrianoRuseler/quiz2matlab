@@ -110,13 +110,10 @@ for a=1:length(torelancia)
         str = strcat(str,['~' num2str(torelancia(a)) '%']);
     end
 end
-quiz.tolMULTICHOICE = strcat(str,'}');
-            
-            
+quiz.tolMULTICHOICE = strcat(str,'}');         
  
 % Generate this: {1:MULTICHOICE_S:10~11~12~13~%100%15~16~18~20~22~24~27~30~33~36~39~43~47~51~56~62~68~75~82~91}
 quiz.f123MULTICHOICE=strrep(['{1:MULTICHOICE_S:' strrep(num2str(E),'  ','~') '}'],num2str(E(eind)),['%100%' num2str(E(eind))]); % Cool
-
 
 f123 = dec2base(E(eind),10) - '0';
 f123 = f123+1; % Gera a sequência numérica
