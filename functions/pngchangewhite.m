@@ -23,14 +23,30 @@
 % *** SOFTWARE.
 % ***
 % =========================================================================
-% pngchangewhite(imgin,imgout,217,237,247) % UTFPR
-% pngchangewhite(imgin,imgout,222,242,248) % AWS
-function pngchangewhite(imgin,imgout,R,G,B)
+% pngchangewhite(imgin,imgout,'clean') % UTFPR - clean
+% pngchangewhite(imgin,imgout,'boost') % AWS - boost
+function pngchangewhite(imgin,imgout,theme)
+
+switch theme
+    case 'clean'
+        R=217;
+        G=237;
+        B=247;
+    case 'boost'
+        R=222;
+        G=242;
+        B=248;
+    otherwise % boost
+        R=222;
+        G=242;
+        B=248;
+end
+
 
 A = imread(imgin);
 % figure
 % imshow(A)
-% A = rgb2gray(A); % Convert to Gray scale
+% Extract RGB vectors
 Rin = A(:,:,1); 
 Gin = A(:,:,2); 
 Bin = A(:,:,3); 
