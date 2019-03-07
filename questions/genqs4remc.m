@@ -25,8 +25,7 @@
 % =========================================================================
 % Generate Quiz Struct for Resistor Choice.
 function  [quizstruct] = genqs4remc(Values,tol,EXX,name,theme) % Values can be a vector
-% [quizstruct] = genqs4re(15e3,5,'E24','LAB01Q02a','clean')
-% [band,quiz,valuestr,colornamestr] = rbandcolorid(15e3,5,'E24');
+% [quizstruct] = genqs4remc(15e3,5,'E24','LAB01Q02a','clean')
 
 quizstruct.name = name;
 quizstruct.question.type = 'multichoice';
@@ -34,21 +33,32 @@ quizstruct.question.type = 'multichoice';
  colorname={'Preto','Marrom','Vermelho','Laranja','Amarelo','Verde','Azul','Violeta','Cinza','Branco','Dourado','Prata','Ausente'};
  
  for n=1:length(Values)
-     [band,~,valuestr,colornamestr] = rbandcolorid(Values(n),tol,EXX);
+     
+     quizstruct.question.answernumbers{n}=5; % Numero de escolhas
+     
+     [band,colornamestr,valuestr] = rband(Values(n),tol,EXX);
+     quizstruct.question.text{n}=['Qual dos resistores abaixo possui uma resistência de ' valuestr '?'];
      [Yc,~] = printresistor(band,theme);
      quizstruct.question.answer{n}{1}=['<p style="text-align: center;"><img src="data:image/png;base64,' Yc '" alt="" width="325" height="59"></p><p style="text-align: center;">(' colornamestr ')</p><br><p></p>'];
-     
-     quizstruct.question.text{n}=['Qual dos resistores abaixo possui uma resistência de ' valuestr '?'];
      quizstruct.question.answerfraction{n}{1}='100';
      quizstruct.question.answerfeedback{n}{1}='';
-     quizstruct.question.answernumbers{n}=5; % Numero de escolhas
-     for r=2:5 % Generates more 4 dump resistors
-         
+     
+     
+     band=band(randperm(length(band)));
+     [Yc,~] = printresistor(band,theme);
+     quizstruct.question.answer{n}{2}=['<p style="text-align: center;"><img src="data:image/png;base64,' Yc '" alt="" width="325" height="59"></p><p style="text-align: center;">(' colornamestr ')</p><br><p></p>'];
+     quizstruct.question.answerfraction{n}{2}='0';
+     quizstruct.question.answerfeedback{n}{2}='';
+     
+     
+     for r=3:5 % Generates more 4 dump resistors
          if length(band)==4
              dband = randi([1 12],1,4);
+             dband=dband(randperm(4));
              dcolornamestr=[ colorname{dband(1)} ', ' colorname{dband(2)} ', ' colorname{dband(3)} ' e ' colorname{dband(4)} ];
          elseif length(band)==5
              dband = randi([1 12],1,5);
+             dband=dband(randperm(5));
              dcolornamestr=[ colorname{dband(1)} ', ' colorname{dband(2)} ', ' colorname{dband(3)} ', ' colorname{dband(4)} ' e ' colorname{dband(5)} ];
          end
          
@@ -57,9 +67,9 @@ quizstruct.question.type = 'multichoice';
          quizstruct.question.answerfraction{n}{r}='0'; % Pontuação
          quizstruct.question.answerfeedback{n}{r}='';
      end
-
      
-     quizstruct.question.name{n}=[name ' genqs4remc(' valuestr ')'];     
+     
+     quizstruct.question.name{n}=[name ' genqs4remc(' valuestr ')'];
      disp(quizstruct.question.name{n}) % Mostra nome da questão
      
      quizstruct.question.generalfeedback{n}='';
