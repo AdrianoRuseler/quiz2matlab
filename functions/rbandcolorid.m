@@ -34,6 +34,8 @@ function  [band,quiz,valuestr,colornamestr] = rbandcolorid(Value,tol,EXX)
 % [band,quiz,valuestr,colornamestr] = rbandcolorid(15e3,5,'E24')
 % [band,quiz,valuestr,colornamestr] = rbandcolorid(1e3,1,'E48')
 
+
+
 switch EXX
     case 'E06'
         E=[10 15 22 33 47 68]; %
@@ -78,15 +80,21 @@ end
 
 if isempty(eind) % Resistor not found
     band=[];
+    quiz=[];
+    valuestr='';
+    colornamestr='';
     disp('Resistor not found!!')
     return
 end
 
-%  E(eind)*multiplier(mind)            
+%  E(eind)*multiplier(mind)
 
 tind=find((torelancia*100)==(tol*100));
 if isempty(tind) % Resistor not found
     band=[];
+    quiz=[];
+    valuestr='';
+    colornamestr='';
     disp('Toleramce not found!!')
     return
 end
