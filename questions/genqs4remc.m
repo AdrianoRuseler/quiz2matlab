@@ -44,9 +44,14 @@ quizstruct.question.type = 'multichoice';
      quizstruct.question.answerfeedback{n}{1}='';
      
      
-     band=band(randperm(length(band)));
-     [Yc,~] = printresistor(band,theme);
-     quizstruct.question.answer{n}{2}=['<p style="text-align: center;"><img src="data:image/png;base64,' Yc '" alt="" width="325" height="59"></p><p style="text-align: center;">(' colornamestr ')</p><br><p></p>'];
+     dband=band(randperm(length(band)));
+     [Yc,~] = printresistor(dband,theme);
+     if length(band)==4
+         dcolornamestr=[ colorname{dband(1)} ', ' colorname{dband(2)} ', ' colorname{dband(3)} ' e ' colorname{dband(4)} ];
+     elseif length(band)==5
+         dcolornamestr=[ colorname{dband(1)} ', ' colorname{dband(2)} ', ' colorname{dband(3)} ', ' colorname{dband(4)} ' e ' colorname{dband(5)} ];
+     end
+     quizstruct.question.answer{n}{2}=['<p style="text-align: center;"><img src="data:image/png;base64,' Yc '" alt="" width="325" height="59"></p><p style="text-align: center;">(' dcolornamestr ')</p><br><p></p>'];
      quizstruct.question.answerfraction{n}{2}='0';
      quizstruct.question.answerfeedback{n}{2}='';
      
