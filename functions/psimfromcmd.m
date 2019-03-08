@@ -27,11 +27,10 @@
 
 function  circuit = psimfromcmd(circuit)
 
-
 % Copyright ® 2006-2018 Powersim Inc.  All Rights Reserved.
-%
+% 
 % Usage: PsimCmd.exe -i "[input file]" -o "[output file]" -v "VarName1=VarValue"  -v "VarName2=VarValue"  -g -K1 -L1 -t "TotalTime" -s "TimeStep" -pt "PrintTime" -ps "PrintStep" -Net "Netlist file name" -m "file name for errors"
-%
+% 
 % Except input file, all other parameters are optional.
 % All file names should be enclosed by " or ' characters.
 % Command-line parameters:
@@ -92,7 +91,9 @@ PsimCmdsrt= ['-i ' infile ' -o ' outfile ' -m ' msgfile ' -t ' totaltime ' -s ' 
 tic
 disp(PsimCmdsrt)
 disp('Simulating...')
-[~,cmdout] = system(['PsimCmd ' PsimCmdsrt]); % Executa simulação
+[status,cmdout] = system(['PsimCmd ' PsimCmdsrt]); % Executa simulação
+
+circuit.PSIMCMD.status=status; % If 0, is OK! else, some problem
 
 circuit.PSIMCMD.simtime=toc; % Tempo total de simulação
 disp(cmdout)
@@ -123,7 +124,6 @@ M = cell2mat(textscan(fileID,fstr));
 fclose(fileID);
 
 disp('Done!')
-
 % Convert data
 
 disp('Converting to simulink struct data ....')
