@@ -1,4 +1,3 @@
-
 % =========================================================================
 %
 %  The MIT License (MIT)
@@ -91,6 +90,15 @@ xlabel('Tempo (ms)','Interpreter','latex')
  
 %  print(circuit.PSIMCMD.simview.main.hfig,[circuit.latex.figsdir '\' circuit.tipo circuit.prefixname],'-depsc') % Exporta figura no formato .eps
 
-print(circuit.PSIMCMD.simview.main.hfig,[circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.png'],'-dpng')      
+print(circuit.PSIMCMD.simview.main.hfig,[circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.data.blockName '.png'],'-dpng')      
+
+imgin=[circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.data.blockName '.png'];
+imgout=[circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.data.blockName '_clean.png'];
+pngchangewhite(imgin,imgout,'clean')
+
+imgout=[circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.data.blockName '_boost.png'];
+pngchangewhite(imgin,imgout,'boost')
+
+
 
 %  print('PlotTest.png','-dpng')
