@@ -91,7 +91,7 @@ PsimCmdsrt= ['-i ' infile ' -o ' outfile ' -m ' msgfile ' -t ' totaltime ' -s ' 
 
 tic
 disp(PsimCmdsrt)
-disp('Simulando conversor...')
+disp('Simulating...')
 [~,cmdout] = system(['PsimCmd ' PsimCmdsrt]); % Executa simulação
 disp(cmdout)
 circuit.PSIMCMD.cmdout=cmdout;
@@ -101,7 +101,7 @@ circuit.PSIMCMD.cmdout=cmdout;
 if verLessThan('matlab', '9.1')
     if ~contains(cmdout,'Failed')
         circuit.PSIMCMD.status=0;
-        disp('Importando dados simulados do conversor...')
+        disp('Importing simulated data...')
         circuit = psimread(circuit); % Importa pontos simulados
     else
         disp('Ocorreu algum erro!')
@@ -113,7 +113,7 @@ else
         circuit.PSIMCMD.status=1;
     else
         circuit.PSIMCMD.status=0;
-        disp('Importando dados simulados do conversor...')
+        disp('Importing simulated data...')
         circuit = psimread(circuit); % Importa pontos simulados
         %     conv = psimini2struct(conv);  % Atualiza a estrutura conv com dados do arquivo .ini
     end
@@ -122,9 +122,14 @@ end
 disp(cmdout)
 circuit.PSIMCMD.simtime=toc; % Tempo total de simulação
 
+
+disp('Deleting files...')
+if(circuit.PSIMCMD.tmpfiledel)    
+    delete(circuit.PSIMCMD.infile) % Deleta arquivo de simulação
+    delete(circuit.PSIMCMD.outfile) % Deleta arquivo de dados
+    delete(circuit.PSIMCMD.msgfile)    
+end
+
 disp(circuit.PSIMCMD)
-
-
-
 
 
