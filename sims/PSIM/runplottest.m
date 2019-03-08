@@ -1,6 +1,8 @@
 
 % Sets simulation dir
-quiz2matlabdir='F:\Dropbox\GitHub\quiz2matlab';
+% quiz2matlabdir='F:\Dropbox\GitHub\quiz2matlab'; % Home
+quiz2matlabdir='A:\Dropbox\GitHub\quiz2matlab'; % UTFPR
+
 quiz2matlabsdir=[quiz2matlabdir '\sims'];
 quiz2matlabspdir=[quiz2matlabsdir '\PSIM'];
 
@@ -21,3 +23,14 @@ circuit.PSIMCMD.printstep=1; %Print step (default = 1). If the print step is set
 
 % Runs simulation
 circuit = psimfromcmd(circuit); % Simula via CMD
+
+
+%% 
+% A:\Dropbox\GitHub\quiz2matlab\sims\PSIM
+% FileName = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.ini']; % Sim base file
+
+
+
+% Result = ini2struct(circuit.PSIMCMD.inifile)
+
+circuit = simview2matlab(circuit); % Importa dados do simview

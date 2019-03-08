@@ -30,8 +30,8 @@
 
 function circuit = simview2matlab(circuit)
 
-circuit.PSIMCMD.simview=[]; % Limpa campo? Why??
-
+% circuit.PSIMCMD.simview=[]; % Limpa campo? Why??
+tic
 % Read ini file
 inistruct = ini2struct(circuit.PSIMCMD.inifile);  
 if isempty(inistruct)
@@ -128,6 +128,8 @@ end
 for i=1:length(circuit.PSIMCMD.data.signals)
     evalin('base', ['clear ' circuit.PSIMCMD.data.signals(i).label])     
 end
+
+simview.runtime=toc;
 
 %% Save data struct
 circuit.PSIMCMD.simview=simview;
