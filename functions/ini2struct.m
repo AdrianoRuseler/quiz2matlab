@@ -120,7 +120,12 @@ while ~feof(f)                          % and read until it ends
     end
 end
 fclose(f);
-return;
+return
+
+
+
+
+
 
 function res = CleanValue(s)
 res = strtrim(s);
@@ -128,4 +133,4 @@ if strcmpi(res(1),'=')
     res(1)=[];
 end
 res = strtrim(res);
-return;
+return
