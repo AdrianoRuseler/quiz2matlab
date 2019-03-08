@@ -62,6 +62,7 @@ circuit.PSIMCMD.extracmd = varstrcmd;
 
 
 simfilebase = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.psimsch']; % Sim base file
+circuit.PSIMCMD.inifile = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.ini']; % Arquivo ini simview
 
 
 if(circuit.PSIMCMD.tmpfile) % Create tmp file for simulation?
@@ -75,7 +76,6 @@ end
 
 circuit.PSIMCMD.outfile = [circuit.PSIMCMD.simsdir '\' tmpname '.txt'];
 circuit.PSIMCMD.msgfile = [circuit.PSIMCMD.simsdir '\' tmpname '_msg.txt'];
-circuit.PSIMCMD.inifile = [circuit.PSIMCMD.simsdir '\' tmpname '.ini']; % Arquivo ini simview
 
 % Cria string de comando
 infile = ['"' circuit.PSIMCMD.infile '"'];
