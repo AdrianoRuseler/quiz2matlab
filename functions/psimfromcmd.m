@@ -59,15 +59,24 @@ varstrcmd='';
 for ind=1:length(circuit.parname)    
         varstrcmd=[varstrcmd ' -v "' circuit.parname{ind} '=' num2str(circuit.parvalue(ind),'%10.8e') '"'];
 end
-
-% circuit.fullfilename = [ circuit.basefilename  circuit.prefixname]; % Atualiza nome do arquivo
-
-circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.psimsch'];
-circuit.PSIMCMD.outfile = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.txt'];
-circuit.PSIMCMD.msgfile = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '_msg.txt'];
-circuit.PSIMCMD.inifile = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.ini']; % Arquivo ini simview
 circuit.PSIMCMD.extracmd = varstrcmd;
 
+
+simfilebase = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.psimsch']; % Sim base file
+
+
+if(circuit.PSIMCMD.tmpfile) % Create tmp file for simulation?
+    tmpname=[circuit.PSIMCMD.name strrep(char(java.util.UUID.randomUUID),'-','')];
+    circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir '\' tmpname '.psimsch'];
+    copyfile(simfilebase,circuit.PSIMCMD.infile) % Copia arquivo
+else
+    tmpname = circuit.PSIMCMD.name;
+    circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir '\' tmpname '.psimsch'];
+end
+
+circuit.PSIMCMD.outfile = [circuit.PSIMCMD.simsdir '\' tmpname '.txt'];
+circuit.PSIMCMD.msgfile = [circuit.PSIMCMD.simsdir '\' tmpname '_msg.txt'];
+circuit.PSIMCMD.inifile = [circuit.PSIMCMD.simsdir '\' tmpname '.ini']; % Arquivo ini simview
 
 % Cria string de comando
 infile = ['"' circuit.PSIMCMD.infile '"'];
@@ -86,6 +95,8 @@ disp('Simulando conversor...')
 [~,cmdout] = system(['PsimCmd ' PsimCmdsrt]); % Executa simulação
 disp(cmdout)
 circuit.PSIMCMD.cmdout=cmdout;
+
+
 
 if verLessThan('matlab', '9.1')
     if ~contains(cmdout,'Failed')
