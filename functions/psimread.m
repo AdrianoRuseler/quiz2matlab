@@ -79,7 +79,9 @@ dirstruct.simulatedir=pathstr; % Update simulations dir
 %%  Load file .txt
 disp(['Reading ' circuit.PSIMCMD.outfile ' file....     Wait!'])
 tic
-cd(dirstruct.simulatedir)
+% cd(dirstruct.simulatedir)
+
+
 [fileID,errmsg] = fopen(circuit.PSIMCMD.outfile);
 % [filename,permission,machinefmt,encodingOut] = fopen(fileID); 
 if fileID==-1
@@ -135,7 +137,7 @@ disp('Done!!!!')
 toc
 
 
-cd(dirstruct.wdir)
+% cd(dirstruct.wdir)
 % disp('We are good to go!!!')
 
 
