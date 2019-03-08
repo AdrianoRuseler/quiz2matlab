@@ -2,7 +2,7 @@
 % ***
 % *** The MIT License (MIT)
 % ***
-% *** Copyright (c) 2018 AdrianoRuseler
+% *** Copyright (c) 2019 AdrianoRuseler
 % ***
 % *** Permission is hereby granted, free of charge, to any person obtaining a copy
 % *** of this software and associated documentation files (the "Software"), to deal
@@ -56,8 +56,8 @@ function  circuit = psimfromcmd(circuit)
 
 %  varstrcmd -v "VarName1=VarValue"  -v "VarName2=VarValue"
 varstrcmd='';
-for ind=1:length(circuit.parname)    
-        varstrcmd=[varstrcmd ' -v "' circuit.parname{ind} '=' num2str(circuit.parvalue(ind),'%10.8e') '"'];
+for ind=1:length(circuit.parname)
+    varstrcmd=[varstrcmd ' -v "' circuit.parname{ind} '=' num2str(circuit.parvalue(ind),'%10.8e') '"'];
 end
 circuit.PSIMCMD.extracmd = varstrcmd;
 
@@ -93,43 +93,75 @@ tic
 disp(PsimCmdsrt)
 disp('Simulating...')
 [~,cmdout] = system(['PsimCmd ' PsimCmdsrt]); % Executa simulação
+
+circuit.PSIMCMD.simtime=toc; % Tempo total de simulação
 disp(cmdout)
 circuit.PSIMCMD.cmdout=cmdout;
 
 
+%%  Load file .txt
+disp(['Reading ' circuit.PSIMCMD.outfile ' file....     Wait!'])
+tic
 
-if verLessThan('matlab', '9.1')
-    if ~contains(cmdout,'Failed')
-        circuit.PSIMCMD.status=0;
-        disp('Importing simulated data...')
-        circuit = psimread(circuit); % Importa pontos simulados
-    else
-        disp('Ocorreu algum erro!')
-        circuit.PSIMCMD.status=1;
-    end
-else
-    if contains(cmdout,'Error')||contains(cmdout,'Failed') % Verifica se houve error durante a simulação
-        disp('Ocorreu algum erro!')
-        circuit.PSIMCMD.status=1;
-    else
-        circuit.PSIMCMD.status=0;
-        disp('Importing simulated data...')
-        circuit = psimread(circuit); % Importa pontos simulados
-        %     conv = psimini2struct(conv);  % Atualiza a estrutura conv com dados do arquivo .ini
-    end
+[fileID,~] = fopen(circuit.PSIMCMD.outfile);
+% [filename,permission,machinefmt,encodingOut] = fopen(fileID);
+if fileID==-1
+    disp('File error!!')
+    return
 end
 
-disp(cmdout)
-circuit.PSIMCMD.simtime=toc; % Tempo total de simulação
+% BufSize -> Maximum string length in bytes -> 4095
+tline = fgetl(fileID);
+[header] = strread(tline,'%s','delimiter',' ');
 
+fstr='%f';
+for tt=2:length(header)
+    fstr=[fstr '%f'];
+end
+
+M = cell2mat(textscan(fileID,fstr));
+fclose(fileID);
+
+disp('Done!')
+
+% Convert data
+
+disp('Converting to simulink struct data ....')
+
+circuit.PSIMCMD.data.time=M(:,1);
+circuit.PSIMCMD.data.Ts=M(2,1)-M(1,1); % Time step
+
+% Verifies header name
+for i=2:length(header)
+    if verLessThan('matlab', '8.2.0')
+        U = genvarname(header{i});
+        modified=1; % Just force update
+    else
+        [U, modified] = matlab.lang.makeValidName(header{i},'ReplacementStyle','delete');
+    end
+    if modified
+        disp(['Name ' header{i} ' modified to ' U ' (MATLAB valid name for variables)!!'])
+    end
+    circuit.PSIMCMD.data.signals(i-1).label=U;
+    circuit.PSIMCMD.data.signals(i-1).values=M(:,i);
+    circuit.PSIMCMD.data.signals(i-1).dimensions=1;
+    circuit.PSIMCMD.data.signals(i-1).title=U;
+    circuit.PSIMCMD.data.signals(i-1).plotStyle=[0,0];
+end
+
+circuit.PSIMCMD.data.blockName=tmpname;
+circuit.PSIMCMD.data.PSIMheader=header; % For non valid variables
+circuit.PSIMCMD.datareadtime=toc; % Tempo total de simulação
+
+disp('Done!!!!')
 
 disp('Deleting files...')
-if(circuit.PSIMCMD.tmpfiledel)    
+if(circuit.PSIMCMD.tmpfiledel)
     delete(circuit.PSIMCMD.infile) % Deleta arquivo de simulação
     delete(circuit.PSIMCMD.outfile) % Deleta arquivo de dados
-    delete(circuit.PSIMCMD.msgfile)    
+    delete(circuit.PSIMCMD.msgfile)
 end
-
+disp('Done!!!!')
 disp(circuit.PSIMCMD)
 
 
