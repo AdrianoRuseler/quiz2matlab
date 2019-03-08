@@ -54,6 +54,11 @@ function  circuit = psimfromcmd(circuit)
 % -SP  or -SPICE : Run Spice simulation. (Requires Spice module)
 % -LT : Run LTspice simulation. (Requires Spice module)
 
+%  varstrcmd -v "VarName1=VarValue"  -v "VarName2=VarValue"
+varstrcmd='';
+for ind=1:length(circuit.parname)    
+        varstrcmd=[varstrcmd ' -v "' circuit.parname{ind} '=' num2str(circuit.parvalue(ind),'%10.8e') '"'];
+end
 
 % circuit.fullfilename = [ circuit.basefilename  circuit.prefixname]; % Atualiza nome do arquivo
 
@@ -61,7 +66,7 @@ circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.psi
 circuit.PSIMCMD.outfile = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.txt'];
 circuit.PSIMCMD.msgfile = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '_msg.txt'];
 circuit.PSIMCMD.inifile = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.ini']; % Arquivo ini simview
-circuit.PSIMCMD.extracmd = '';
+circuit.PSIMCMD.extracmd = varstrcmd;
 
 
 % Cria string de comando
