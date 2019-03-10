@@ -11,12 +11,14 @@ quiz2matlabspdir=[quiz2matlabsdir '\PSIM'];
 % Config simulation
 circuit.parname={'Vi','R1','R2'}; % Variables names
 circuit.parvalue=[10 1e3 1e3]; % Variables values
+circuit.parunit={' V','&Omega;','&Omega;'}; % Variables unit
+circuit.parstr = param2str(circuit.parvalue,circuit.parname,circuit.parunit);
 circuit.PSIMCMD.name = 'quiztest'; % File name
 circuit.PSIMCMD.simsdir=quiz2matlabspdir; % PSIM file dir
 circuit.PSIMCMD.tmpfile=1; % Create tmp file?
 circuit.PSIMCMD.tmpfiledel=1; % Delete tmp files?
 
-% Simulação 
+% Simulation control settings
 circuit.PSIMCMD.totaltime=10E-005; % Total simulation time, in sec.
 circuit.PSIMCMD.steptime=1E-005; % Simulation time step, in sec.  
 circuit.PSIMCMD.printtime=0; %Time from which simulation results are saved to the output file (default = 0). No output is saved before this time. 
@@ -29,17 +31,39 @@ circuit = psimfromcmd(circuit); % Simula via CMD
 
 %% Generate question
 
-circuit.quiz.name = 'plottestquiz';
-
-% pngchangewhite(imgin,imgout,theme)
-
-pngfile= ''; % Fig png file
-figlegendastr='Figura 1: Considere '; % Legenda da figura
+circuit.quiz.name = 'sometestquiz';
+circuit.quiz.enunciado = 'Para o circuito apresentado na Figura 1, determine:'; % Enunciado da pergunta!
+pngfile=[quiz2matlabspdir '\quiztestfig.png']; % Fig png file
+figlegendastr=['Figura 1: Considere ' circuit.parstr ';']; % Legenda da figura
 circuit.quiz.fightml = psimfigstr(pngfile,'left',figlegendastr); % html code for fig
 
 
 
+circuit.quiz.question{1}.str='Qual a tensão em R1?';
+circuit.quiz.question{1}.units={' V',' V',' V'};
+circuit.quiz.question{1}.options={'opt1','opt2','opt3'}; % Variables from PSIM simulation
+circuit.quiz.question{1}.optscore=[100 0 0]; % Score per option
+circuit.quiz.question{1}.choicetype='MULTICHOICE_S';
 
+% circuit.quiz.question{2}.choicestr
+
+
+circuit.quiz.question{2}.str='Qual a tensão em R2?';
+circuit.quiz.question{2}.units={' V',' V',' V'};
+circuit.quiz.question{2}.options={'opt3','opt2','opt1'};
+circuit.quiz.question{2}.optscore=[100 0 0]; % Score per option
+circuit.quiz.question{2}.choicetype='MULTICHOICE_S';
+
+% circuit.quiz.question{3}.choicestr
+
+circuit.quiz.question{3}.str='Qual a tensão em R2+R1?';
+circuit.quiz.question{3}.units={' V',' V',' V'};
+circuit.quiz.question{3}.options={'opt3','opt2','opt1'};
+circuit.quiz.question{3}.optscore=[100 0 0]; % Score per option
+circuit.quiz.question{3}.choicetype='MULTICHOICE_S';
+
+
+circuit = psimXmultichoice(circuit); % Generate multichoice
 
 
 
