@@ -144,6 +144,8 @@ for i=2:length(header)
     end
     circuit.PSIMCMD.data.signals(i-1).label=U;
     circuit.PSIMCMD.data.signals(i-1).values=M(:,i);
+    circuit.PSIMCMD.data.signals(i-1).mean=mean(M(:,i)); 
+    circuit.PSIMCMD.data.signals(i-1).rms=rms(M(:,i));
     circuit.PSIMCMD.data.signals(i-1).dimensions=1;
     circuit.PSIMCMD.data.signals(i-1).title=U;
     circuit.PSIMCMD.data.signals(i-1).plotStyle=[0,0];
