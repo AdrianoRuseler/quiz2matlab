@@ -54,18 +54,22 @@ circuit.quiz.question{2}.options={'opt3','opt2','opt1'};
 circuit.quiz.question{2}.optscore=[100 0 0]; % Score per option
 circuit.quiz.question{2}.choicetype='MULTICHOICE_S';
 
-% circuit.quiz.question{3}.choicestr
-
-circuit.quiz.question{3}.str='Qual a tensão em R2+R1?';
-circuit.quiz.question{3}.units={' V',' V',' V'};
-circuit.quiz.question{3}.options={'opt3','opt2','opt1'};
-circuit.quiz.question{3}.optscore=[100 0 0]; % Score per option
-circuit.quiz.question{3}.choicetype='MULTICHOICE_S';
-
-
 circuit = psimXmultichoice(circuit); % Generate multichoice
+circuit = quiztextgen(circuit); % Generates quiz text field
 
 
+circuits{1}=circuit; % Circuits array (multiple quizes)
+circuits{2}=circuit;
+circuits{3}=circuit;
+
+%% Generate quizstruct moodle question
+
+quizstruct = psimclozegen(circuits,'quizstructtest'); % Generate quizstruct
+
+cloze2moodle(quizstruct) % Generates xml file
+
+
+% quizstruct 
 
 %% simview
 % A:\Dropbox\GitHub\quiz2matlab\sims\PSIM
