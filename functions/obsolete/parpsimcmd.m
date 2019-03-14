@@ -54,6 +54,7 @@ function  dataout = parpsimcmd(parname,parvalue,simfilebase,totaltime,steptime,p
 % -SP  or -SPICE : Run Spice simulation. (Requires Spice module)
 % -LT : Run LTspice simulation. (Requires Spice module)
 
+
 %  varstrcmd -v "VarName1=VarValue"  -v "VarName2=VarValue"
 varstrcmd='';
 for ind=1:length(parname)    
@@ -69,9 +70,6 @@ end
 [simdir, name, ext] = fileparts(simfilebase);
 tmpname=[name strrep(char(java.util.UUID.randomUUID),'-','')];
 simfile = fullfile(simdir, [tmpname ext]); % Generate temp sim filename
-
-
-
 copyfile(simfilebase,simfile) % Copia arquivo
 
 outfile = [simdir '\' tmpname '.txt'];
@@ -92,6 +90,9 @@ PsimCmdsrt= ['-i ' infilestr ' -o ' outfilestr ' -t ' ttime ' -s ' stime ' -pt '
 
 system(['PsimCmd ' PsimCmdsrt]); % Executa simulação
 disp([name ' simulado!'])
+
+
+
 
 [fileID,errmsg] = fopen(outfile);
 t=0; 
