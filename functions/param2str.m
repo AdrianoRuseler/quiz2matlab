@@ -25,7 +25,12 @@
 % =========================================================================
 
 % str=param2str(Valor,parname,parunit)
-function [parstr]=param2str(valor,parname,parunit)
+function [parstr]=param2str(circuit)
+
+valor=circuit.parvalue;
+parname=circuit.parname;
+parunit=circuit.parunit;
+
 
 parstr=[ parname{1} '=' strrep(num2eng(valor(1),1),'.',',') parunit{1} ','];
 for a=2:length(valor)
