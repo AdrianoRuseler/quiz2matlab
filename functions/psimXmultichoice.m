@@ -62,7 +62,8 @@ for q=1:length(circuit.quiz.question)
     
     lopts=length(circuit.quiz.question{q}.options); % Number of options per question
     for o=1:lopts
-        circuit.quiz.question{q}.labelsind(o) = find(contains(labels,circuit.quiz.question{q}.options{o},'IgnoreCase',true));
+        optind=find(contains(labels,circuit.quiz.question{q}.options{o},'IgnoreCase',true));
+        circuit.quiz.question{q}.labelsind(o) = optind(1);        
         circuit.quiz.question{q}.values(o)=[circuit.PSIMCMD.data.signals(circuit.quiz.question{q}.labelsind(o)).mean];
     end
     
