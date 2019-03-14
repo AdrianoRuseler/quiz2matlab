@@ -111,4 +111,4 @@ end
 
 xmlwrite([quizstruct.xmlpath '\' quizstruct.name 'f' num2str(file,'%02i') '.xml'],docNode);
 
-
+winopen(quizstruct.xmlpath)
