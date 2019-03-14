@@ -30,7 +30,7 @@ function [parstr]=param2str(valor,parname,parunit)
 parstr=[ parname{1} '=' strrep(num2eng(valor(1),1),'.',',') parunit{1} ','];
 for a=2:length(valor)
     if a==length(valor)
-        parstr= strcat(parstr, [' ' parname{a} '=' strrep(num2eng(valor(a),1),'.',',') parunit{a} '.'] );
+        parstr= strcat(parstr, [' ' parname{a} '=' strrep(num2eng(valor(a),1),'.',',') parunit{a} ] );
     elseif a==length(valor)-1
         parstr= strcat(parstr, [' ' parname{a} '=' strrep(num2eng(valor(a),1),'.',',') parunit{a} ' e'] );
     else
