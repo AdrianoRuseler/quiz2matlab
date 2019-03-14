@@ -60,10 +60,12 @@ for ind=1:length(circuit.parname)
 end
 circuit.PSIMCMD.extracmd = varstrcmd;
 
-
 simfilebase = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.psimsch']; % Sim base file
 circuit.PSIMCMD.inifile = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.ini']; % Arquivo ini simview
 
+if(circuit.PSIMCMD.tmpdir)  % Use system temp dir?
+   circuit.PSIMCMD.simsdir = tempdir;    
+end
 
 if(circuit.PSIMCMD.tmpfile) % Create tmp file for simulation?
     tmpname=[circuit.PSIMCMD.name strrep(char(java.util.UUID.randomUUID),'-','')];
