@@ -3,8 +3,11 @@ function data = rawltspice(filename)
 % Elapsed time is 0.053146 seconds.
 % filename='F:\Dropbox\UTFPR\Moodle\MATLAB\LAB12\LAB12a5bb8a430d91f4a628c42613fc6299d85.raw';
 
+tstart = tic;
+fprintf('Extracting LTspice ASCII results ...\n');
+    
 if ~exist(filename,'file') % Verifica se existe o arquivo
-    disp(['Arquivo não encontrado:' filename ])
+    disp(['File not found:' filename ])
     data=[];
     return;
 end
@@ -17,6 +20,8 @@ if fileID == -1
 end
 
 
+
+
 Line=1;
 tline = cell(1,20); % Initial header size guess
 while ~feof(fileID) % Get header
@@ -26,6 +31,7 @@ while ~feof(fileID) % Get header
         break;
     elseif contains(tline{Line},'Binary:') % Find Binary data: line
         disp('Binary data!') %
+        disp('Binary data!') %
         fclose(fileID);
         data=[];
         return;
@@ -34,6 +40,8 @@ while ~feof(fileID) % Get header
 end
 % 
 fclose(fileID);
+
+% data.dataArray=dataArray;
 % toc
 %% Read header
 
@@ -93,10 +101,22 @@ end
 %     data = rawltspice(simoprawfile); % Read data
 
 %% Gets variables name
+nv=1;
+vars=cell(1,data.nvars); % reserve space
+
+for Line=vline:9+data.nvars % Why 9?
+    vars{nv}=strsplit(strtrim(tline{Line}),char(9));
+    U = matlab.lang.makeValidName(char(vars{nv}(2)),'ReplacementStyle','delete');
+    data.signals(nv).label=char(U);
+    data.signals(nv).type=char(vars{nv}(3));
+    data.signals(nv).ID=str2double(char(vars{nv}(1)));
+    nv=nv+1;
+end
+% 
 % nv=1;
 % vars=cell(1,data.nvars); % reserve space
-% 
-% for Line=vline:9+data.nvars % Why 9?
+% vline=11; % Ajuste ???
+% for Line=vline:10+data.nvars % Why 9?
 %     vars{nv}=strsplit(strtrim(tline{Line}),char(9));
 %     U = matlab.lang.makeValidName(char(vars{nv}(2)),'ReplacementStyle','delete');
 %     data.signals(nv).label=char(U);
@@ -105,23 +125,11 @@ end
 %     nv=nv+1;
 % end
 
-nv=1;
-vars=cell(1,data.nvars); % reserve space
-vline=11; % Ajuste ???
-for Line=vline:10+data.nvars % Why 9?
-    vars{nv}=strsplit(strtrim(tline{Line}),char(9));
-    U = matlab.lang.makeValidName(char(vars{nv}(2)),'ReplacementStyle','delete');
-    data.signals(nv).label=char(U);
-    data.signals(nv).type=char(vars{nv}(3));
-    data.signals(nv).ID=str2double(char(vars{nv}(1)));
-    nv=nv+1;
-end
-
 %% Delete data file
-delete(filename) % Deleta arquivo de dados
+% delete(filename) % Deleta arquivo de dados
 
 
 
-
+fprintf('finished extracting LTspice ASCII results after %d seconds.\n',toc(tstart));
 
 
