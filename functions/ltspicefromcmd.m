@@ -2,13 +2,11 @@
 % Run LTspice simulation from cmd
 function  circuit = ltspicefromcmd(circuit)
 
-paramstr='.param';
+paramstr='.param'; % Generates the param string
 for ind=1:length(circuit.parname)
     paramstr=[paramstr ' ' circuit.parname{ind} '=' num2str(circuit.parvalue(ind),'%10.8e')];
 end
-% circuit.LTspice.net.paramstr=paramstr;
-
-circuit.LTspice.net.lines{circuit.LTspice.net.paramline}=paramstr;
+circuit.LTspice.net.lines{circuit.LTspice.net.paramline}=paramstr; % Updates param line from net file
 
 if(circuit.LTspice.tmpdir)  % Use system temp dir?
    circuit.LTspice.simsdir = tempdir;    
@@ -45,10 +43,10 @@ circuit.LTspice.log.file = [circuit.LTspice.simsdir tmpname '.log'];
 circuit.LTspice.raw.file = [circuit.LTspice.simsdir tmpname '.raw'];
 
 
-% circuit.LTspice.raw.data = rawltspice(circuit.LTspice.raw.file); % Read data
+circuit.LTspice.raw.data = rawltspice(circuit.LTspice.raw.file); % Read data
 
 
-
+% circuit.LTspice.raw.data.signals.op
 
 
 
