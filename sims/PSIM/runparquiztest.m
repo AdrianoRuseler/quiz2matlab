@@ -39,7 +39,7 @@ X=Xi(:,nq);
 for c=1:length(X)
     tmpcircuits{c}=circuit;
     tmpcircuits{c}.parvalue=X(:,c); % Variables values
-    tmpcircuits{c}.parstr = param2str(tmpcircuits{c}.parvalue,tmpcircuits{c}.parname,tmpcircuits{c}.parunit);
+    tmpcircuits{c}.parstr = param2str(tmpcircuits{c});
 end
 %%   Runs simulation OK!
 [~,y]=size(X);
