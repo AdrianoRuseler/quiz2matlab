@@ -5,7 +5,7 @@ function [circuit] = ltasc2net(circuit)
 circuit.LTspice.ascfile = [circuit.LTspice.simsdir '\' circuit.LTspice.name '.asc']; % Sim base file
 
 if ~exist(circuit.LTspice.ascfile,'file') % Caso arquivo não exista
-    disp(['Arquivo não encontrado: ' circuit.LTspice.ascfile])
+    disp(['File not found: ' circuit.LTspice.ascfile])
     return;
 end
 
