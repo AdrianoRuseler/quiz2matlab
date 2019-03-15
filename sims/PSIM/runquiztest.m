@@ -2,8 +2,8 @@ clear all
 clc
 
 % Sets simulation dir
-% quiz2matlabdir='F:\Dropbox\GitHub\quiz2matlab'; % Home
-quiz2matlabdir='A:\Dropbox\GitHub\quiz2matlab'; % UTFPR
+quiz2matlabdir='F:\Dropbox\GitHub\quiz2matlab'; % Home
+% quiz2matlabdir='A:\Dropbox\GitHub\quiz2matlab'; % UTFPR
 
 quiz2matlabsdir=[quiz2matlabdir '\sims'];
 quiz2matlabspdir=[quiz2matlabsdir '\PSIM'];
@@ -12,7 +12,7 @@ quiz2matlabspdir=[quiz2matlabsdir '\PSIM'];
 circuit.parname={'Vi','R1','R2'}; % Variables names
 circuit.parvalue=[10 1e3 1e3]; % Variables values
 circuit.parunit={' V','&Omega;','&Omega;'}; % Variables unit
-circuit.parstr = param2str(circuit.parvalue,circuit.parname,circuit.parunit);
+circuit.parstr = param2str(circuit);
 circuit.PSIMCMD.name = 'quiztest'; % File name
 circuit.PSIMCMD.simsdir=quiz2matlabspdir; % PSIM file dir
 circuit.PSIMCMD.tmpfile=1; % Create tmp file?
@@ -27,6 +27,8 @@ circuit.PSIMCMD.printstep=1; %Print step (default = 1). If the print step is set
 % If it is 10, only one out of 10 data points will be saved. This helps to reduce the size of the output file. 
 
 % Runs simulation
+
+circuit = getpsimnet(circuit); % Reads or generates net file from psim
 
 
 circuit = psimfromcmd(circuit); % Simula via CMD
