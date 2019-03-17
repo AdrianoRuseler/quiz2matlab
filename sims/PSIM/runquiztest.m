@@ -29,7 +29,7 @@ circuit.PSIMCMD.printstep=1; %Print step (default = 1). If the print step is set
 % Runs simulation
 
 circuit = getpsimnet(circuit); % Reads or generates net file from psim
-
+circuit.PSIMCMD.net.run = 1;
 
 circuit = psimfromcmd(circuit); % Simula via CMD
 

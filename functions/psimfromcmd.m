@@ -67,13 +67,19 @@ if(circuit.PSIMCMD.tmpdir)  % Use system temp dir?
    circuit.PSIMCMD.simsdir = tempdir;    
 end
 
-if(circuit.PSIMCMD.tmpfile) % Create tmp file for simulation?
-    tmpname=[circuit.PSIMCMD.name strrep(char(java.util.UUID.randomUUID),'-','')];
-    circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir '\' tmpname '.psimsch'];
-    copyfile(simfilebase,circuit.PSIMCMD.infile) % Copia arquivo
+
+tmpname=[circuit.PSIMCMD.name strrep(char(java.util.UUID.randomUUID),'-','')];
+if(circuit.PSIMCMD.net.run) % run net file
+    circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir '\' tmpname '.cct'];
+    copyfile(circuit.PSIMCMD.net.file,circuit.PSIMCMD.infile)
 else
-    tmpname = circuit.PSIMCMD.name;
-    circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir '\' tmpname '.psimsch'];
+    if(circuit.PSIMCMD.tmpfile) % Create tmp file for simulation?        
+        circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir '\' tmpname '.psimsch'];
+        copyfile(simfilebase,circuit.PSIMCMD.infile) % Copia arquivo
+    else
+        tmpname = circuit.PSIMCMD.name;
+        circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir '\' tmpname '.psimsch'];
+    end
 end
 
 circuit.PSIMCMD.outfile = [circuit.PSIMCMD.simsdir '\' tmpname '.txt'];

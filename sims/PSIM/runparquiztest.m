@@ -25,6 +25,9 @@ circuit.PSIMCMD.printtime=0; %Time from which simulation results are saved to th
 circuit.PSIMCMD.printstep=1; %Print step (default = 1). If the print step is set to 1, every data point will be saved to the output file. 
 % If it is 10, only one out of 10 data points will be saved. This helps to reduce the size of the output file. 
 
+circuit = getpsimnet(circuit); % Reads or generates net file from psim
+circuit.PSIMCMD.net.run = 1;
+
 %% parameters input
 Vi=5:5:30; 
 R1 = combres(1,[100],'E12'); %
