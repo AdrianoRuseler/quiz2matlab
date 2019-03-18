@@ -180,5 +180,5 @@ end
 xmlwrite([quizstruct.name '.xml'],docNode);
 
 
-
+winopen(pwd)
 
