@@ -65,7 +65,7 @@ Rs=multiplier.*E'; % Generate all resistors combination
 if Value>=10 % Just integer numbers in find function
     [eind,mind] = find(Rs==Value);   
 else
-    [eind,mind] = find(Rs==Value*100);
+    [eind,mind] = find(Rs==round(Value*100));
     mind=mind-2; 
 end
 

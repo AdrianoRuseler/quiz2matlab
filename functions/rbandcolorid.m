@@ -68,13 +68,13 @@ end
  multiplier=[0.01 0.1 1 10 100 1e3 10e3 100e3 1e6 10e6 100e6 1e9];
  torelancia=[0.05 0.1 0.25 0.5 1 2 5 10 20]; % Tolerance in percentage
 
-Rs=multiplier.*E'; % Generate all resistors combination
+Rs=multiplier.*E'; % Generate all series resistors combination
 
 
 if Value>=10 % Just integer numbers in find function
     [eind,mind] = find(Rs==Value);   
 else
-    [eind,mind] = find(Rs==Value*100);
+    [eind,mind] = find(Rs==round(Value*100));
     mind=mind-2; 
 end
 
@@ -83,7 +83,7 @@ if isempty(eind) % Resistor not found
     quiz=[];
     valuestr='';
     colornamestr='';
-    disp('Resistor not found!!')
+    disp(['Resistor ' num2str(Value) ' not found!!'])
     return
 end
 
@@ -201,6 +201,10 @@ quiz.valorNUMERICAL = ['{1:NUMERICAL:~%100%' num2str(Value) ':' ceil(num2str(Val
  
  
 indp=find((escala-Value)>0);
+
+if isempty(indp)
+    indp=7;
+end
 
 
 strf5='{1:MULTICHOICE_S:';
