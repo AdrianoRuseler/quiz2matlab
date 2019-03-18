@@ -34,7 +34,7 @@ for n=1:length(Values)
     
     [~,quiz,valuestr,~] = rbandcolorid(Values(n),tol,EXX);
        
-    quizstruct.question.name{n}=[name ' genqs4rf(' valuestr ')'];
+    quizstruct.question.name{n}=[name ' genqs4rf(' strrep(valuestr,' ','') ')'];
     
     quizstruct.question.text{n}=['<p>Qual a sequência de cores do resistor de ' valuestr '?</p>' quiz.tableMULTICHOICE ];
     

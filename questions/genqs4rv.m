@@ -31,16 +31,19 @@ quizstruct.name = name;
 quizstruct.question.type = 'cloze';
 
 
-for n=1:length(Values)        
-    [band,quiz,valuestr,colornamestr] = rbandcolorid(Values(n),tol,EXX);  
-    [Yc,~] = printresistor(band,theme);
-    
-    quizstruct.question.name{n}=[name ' genqs4rv(' valuestr ')'];       
+for n=1:length(Values)
+    [band,quiz,valuestr,colornamestr] = rbandcolorid(Values(n),tol,EXX);
+    if isempty(band)
+        continue
+    else
+        [Yc,~] = printresistor(band,theme);
+    end
+    quizstruct.question.name{n}=[name ' genqs4rv(' strrep(valuestr,' ','') ')'];
     
     quizstruct.question.text{n}=['<p style="text-align: center;">Determine o valor da resistência do resistor apresentado na figura a seguir:<br></p><p style="text-align: center;"><img src="data:image/png;base64,' Yc...
-                '" alt="" width="325" height="59"></p> <p style="text-align: center;">(' colornamestr ')<br>'...
-                '</p> <p style="text-align: center;">Resposta: ' quiz.f123MULTICHOICE ' x ' quiz.mulMULTICHOICE ' ± ' quiz.tolMULTICHOICE '<br></p><p><br></p>'];
-            
+        '" alt="" width="325" height="59"></p> <p style="text-align: center;">(' colornamestr ')<br>'...
+        '</p> <p style="text-align: center;">Resposta: ' quiz.f123MULTICHOICE ' x ' quiz.mulMULTICHOICE ' ± ' quiz.tolMULTICHOICE '<br></p><p><br></p>'];
+    
     
     disp(quizstruct.question.name{n})
     quizstruct.question.generalfeedback{n}='';

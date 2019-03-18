@@ -33,8 +33,7 @@ quizstruct.question.type = 'cloze';
 for n=1:length(Values)    
     
     [~,quiz,valuestr,~] = rbandcolorid(Values(n),tol,EXX);
-       
-    quizstruct.question.name{n}=[name ' genqs4rm(' valuestr ')'];
+    quizstruct.question.name{n}=[name ' genqs4rm(' strrep(valuestr,' ','') ')'];
     
     quizstruct.question.text{n}=['<p>Qual a sequência de cores do resistor de ' valuestr '?</p>' quiz.tableMULTICHOICE ...
         '<br><p>Com um multímetro, meça o resistor de ' valuestr ' e preencha os campos abaixo:</p>'...
