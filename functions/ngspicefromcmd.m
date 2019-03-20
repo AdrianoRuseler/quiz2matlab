@@ -30,26 +30,28 @@ while fileID < 0 % Loop até conseguir abrir arquivo para escrita.
     [fileID,errmsg] = fopen(circuit.Ngspice.cir.file,'w');
 end
 
+% circuit.LTspice.log.file = [circuit.Ngspice.simsdir tmpname '.log'];
+circuit.Ngspice.raw.file = [circuit.Ngspice.simsdir tmpname '.raw'];
+
+
+circuit.Ngspice.cir.lines{circuit.Ngspice.cir.writeline}=['write ' circuit.Ngspice.raw.file circuit.Ngspice.cir.writevars]; % Updates write line from net file
+
+
 for l=1:length(circuit.Ngspice.cir.lines) % Write netfile content
     fprintf(fileID, '%s%c%c', circuit.Ngspice.cir.lines{l} ,13,10);   
 end
 
 fclose(fileID); % Close OK!
 
-% status = system(['XVIIx64.exe -Run -b -ascii ' circuit.LTspice.net.file]); % Executa simulação
-
-% circuit.LTspice.log.file = [circuit.Ngspice.simsdir tmpname '.log'];
-circuit.Ngspice.raw.file = [circuit.Ngspice.simsdir tmpname '.raw'];
-
 if ~exist(circuit.Ngspice.cir.file,'file') % Caso arquivo não exista
     disp(['File not found: ' circuit.Ngspice.cir.file])
     return;
 end
 
-
-[status,cmdout] = system(['ngspice_con ' circuit.Ngspice.cir.file ]); % Como silenciar o log?
+[status,cmdout] = system(['ngspice_con ' circuit.Ngspice.cir.file ]); %
 
 circuit.Ngspice.cir.status=status;
 circuit.Ngspice.cir.cmdout=cmdout;
 
+disp(circuit.Ngspice.cir.cmdout)
 % [header,variables,data] = rawspice6(circuit.Ngspice.raw.file);
