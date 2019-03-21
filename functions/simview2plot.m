@@ -67,8 +67,11 @@ for s=0:circuit.PSIMCMD.simview.main.numscreen-1
         colorstr = dec2hex(color,6); % Convert color to hex BGR
         colorstr2=[colorstr(5:6) colorstr(3:4) colorstr(1:2)]; % Put in order RGB
         rgb = reshape(sscanf(colorstr2.','%2x'),3,[]).'/255; % https://www.mathworks.com/matlabcentral/fileexchange/46289-rgb2hex-and-hex2rgb
+        
+        symbol = eval(['circuit.PSIMCMD.simview.screen' num2str(s) '.curve' num2str(c) '.symbol']); % Get symbol data
+        Markers={'none','o','s','^','*'}; % 
 
-        plot(haxes,xdata,ydata,'LineWidth',thickness,'Color',rgb) %% Plot data
+        plot(haxes,xdata,ydata,'LineWidth',thickness,'Color',rgb,'Marker',Markers{symbol+1}) %% Plot data
         
         ymax = eval(['circuit.PSIMCMD.simview.screen' num2str(s) '.curve' num2str(c) '.ymax']);
         ymin = eval(['circuit.PSIMCMD.simview.screen' num2str(s) '.curve' num2str(c) '.ymin']);
