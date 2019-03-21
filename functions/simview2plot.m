@@ -38,18 +38,16 @@ end
 %% All data must be available here:
 
 if ~isfield(circuit.PSIMCMD,'simview')
-    disp('Sem dados de simulação!')
+    disp('No simview data field!')
     status=1;
     return
 elseif isempty(circuit.PSIMCMD.simview)
-    disp('Sem dados de simulação!')
+    disp('No data in simview filed!')
     status=1;
     return
 end
     
 circuit.PSIMCMD.simview.main.hfig=figure; % Create fig handle
-% title(['RA: ' num2str(conv.RA)])
-
 xdata=circuit.PSIMCMD.simview.main.xdata*1e3;
 
 for s=0:circuit.PSIMCMD.simview.main.numscreen-1
@@ -62,7 +60,21 @@ for s=0:circuit.PSIMCMD.simview.main.numscreen-1
         %         disp('Plots!!')
         ydata = eval(['circuit.PSIMCMD.simview.screen' num2str(s) '.curve' num2str(c) '.data']);
         legString{c+1} = eval(['circuit.PSIMCMD.simview.screen' num2str(s) '.curve' num2str(c) '.label']);
-        plot(haxes,xdata,ydata)
+        
+        thickness = eval(['circuit.PSIMCMD.simview.screen' num2str(s) '.curve' num2str(c) '.thickness']);
+        
+        color = eval(['circuit.PSIMCMD.simview.screen' num2str(s) '.curve' num2str(c) '.color']); % Get curve color       
+        colorstr = dec2hex(color,6); % Convert color to hex BGR
+        colorstr2=[colorstr(5:6) colorstr(3:4) colorstr(1:2)]; % Put in order RGB
+        rgb = reshape(sscanf(colorstr2.','%2x'),3,[]).'/255; % https://www.mathworks.com/matlabcentral/fileexchange/46289-rgb2hex-and-hex2rgb
+
+        plot(haxes,xdata,ydata,'LineWidth',thickness,'Color',rgb) %% Plot data
+        
+        ymax = eval(['circuit.PSIMCMD.simview.screen' num2str(s) '.curve' num2str(c) '.ymax']);
+        ymin = eval(['circuit.PSIMCMD.simview.screen' num2str(s) '.curve' num2str(c) '.ymin']);
+        ylim([ymin ymax]) % Set y limits         
+       
+        
     end
     %     axis tight
     %     xlim(haxes,[conv.PSIMCMD.printtime conv.PSIMCMD.totaltime]*1e3); % Aqui está o problema
@@ -70,7 +82,7 @@ for s=0:circuit.PSIMCMD.simview.main.numscreen-1
     legend(haxes,legString,'Interpreter','latex');
     if ~s==circuit.PSIMCMD.simview.main.numscreen-1
         set(haxes,'XTickLabel',[])
-%         title(['RA: ' num2str(circuit.RA)],'Interpreter','latex')
+        %         title(['RA: ' num2str(circuit.RA)],'Interpreter','latex')
     end
 end
 
@@ -90,15 +102,14 @@ xlabel('Tempo (ms)','Interpreter','latex')
  
 %  print(circuit.PSIMCMD.simview.main.hfig,[circuit.latex.figsdir '\' circuit.tipo circuit.prefixname],'-depsc') % Exporta figura no formato .eps
 
-print(circuit.PSIMCMD.simview.main.hfig,[circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.data.blockName '.png'],'-dpng')      
+print(circuit.PSIMCMD.simview.main.hfig,[circuit.PSIMCMD.simsdir circuit.PSIMCMD.data.blockName '.png'],'-dpng')      
 
-imgin=[circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.data.blockName '.png'];
-imgout=[circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.data.blockName '_clean.png'];
+imgin=[circuit.PSIMCMD.simsdir circuit.PSIMCMD.data.blockName '.png'];
+imgout=[circuit.PSIMCMD.simsdir circuit.PSIMCMD.data.blockName '_clean.png'];
 pngchangewhite(imgin,imgout,'clean')
 
-imgout=[circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.data.blockName '_boost.png'];
+imgout=[circuit.PSIMCMD.simsdir circuit.PSIMCMD.data.blockName '_boost.png'];
 pngchangewhite(imgin,imgout,'boost')
 
-
-
+winopen(circuit.PSIMCMD.simsdir)
 %  print('PlotTest.png','-dpng')
