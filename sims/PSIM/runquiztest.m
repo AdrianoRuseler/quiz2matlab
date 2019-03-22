@@ -6,7 +6,7 @@ quiz2matlabdir='F:\Dropbox\GitHub\quiz2matlab'; % Home
 % quiz2matlabdir='A:\Dropbox\GitHub\quiz2matlab'; % UTFPR
 
 quiz2matlabsdir=[quiz2matlabdir '\sims'];
-quiz2matlabspdir=[quiz2matlabsdir '\PSIM'];
+quiz2matlabspdir=[quiz2matlabsdir '\PSIM\'];
 
 % Config simulation
 circuit.parname={'Vi','R1','R2'}; % Variables names
