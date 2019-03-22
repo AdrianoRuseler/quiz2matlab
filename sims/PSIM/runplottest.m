@@ -4,7 +4,7 @@ quiz2matlabdir='F:\Dropbox\GitHub\quiz2matlab'; % Home
 % quiz2matlabdir='A:\Dropbox\GitHub\quiz2matlab'; % UTFPR
 
 quiz2matlabsdir=[quiz2matlabdir '\sims'];
-quiz2matlabspdir=[quiz2matlabsdir '\PSIM'];
+quiz2matlabspdir=[quiz2matlabsdir '\PSIM\'];
 
 % Config simulation
 circuit.parname={'Vi','fi','R1','R2'}; % Variables names
@@ -12,7 +12,10 @@ circuit.parvalue=[10 100 1e3 1e3]; % Variables values
 circuit.PSIMCMD.name = 'plottest'; % File name
 circuit.PSIMCMD.simsdir=quiz2matlabspdir; % PSIM file dir
 circuit.PSIMCMD.tmpfile=1; % Create tmp file?
+circuit.PSIMCMD.tmpdir=1; % Use system temp dir?
 circuit.PSIMCMD.tmpfiledel=1; % Delete tmp files?
+circuit.PSIMCMD.net.run = 0;
+% circuit = getpsimnet(circuit); % Reads or generates net file from psim
 
 % Simulação 
 circuit.PSIMCMD.totaltime=0.01; % Total simulation time, in sec.
@@ -33,3 +36,6 @@ circuit = psimfromcmd(circuit); % Simula via CMD
 circuit = simview2matlab(circuit); % Importa dados do simview
 circuit = simview2data(circuit); % Gera dados para o plot
 status = simview2plot(circuit); % Plots simview
+
+        
+        
