@@ -26,11 +26,9 @@
 
 function [circuit]=psimXmultichoice(circuit)
 
-% Ru - Vetor numérico com respostas
-% RuCerta - Indice com a resposta correta
-% unidade  - unidade da resposta, ex V, A Ohms...
 % Tipo:
 %
+% NUMERICAL
 % MULTICHOICE
 % MULTICHOICE_H
 % MULTICHOICE_V
@@ -42,62 +40,86 @@ labels={circuit.PSIMCMD.data.signals.label}; % Data variables
 
 for q=1:length(circuit.quiz.question)
     
-    switch circuit.quiz.question{q}.choicetype
+    switch circuit.quiz.question{q}.type
+        case 'NUMERICAL'
+            multicell='{1:NUMERICAL:';
+            isnumerical=1;
         case 'MULTICHOICE'
             multicell='{1:MULTICHOICE:';
+            isnumerical=0;
         case 'MULTICHOICE_H'
             multicell='{1:MULTICHOICE_H:';
+            isnumerical=0;
         case 'MULTICHOICE_V'
             multicell='{1:MULTICHOICE_V:';
+            isnumerical=0;
         case 'MULTICHOICE_S'
             multicell='{1:MULTICHOICE_S:';
+            isnumerical=0;
         case 'MULTICHOICE_HS'
             multicell='{1:MULTICHOICE_HS:';
+            isnumerical=0;
         case 'MULTICHOICE_VS'
             multicell='{1:MULTICHOICE_VS:';
+            isnumerical=0;
         otherwise
             multicell='{1:MULTICHOICE_S:';
+            isnumerical=0;
             %   MULTICHOICE
     end
     
     lopts=length(circuit.quiz.question{q}.options); % Number of options per question
-    for o=1:lopts
+    for o=1:lopts % Get option value
         optind=find(contains(labels,circuit.quiz.question{q}.options{o},'IgnoreCase',true));
-        circuit.quiz.question{q}.labelsind(o) = optind(1);        
-        circuit.quiz.question{q}.values(o)=[circuit.PSIMCMD.data.signals(circuit.quiz.question{q}.labelsind(o)).mean];
-    end
-    
-    [optscoresort,optscoreind] = sort(circuit.quiz.question{q}.optscore,'descend');
-    circuit.quiz.question{q}.optscore = optscoresort;
-    circuit.quiz.question{q}.values = circuit.quiz.question{q}.values(optscoreind);
-    circuit.quiz.question{q}.units = circuit.quiz.question{q}.units(optscoreind);
-    
-    %  circuit.quiz.question{q}.values % Are unique?? % Changes all 
-    tempres1=round(circuit.quiz.question{q}.values*1000,3,'significant');
-    if ~isequal(length(unique(tempres1)),length(tempres1)) % Options are not unique
-        for o=1:lopts
-            if(circuit.quiz.question{q}.optscore(o))% Scored option - dont change it!                
-                
-            else % Option can be changed - no score
-                tempopts= unique([circuit.quiz.question{q}.values(o) circuit.quiz.question{q}.values(o).*[(rand(1,lopts)) (1+rand(1,lopts))]]);
-                circuit.quiz.question{q}.values(o)= tempopts(randperm(length(tempopts),1));
-            end
-        end % Loop
-    end
-    
-    
-    for o=1:lopts
-        if(circuit.quiz.question{q}.optscore(o))
-            multicell = strcat(multicell,['~%' num2str(circuit.quiz.question{q}.optscore(o)) '%' strrep(num2eng(circuit.quiz.question{q}.values(o),1),'.',',') circuit.quiz.question{q}.units{o}]);
-        else
-            multicell = strcat(multicell,['~' strrep(num2eng(circuit.quiz.question{q}.values(o),1),'.',',') circuit.quiz.question{q}.units{o}]);
+        if ~isempty(optind) % Label found
+            circuit.quiz.question{q}.labelsind(o) = optind(1);
+            circuit.quiz.question{q}.values(o)=[circuit.PSIMCMD.data.signals(circuit.quiz.question{q}.labelsind(o)).mean];
         end
     end
-    
-    
-    multicell = strcat(multicell,'}');
-    multicell = strrep(multicell,'u','&mu;'); % Substitui u por micro;
-    
+        
+    if isnumerical % NUMERICAL       
+        for o=1:lopts % get option value
+            tempstr=[num2str(circuit.quiz.question{q}.values(o)) ':' num2str(circuit.quiz.question{q}.values(o)*circuit.quiz.question{q}.opttol(o)/100)];
+            if(circuit.quiz.question{q}.optscore(o))
+                multicell = strcat(multicell,['~%' num2str(circuit.quiz.question{q}.optscore(o)) '%' tempstr ]);
+            else
+                multicell = strcat(multicell,['~' tempstr]);
+            end
+            
+        end        
+        multicell = strcat(multicell,'}');        
+    else  %   MULTICHOICE       
+        [optscoresort,optscoreind] = sort(circuit.quiz.question{q}.optscore,'descend');
+        circuit.quiz.question{q}.optscore = optscoresort;
+        circuit.quiz.question{q}.values = circuit.quiz.question{q}.values(optscoreind);
+        circuit.quiz.question{q}.units = circuit.quiz.question{q}.units(optscoreind);
+        
+        %  circuit.quiz.question{q}.values % Are unique?? % Changes all
+        tempres1=round(circuit.quiz.question{q}.values*1000,3,'significant');
+        if ~isequal(length(unique(tempres1)),length(tempres1)) % Options are not unique
+            for o=1:lopts
+                if(circuit.quiz.question{q}.optscore(o))% Scored option - dont change it!
+                    
+                else % Option can be changed - no score
+                    tempopts= unique([circuit.quiz.question{q}.values(o) circuit.quiz.question{q}.values(o).*[(rand(1,lopts)) (1+rand(1,lopts))]]);
+                    circuit.quiz.question{q}.values(o)= tempopts(randperm(length(tempopts),1));
+                end
+            end % Loop
+        end
+        
+        
+        for o=1:lopts
+            if(circuit.quiz.question{q}.optscore(o))
+                multicell = strcat(multicell,['~%' num2str(circuit.quiz.question{q}.optscore(o)) '%' strrep(num2eng(circuit.quiz.question{q}.values(o),1),'.',',') circuit.quiz.question{q}.units{o}]);
+            else
+                multicell = strcat(multicell,['~' strrep(num2eng(circuit.quiz.question{q}.values(o),1),'.',',') circuit.quiz.question{q}.units{o}]);
+            end
+        end
+        
+        multicell = strcat(multicell,'}');
+        multicell = strrep(multicell,'u','&mu;'); % Substitui u por micro;
+        
+    end
     circuit.quiz.question{q}.choicestr=multicell;
 end
 
