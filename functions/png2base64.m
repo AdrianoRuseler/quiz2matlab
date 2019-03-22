@@ -27,7 +27,7 @@ function pngfigstr=png2base64(pngfile)
 
 fileID = fopen(pngfile);
 if fileID == -1
-    disp('Falhou ao abrir o arquivo!')
+    disp(['Failed to open file: ' pngfile])
     pngfigstr='';
     return
 else
