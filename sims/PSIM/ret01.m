@@ -2,8 +2,8 @@ clear all
 clc
 
 % Sets simulation dir
-quiz2matlabdir='F:\Dropbox\GitHub\quiz2matlab'; % Home
-% quiz2matlabdir='A:\Dropbox\GitHub\quiz2matlab'; % UTFPR
+% quiz2matlabdir='F:\Dropbox\GitHub\quiz2matlab'; % Home
+quiz2matlabdir='A:\Dropbox\GitHub\quiz2matlab'; % UTFPR
 
 quiz2matlabsdir=[quiz2matlabdir '\sims'];
 quiz2matlabspdir=[quiz2matlabsdir '\PSIM\'];
@@ -27,7 +27,7 @@ circuit = getpsimnet(circuit); % Generates net file from psim
 
 %% Parameters setup
 
-circuit.parvalue=[10 150 0 0 15]; % Variables values
+circuit.parvalue=[10 150 0 0 1500]; % Variables values
 nper=1; % Number of periods
 circuit.PSIMCMD.totaltime=nper/circuit.parvalue(2); % Total simulation time, in sec.
 
@@ -46,10 +46,28 @@ circuit.quiz.fightml = psimfigstr(pngfile,'left',figlegendastr); % html code for
 
 circuit.quiz.question{1}.str='Qual a potência ativa na carga?';
 circuit.quiz.question{1}.units={'W'}; % 
+circuit.quiz.question{1}.vartype={'mean'}; % Not implemented
 circuit.quiz.question{1}.options={'p0'}; % Variables from PSIM simulation
 circuit.quiz.question{1}.optscore=[100]; % Score per option
 circuit.quiz.question{1}.opttol=[10]; % tolerance in percentage %
 circuit.quiz.question{1}.type='NUMERICAL';
+
+circuit.quiz.question{2}.str='Qual a potência ativa na carga?';
+circuit.quiz.question{2}.units={'W'}; % 
+circuit.quiz.question{2}.vartype={'mean'}; % Not implemented
+circuit.quiz.question{2}.options={'p0'}; % Variables from PSIM simulation
+circuit.quiz.question{2}.optscore=[100]; % Score per option
+circuit.quiz.question{2}.opttol=[10]; % tolerance in percentage %
+circuit.quiz.question{2}.type='NUMERICAL';
+
+
+circuit.quiz.question{3}.str='Qual a corrente na fonte?';
+circuit.quiz.question{3}.units={'A','V','V','W'};
+circuit.quiz.question{3}.vartype={'mean','mean','rms','mean'}; % Not implemented
+circuit.quiz.question{3}.options={'I0','V0','Vi','p0'};
+circuit.quiz.question{3}.optscore=[100 0 0 0]; % Score per option
+circuit.quiz.question{3}.type='MULTICHOICE_S';
+
 
 circuit = psimXmultichoice(circuit); % Generate multichoice
 circuit = quiztextgen(circuit); % Generates quiz text field
@@ -82,5 +100,12 @@ cloze2moodle(quizstruct) % Generates xml file
 circuit = simview2matlab(circuit); % Importa dados do simview
 circuit = simview2data(circuit); % Gera dados para o plot
 circuit = simview2plot(circuit); % Plots simview
+
+
+%% teste
+
+% 
+% [str, numstr, expstr, mantissa, exponent] = real2eng(16.568974e-6,'A');
+% str=real2eng(16.568974e-6,'A');
 
 
