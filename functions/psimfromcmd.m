@@ -60,8 +60,8 @@ for ind=1:length(circuit.parname)
 end
 circuit.PSIMCMD.extracmd = varstrcmd;
 
-simfilebase = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.psimsch']; % Sim base file
-circuit.PSIMCMD.inifile = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.ini']; % Arquivo ini simview
+simfilebase = [circuit.PSIMCMD.simsdir circuit.PSIMCMD.name '.psimsch']; % Sim base file
+circuit.PSIMCMD.inifile = [circuit.PSIMCMD.simsdir circuit.PSIMCMD.name '.ini']; % Arquivo ini simview
 
 if(circuit.PSIMCMD.tmpdir)  % Use system temp dir?
    circuit.PSIMCMD.simsdir = tempdir;    
@@ -70,20 +70,22 @@ end
 
 tmpname=[circuit.PSIMCMD.name strrep(char(java.util.UUID.randomUUID),'-','')];
 if(circuit.PSIMCMD.net.run) % run net file
-    circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir '\' tmpname '.cct'];
+    circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir tmpname '.cct'];
     copyfile(circuit.PSIMCMD.net.file,circuit.PSIMCMD.infile)
 else
     if(circuit.PSIMCMD.tmpfile) % Create tmp file for simulation?        
-        circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir '\' tmpname '.psimsch'];
+        circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir tmpname '.psimsch'];
         copyfile(simfilebase,circuit.PSIMCMD.infile) % Copia arquivo
     else
         tmpname = circuit.PSIMCMD.name;
-        circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir '\' tmpname '.psimsch'];
+        circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir tmpname '.psimsch'];
     end
 end
 
-circuit.PSIMCMD.outfile = [circuit.PSIMCMD.simsdir '\' tmpname '.txt'];
-circuit.PSIMCMD.msgfile = [circuit.PSIMCMD.simsdir '\' tmpname '_msg.txt'];
+circuit.PSIMCMD.outfile = [circuit.PSIMCMD.simsdir tmpname '.txt'];
+circuit.PSIMCMD.msgfile = [circuit.PSIMCMD.simsdir tmpname 'msg.txt'];
+
+
 
 % Cria string de comando
 infile = ['"' circuit.PSIMCMD.infile '"'];
@@ -98,12 +100,12 @@ PsimCmdsrt= ['-i ' infile ' -o ' outfile ' -m ' msgfile ' -t ' totaltime ' -s ' 
 
 tic
 disp(PsimCmdsrt)
-disp('Simulating...')
+disp(['Simulating ' circuit.PSIMCMD.infile ' file....     Wait!'])
 [status,cmdout] = system(['PsimCmd ' PsimCmdsrt]); % Executa simulação
 
 circuit.PSIMCMD.status=status; % If 0, is OK! else, some problem
-
 circuit.PSIMCMD.simtime=toc; % Tempo total de simulação
+
 disp(cmdout)
 circuit.PSIMCMD.cmdout=cmdout;
 
@@ -131,7 +133,7 @@ end
 M = cell2mat(textscan(fileID,fstr));
 fclose(fileID);
 
-disp('Done!')
+% disp('Done!')
 % Convert data
 
 disp('Converting to simulink struct data ....')
@@ -141,18 +143,18 @@ circuit.PSIMCMD.data.Ts=M(2,1)-M(1,1); % Time step
 
 % Verifies header name
 for i=2:length(header)
-    if verLessThan('matlab', '8.2.0')
-        U = genvarname(header{i});
-        modified=1; % Just force update
-    else
-        [U, modified] = matlab.lang.makeValidName(header{i},'ReplacementStyle','delete');
-    end
+    %     if verLessThan('matlab', '8.2.0')
+    %         U = genvarname(header{i});
+    %         modified=1; % Just force update
+    %     else
+    [U, modified] = matlab.lang.makeValidName(header{i},'ReplacementStyle','delete');
+    %     end
     if modified
         disp(['Name ' header{i} ' modified to ' U ' (MATLAB valid name for variables)!!'])
     end
     circuit.PSIMCMD.data.signals(i-1).label=U;
     circuit.PSIMCMD.data.signals(i-1).values=M(:,i);
-    circuit.PSIMCMD.data.signals(i-1).mean=mean(M(:,i)); 
+    circuit.PSIMCMD.data.signals(i-1).mean=mean(M(:,i));
     circuit.PSIMCMD.data.signals(i-1).rms=rms(M(:,i));
     circuit.PSIMCMD.data.signals(i-1).dimensions=1;
     circuit.PSIMCMD.data.signals(i-1).title=U;
@@ -163,7 +165,7 @@ circuit.PSIMCMD.data.blockName=tmpname;
 circuit.PSIMCMD.data.PSIMheader=header; % For non valid variables
 circuit.PSIMCMD.datareadtime=toc; % Tempo total de simulação
 
-disp('Done!!!!')
+% disp('Done!!!!')
 
 disp('Deleting files...')
 if(circuit.PSIMCMD.tmpfiledel)
