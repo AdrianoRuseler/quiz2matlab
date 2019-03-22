@@ -25,13 +25,13 @@
 % =========================================================================
 % TODO: Ajustar limites xlime ylim
 
-function [status]=simview2plot(circuit)
+function [circuit]=simview2plot(circuit)
 
-status=0; % We have to return something
+% status=0; % We have to return something
 
 if nargin <1 % input file not supplied
     % Try to Load SCOPEdata structure
-    status =1;
+%     status =1;
     return
 end
 
@@ -39,11 +39,11 @@ end
 
 if ~isfield(circuit.PSIMCMD,'simview')
     disp('No simview data field!')
-    status=1;
+%     status=1;
     return
 elseif isempty(circuit.PSIMCMD.simview)
     disp('No data in simview filed!')
-    status=1;
+%     status=1;
     return
 end
     
@@ -75,8 +75,7 @@ for s=0:circuit.PSIMCMD.simview.main.numscreen-1
         
         ymax = eval(['circuit.PSIMCMD.simview.screen' num2str(s) '.curve' num2str(c) '.ymax']);
         ymin = eval(['circuit.PSIMCMD.simview.screen' num2str(s) '.curve' num2str(c) '.ymin']);
-        ylim([ymin ymax]) % Set y limits         
-       
+        ylim([ymin ymax]) % Set y limits                
         
     end
     %     axis tight
@@ -104,15 +103,22 @@ xlabel('Tempo (ms)','Interpreter','latex')
  
  
 %  print(circuit.PSIMCMD.simview.main.hfig,[circuit.latex.figsdir '\' circuit.tipo circuit.prefixname],'-depsc') % Exporta figura no formato .eps
-
-print(circuit.PSIMCMD.simview.main.hfig,[circuit.PSIMCMD.simsdir circuit.PSIMCMD.data.blockName '.png'],'-dpng')      
-
 imgin=[circuit.PSIMCMD.simsdir circuit.PSIMCMD.data.blockName '.png'];
+
+print(circuit.PSIMCMD.simview.main.hfig,imgin,'-dpng')    
+
+circuit.PSIMCMD.simview.figs.pngfigstr=png2base64(imgin);
+
+
 imgout=[circuit.PSIMCMD.simsdir circuit.PSIMCMD.data.blockName '_clean.png'];
 pngchangewhite(imgin,imgout,'clean')
+circuit.PSIMCMD.simview.figs.pngfigstrclean=png2base64(imgout);
+delete(imgout)
 
 imgout=[circuit.PSIMCMD.simsdir circuit.PSIMCMD.data.blockName '_boost.png'];
 pngchangewhite(imgin,imgout,'boost')
+circuit.PSIMCMD.simview.figs.pngfigstrboost=png2base64(imgout);
+delete(imgout)
 
 winopen(circuit.PSIMCMD.simsdir)
 %  print('PlotTest.png','-dpng')
