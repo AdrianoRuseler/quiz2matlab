@@ -22,9 +22,10 @@ expHTML = {' y',' z', ' a', ' f', ' p', ' n', ' &micro;', ' m', ' ', ' k', ' M',
 if isinf(exponent) % If is inf!
     expstr=[' ' unitstr];
     numstr = '0';
+    mantissa = 0;
 else
     expstr= [expHTML{exponent/3 +9} unitstr];
-    numstr = strrep(sprintf('%3.3f',mantissa),'.',',');
+    numstr = strrep(num2str(mantissa),'.',',');
 end
 
 
