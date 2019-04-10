@@ -33,9 +33,7 @@ end
 % circuit.LTspice.log.file = [circuit.Ngspice.simsdir tmpname '.log'];
 circuit.Ngspice.raw.file = [circuit.Ngspice.simsdir tmpname '.raw'];
 
-
 circuit.Ngspice.cir.lines{circuit.Ngspice.cir.writeline}=['write ' circuit.Ngspice.raw.file circuit.Ngspice.cir.writevars]; % Updates write line from net file
-
 
 for l=1:length(circuit.Ngspice.cir.lines) % Write netfile content
     fprintf(fileID, '%s%c%c', circuit.Ngspice.cir.lines{l} ,13,10);   
@@ -54,4 +52,22 @@ circuit.Ngspice.cir.status=status;
 circuit.Ngspice.cir.cmdout=cmdout;
 
 disp(circuit.Ngspice.cir.cmdout)
+
+
 % [header,variables,data] = rawspice6(circuit.Ngspice.raw.file);
+
+
+[data.header,variables,rawdata] = rawspice6(circuit.Ngspice.raw.file);
+circuit.Ngspice.raw.data=rawdata;
+
+
+for nv=1:length(variables)
+    vars{nv}=strsplit(strtrim(variables{nv}),char(9));
+    U = matlab.lang.makeValidName(char(vars{nv}(2)),'ReplacementStyle','delete');
+    data.signals(nv).label=char(U);
+    data.signals(nv).type=char(vars{nv}(3));
+    data.signals(nv).ID=str2double(char(vars{nv}(1)));
+    data.signals(nv).values = rawdata(nv);
+end
+
+circuit.Ngspice.data=data;
