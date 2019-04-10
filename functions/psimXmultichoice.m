@@ -91,7 +91,7 @@ for q=1:length(circuit.quiz.question)
     if isnumerical % NUMERICAL       
         for o=1:lopts % get option value
             [~,~, expstr, mantissa] = real2eng(circuit.quiz.question{q}.values(o),circuit.quiz.question{q}.units{o});
-            tempstr=[sprintf('%3.3f',mantissa) ':' sprintf('%3.3f',(mantissa/100))];  %  sprintf('%3.3f',mantissa)
+            tempstr=[sprintf('%3.3f',mantissa) ':' sprintf('%3.3f',(mantissa*circuit.quiz.question{q}.opttol(o)/100))];  %  sprintf('%3.3f',mantissa) 
             if(circuit.quiz.question{q}.optscore(o))
                 multicell = strcat(multicell,['~%' num2str(circuit.quiz.question{q}.optscore(o)) '%' tempstr ]);
             else
