@@ -67,13 +67,15 @@ circuit.Ngspice.cir.lines{17}= '* OP Let expressions, if any:';
 circuit.Ngspice.cir.lines{18}= 'let cp_R1.0 = I(VIPROBE00101)';
 circuit.Ngspice.cir.lines{19}= 'let cp_R2.0 = I(VIPROBE00102)';
 circuit.Ngspice.cir.lines{20}= 'let cp_D1.0 = I(VIPROBE00103)';
-circuit.Ngspice.cir.lines{21}= ['write ' circuit.Ngspice.cir.file '.raw Net1000 Net1001 cp_R1.0 cp_R2.0 cp_D1.0 I(V1)'];
-circuit.Ngspice.cir.writeline=21;
+circuit.Ngspice.cir.lines{21}= 'set filetype = ASCII';
+circuit.Ngspice.cir.lines{22}= ['write ' circuit.Ngspice.cir.file '.raw Net1000 Net1001 cp_R1.0 cp_R2.0 cp_D1.0 I(V1)'];
+circuit.Ngspice.cir.writeline=22;
 circuit.Ngspice.cir.writevars=' Net1000 Net1001 cp_R1.0 cp_R2.0 cp_D1.0 I(V1)';
-circuit.Ngspice.cir.lines{22}= 'set appendwrite true';
-circuit.Ngspice.cir.lines{23}= 'rusage everything';
-circuit.Ngspice.cir.lines{24}= '.endc';
-circuit.Ngspice.cir.lines{25}= '.end';
+circuit.Ngspice.cir.lines{23}= 'set appendwrite true';
+
+circuit.Ngspice.cir.lines{24}= 'rusage everything';
+circuit.Ngspice.cir.lines{25}= '.endc';
+circuit.Ngspice.cir.lines{26}= '.end';
 
 circuit.Ngspice.cir.lines=circuit.Ngspice.cir.lines';
 % system(['ngspice -b -o ' filename '.log ' filename '.cir']);

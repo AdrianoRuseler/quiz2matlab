@@ -1,0 +1,28 @@
+.TIME 1E-005 0.01 0 1 0 0 0 0 0
+.TI_DMC_VERSION 402 
+R R1 1 2 R1 0 
+R R2 2 3 R2 0 
+VP opt1 1 
+VP opt2 2 
+VP2 opt3 1 2 
+VDC VDC1 1 0 Vi 0 0 
+VSEN VSEN1 2 3 4 1.5 
+VP opt4 4 
+P P1 4 5 -1 
+VP opt5 5 
+ISEN ISEN1 3 0 6 1 
+VP opt6 6 
+R R3 7 8 R1 0 
+VDC VDC2 7 0 Vi 0 0 
+ISEN ISEN2 8 0 9 1 
+P P4 9 10 -1 
+R R4 11 12 R2 0 
+VDC VDC3 11 0 Vi 0 0 
+ISEN ISEN3 12 0 13 1 
+P P5 13 14 -1 
+P P6 6 15 -1 
+VP opt7 15 
+VP opt8 9 
+VP opt9 10 
+VP opt10 13 
+VP opt11 14 

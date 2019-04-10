@@ -1,0 +1,9 @@
+* F:\Dropbox\GitHub\quiz2matlab\sims\LTspice\netfiletest.asc
+R1 R2 V1 {R1}
+R2 0 R2 {R2}
+V1 V1 0 {Vi}
+.op
+.param Vi=10 R1=1000 R2=1500
+.meas Vr1 param V(V1)-V(R2)
+.backanno
+.end

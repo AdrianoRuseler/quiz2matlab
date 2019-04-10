@@ -1,0 +1,14 @@
+.TIME 1E-005 0.01 0 1 0 0 0 0 0
+.TI_DMC_VERSION 402 
+VDC VDC1 1 0 Vcc 0 0 
+R Ra 1 2 Ra 1 
+R Rb 2 0 Rb 1 
+VP Vx 2 
+VP Vc 3 
+VP Ve 4 
+IP Ib 5 2 
+R Rc 3 0 Rc 1 
+R Re 1 4 Re 1 
+PNP_1 PNP1 3 4 6 Beta Veb Vecsat 
+ZENER Z1 5 6 Vz 0 0 1 
+VP Vb 6 

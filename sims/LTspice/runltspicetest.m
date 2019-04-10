@@ -2,20 +2,21 @@ clear all
 clc
 
 % Sets simulation dir
-quiz2matlabdir='F:\Dropbox\GitHub\quiz2matlab'; % Home
-% quiz2matlabdir='A:\Dropbox\GitHub\quiz2matlab'; % UTFPR
+% circuit.dir ='F:\Dropbox\GitHub\quiz2matlab\sims\LTspice\'; % Home
+circuit.name = 'netfiletest'; % File name
+circuit.dir = getsimdir([circuit.name '.m']); % Sets simulation dir
+circuit.theme  = 'clean'; % clean or boost
 
-quiz2matlabsdir=[quiz2matlabdir '\sims'];
-quiz2matlabspdir=[quiz2matlabsdir '\LTspice'];
 
 % Config simulation
 circuit.parname={'Vi','R1','R2'}; % Variables names
+circuit.parunit={'V','&Omega;','&Omega;'}; % Variables unit
+
 circuit.parvalue=[10 1e3 1e3]; % Variables values
-circuit.parunit={' V','&Omega;','&Omega;'}; % Variables unit
 circuit.parstr = param2str(circuit);
 
 circuit.LTspice.name = 'netfiletest'; % File name
-circuit.LTspice.simsdir=quiz2matlabspdir; % PSIM file dir
+circuit.LTspice.simsdir=circuit.dir; % PSIM file dir
 
 circuit = ltasc2net(circuit); % Generates the .net file
 circuit = ltgetnet(circuit); % Reads net file
@@ -29,12 +30,12 @@ circuit.LTspice.tmpfiledel=1; % Delete tmp files?
 
 
 circuit = ltspicefromcmd(circuit); % run LTspice simulation
-[circuit] = ltlogread(circuit);
+% circuit = ltlogread(circuit);
 
 % circuit.LTspice.net.lines
 % circuit.LTspice.log.lines
 
-data = LTspiceASCII2Matlab(circuit.LTspice.raw.file,1);
+% data = LTspiceASCII2Matlab(circuit.LTspice.raw.file,1);
 
 
 

@@ -46,6 +46,7 @@ circuit.quiz.fightml = psimfigstr(pngfile,'left',figlegendastr); % html code for
 circuit.quiz.question{1}.str='Qual a tensão em R1?';
 circuit.quiz.question{1}.units={' V',' V',' V',' V',' V'};
 circuit.quiz.question{1}.options={'opt1','opt2','opt3','opt4','opt5'}; % Variables from PSIM simulation
+circuit.quiz.question{1}.vartype={'mean','mean','mean','mean','mean'}; %
 circuit.quiz.question{1}.optscore=[0 0 100 0 0]; % Score per option
 circuit.quiz.question{1}.type='MULTICHOICE_S';
 
@@ -55,12 +56,14 @@ circuit.quiz.question{1}.type='MULTICHOICE_S';
 circuit.quiz.question{2}.str='Qual a tensão em R2?';
 circuit.quiz.question{2}.units={' V',' V',' V',' V',' V'};
 circuit.quiz.question{2}.options={'opt1','opt2','opt3','opt4','opt5'};
+circuit.quiz.question{2}.vartype={'mean','mean','mean','mean','mean'}; %
 circuit.quiz.question{2}.optscore=[0 100 0 0 0]; % Score per option
 circuit.quiz.question{2}.type='MULTICHOICE_S';
 
 circuit.quiz.question{3}.str='Qual a corrente na fonte?';
 circuit.quiz.question{3}.units={'A','A','A','A','A','A'};
 circuit.quiz.question{3}.options={'opt6','opt7','opt8','opt9','opt10','opt11'};
+circuit.quiz.question{3}.vartype={'mean','mean','mean','mean','mean','mean'}; %
 circuit.quiz.question{3}.optscore=[100 0 0 0 0 0]; % Score per option
 circuit.quiz.question{3}.type='MULTICHOICE_S';
    

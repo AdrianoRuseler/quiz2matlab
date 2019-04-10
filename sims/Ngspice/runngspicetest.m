@@ -2,8 +2,8 @@ clear all
 clc
 
 % Sets simulation dir
-% quiz2matlabdir='F:\Dropbox\GitHub\quiz2matlab'; % Home
-quiz2matlabdir='A:\Dropbox\GitHub\quiz2matlab'; % UTFPR
+quiz2matlabdir='F:\Dropbox\GitHub\quiz2matlab'; % Home
+% quiz2matlabdir='A:\Dropbox\GitHub\quiz2matlab'; % UTFPR
 
 quiz2matlabsdir=[quiz2matlabdir '\sims'];
 quiz2matlabspdir=[quiz2matlabsdir '\Ngspice'];
@@ -22,6 +22,16 @@ circuit = ltnet2ngcir(circuit); % Generates the .cir file from LTspice
 % net file
 
 circuit = ngspicegetnet(circuit); % Reads .cir file
+
+%% import from PSIM
+
+circuit.PSIMCMD.name = 'quiztest'; % File name
+circuit.PSIMCMD.simsdir=[quiz2matlabsdir '\PSIM']; % PSIM file dir
+circuit.PSIMCMD.net.file = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.cct']; % net file
+circuit.PSIMCMD.file = [circuit.PSIMCMD.simsdir '\' circuit.PSIMCMD.name '.psimsch']; % PSIM file
+
+circuit = psim2ngcir(circuit); % Generates the .cir file from PSIM
+
 
 
 %% circuit.LTspice.type='op'; % tran, ac, dc, noise, tf, op 
