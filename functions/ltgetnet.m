@@ -43,7 +43,7 @@ while ~feof(fileID)
 end
 fclose(fileID);
 
-circuit.LTspice.net.lines=tline;
+circuit.LTspice.net.lines=tline';
 
 
 
