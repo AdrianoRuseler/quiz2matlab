@@ -36,15 +36,16 @@ end
 
 fclose(fileID); % Close
 
-status = system(['XVIIx64.exe -Run -b -ascii ' circuit.LTspice.net.file]); % Executa simulação
+% [status,cmdout]= 
+system(['XVIIx64.exe -Run -b -ascii ' circuit.LTspice.net.file]); % Executa simulação
+
+circuit.LTspice.raw.file = [circuit.LTspice.simsdir tmpname '.raw'];
+data.filename=circuit.LTspice.raw.file;
+circuit.LTspice.data = rawltspice(data); % Read data
 
 
 circuit.LTspice.log.file = [circuit.LTspice.simsdir tmpname '.log'];
-circuit.LTspice.raw.file = [circuit.LTspice.simsdir tmpname '.raw'];
-
-
-circuit.LTspice.raw.data = rawltspice(circuit.LTspice.raw.file); % Read data
-
+circuit = ltlogread(circuit); % Reads log file
 
 % circuit.LTspice.raw.data.signals.op
 
