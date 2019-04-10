@@ -36,3 +36,11 @@ octave-workspace
 *.xml
 *.smv
 *.png
+
+*.mat
+*.raw
+*.tmp
+*.log
+
+*.psimsch
+*.txt
