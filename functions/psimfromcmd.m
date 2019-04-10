@@ -56,7 +56,7 @@ function  circuit = psimfromcmd(circuit)
 %  varstrcmd -v "VarName1=VarValue"  -v "VarName2=VarValue"
 varstrcmd='';
 for ind=1:length(circuit.parname)
-    varstrcmd=[varstrcmd ' -v "' circuit.parname{ind} '=' num2str(circuit.parvalue(ind),'%10.8e') '"'];
+    varstrcmd=[varstrcmd ' -v "' circuit.parnamesim{ind} '=' num2str(circuit.parvalue(ind),'%10.8e') '"'];
 end
 circuit.PSIMCMD.extracmd = varstrcmd;
 
@@ -106,8 +106,17 @@ disp(['Simulating ' circuit.PSIMCMD.infile ' file....     Wait!'])
 circuit.PSIMCMD.status=status; % If 0, is OK! else, some problem
 circuit.PSIMCMD.simtime=toc; % Tempo total de simulação
 
+% Error:  Error: One
 disp(cmdout)
 circuit.PSIMCMD.cmdout=cmdout;
+
+
+if contains(cmdout,'Error:','IgnoreCase',true)
+    disp('Simulation with error!')
+    return
+else
+    disp('Simulation OK!')
+end
 
 
 %%  Load file .txt
@@ -158,8 +167,8 @@ for i=2:length(header)
     circuit.PSIMCMD.data.signals(i-1).rms=rms(M(:,i));
     circuit.PSIMCMD.data.signals(i-1).max=max(M(:,i));
     circuit.PSIMCMD.data.signals(i-1).min=min(M(:,i)); % 
-    circuit.PSIMCMD.data.signals(i-1).std=std(M(:,i)); % Standard deviation
-    circuit.PSIMCMD.data.signals(i-1).median=median(M(:,i)); % Standard deviation
+%     circuit.PSIMCMD.data.signals(i-1).std=std(M(:,i)); % Standard deviation
+%     circuit.PSIMCMD.data.signals(i-1).median=median(M(:,i)); % Standard deviation
     circuit.PSIMCMD.data.signals(i-1).dimensions=1;
     circuit.PSIMCMD.data.signals(i-1).title=U;
     circuit.PSIMCMD.data.signals(i-1).plotStyle=[0,0];
@@ -179,5 +188,7 @@ if(circuit.PSIMCMD.tmpfiledel)
 end
 disp('Done!!!!')
 disp(circuit.PSIMCMD)
+
+
 
 
