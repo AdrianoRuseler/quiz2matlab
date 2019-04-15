@@ -31,13 +31,14 @@ tmpstr=strsplit(tline{1});
 circuit.LTspice.log.circuit=tmpstr{3}; % Circuit file
 circuit.LTspice.log.status=tline{2}; % Simulation method used and status
 
-
+% Semiconductor Device Operating Points
 for ln=3:length(tline)
     if contains(tline{ln},'Date:')
         circuit.LTspice.log.datesrt=tline{ln}(7:end); % Gets data str
         circuit.LTspice.log.dateline=ln; % Relevant info comes before this
         break
     end
+    
     %     elseif contains(tline{ln},'Total elapsed time:')
     %         circuit.LTspice.log.ttimestr=tline{ln};
     
@@ -50,26 +51,53 @@ for ln=3:length(tline)
     %     end
 end
 
+% Semiconductor Device Operating Points?
+sd =0;
+for ln=4:circuit.LTspice.log.dateline
+    if contains(tline{ln},'=') || contains(tline{ln},'Date') % .meas field or end of Semiconductor info
+        circuit.LTspice.log.measline = ln;
+        break
+    elseif contains(tline{ln},':') %
+        tmpstr=strsplit(tline{ln},':'); %
+        if contains(tmpstr{1},'Name') %
+            sd=sd+1; % Device found
+            circuit.LTspice.log.sdop{sd}.Name = strtrim(tmpstr{2});
+        elseif contains(tmpstr{1},'Model') %
+            circuit.LTspice.log.sdop{sd}.Model = strtrim(tmpstr{2});
+        else
+            varname = char(matlab.lang.makeValidName(char(tmpstr{1}),'ReplacementStyle','delete'));
+%             disp(['circuit.LTspice.log.sdop{sd}.' varname '=str2double(strtrim(tmpstr{2}));' ])
+            eval(['circuit.LTspice.log.sdop{sd}.' varname '=str2double(strtrim(tmpstr{2}));' ])
+        end
+    end
+end
 
-% dateline circuit.LTspice.data.signals
+if ~isfield(circuit.LTspice.log,'measline')
+    circuit.LTspice.log.measline = ln;
+end
 
-nvars = circuit.LTspice.data.nvars;
-% m=1;
-for ln=3:circuit.LTspice.log.dateline
-    if contains(tline{ln},'=')
-        tmpstr1=strsplit(tline{ln},':'); % Varname
+nvars = length(circuit.LTspice.data.signals);
+for ln=circuit.LTspice.log.measline:circuit.LTspice.log.dateline
+    if contains(tline{ln},'=') % .meas field
+        if contains(tline{ln},'FROM')
+            tmpstr0=strsplit(tline{ln},'FROM'); % Varname
+            tmpstr1=strsplit(tmpstr0{1},':'); % Varname
+        else
+            tmpstr1=strsplit(tline{ln},':'); % Varname
+        end
         tmpstr2=strsplit(strtrim(tmpstr1{2}),'=');
-%         circuit.LTspice.log.measname{m}=strtrim(tmpstr1{1});
+        
         nvars=nvars+1;
         U = matlab.lang.makeValidName(char(tmpstr1{1}),'ReplacementStyle','delete');
         circuit.LTspice.data.signals(nvars).label=char(U);
         circuit.LTspice.data.signals(nvars).cmd=strtrim(tmpstr2{1});
         circuit.LTspice.data.signals(nvars).type='meas';
-%         circuit.LTspice.log.meascmd{m}=strtrim(tmpstr2{1});
-%         circuit.LTspice.log.measvalue{m}=str2double(strtrim(tmpstr2{2}));
-        
         circuit.LTspice.data.signals(nvars).meas=str2double(strtrim(tmpstr2{2}));
-%         m=m+1;
+        
+        varname = char(matlab.lang.makeValidName(char(tmpstr1{1}),'ReplacementStyle','delete'));
+        % disp(['circuit.LTspice.log.meas.' varname '=str2double(strtrim(tmpstr2{2}));' ])
+        eval(['circuit.LTspice.log.meas.' varname '=str2double(strtrim(tmpstr2{2}));' ])
+        
     end
     %     elseif contains(tline{ln},'Total elapsed time:')
     %         circuit.LTspice.log.ttimestr=tline{ln};
@@ -83,7 +111,7 @@ for ln=3:circuit.LTspice.log.dateline
     %     end
 end
 
-circuit.LTspice.data.nvars=nvars;
+circuit.LTspice.data.nvars=length(circuit.LTspice.data.signals);
 
 
 
