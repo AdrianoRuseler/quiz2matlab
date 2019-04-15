@@ -39,6 +39,22 @@ circuit = ltspicefromcmd(circuit); % run LTspice simulation
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 %% Generate question
 
 circuit.quiz.name = 'sometestquiz';
