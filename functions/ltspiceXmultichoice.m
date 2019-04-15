@@ -69,32 +69,65 @@ for q=1:length(circuit.quiz.question)
             %   MULTICHOICE
     end
     
+    
+    
     lopts=length(circuit.quiz.question{q}.options); % Number of options per question
     for o=1:lopts % Get option value
-        optind=find(contains(labels,circuit.quiz.question{q}.options{o},'IgnoreCase',true));       
-        if ~isempty(optind) % Label found
-            circuit.quiz.question{q}.labelsind(o) = optind(1);
-            switch circuit.quiz.question{q}.vartype{o}
-                case 'max'
-                    circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).max];
-                case 'min'
-                    circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).min];
-                case 'rms'
-                    circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).rms];
-                case 'mean'
-                    circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).mean];
-                case 'op'
-                    circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).op];
-                case 'meas' % .meas
-                    circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).meas];
-                otherwise
-                    circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).mean];
-            end
-        else
-            disp([circuit.quiz.question{q}.options{o} ' NOT FOUND!!'])
+        %         disp(['Look for ' circuit.quiz.question{q}.options{o} ' in:'])
+        %         disp(labels)
+        switch circuit.quiz.question{q}.vartype{o}
+            case 'max'
+                optind=find(contains(labels,circuit.quiz.question{q}.options{o},'IgnoreCase',true));
+                circuit.quiz.question{q}.labelsind(o) = optind(1);
+                circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).max];
+            case 'min'
+                optind=find(contains(labels,circuit.quiz.question{q}.options{o},'IgnoreCase',true));
+                circuit.quiz.question{q}.labelsind(o) = optind(1);
+                circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).min];
+            case 'rms'
+                optind=find(contains(labels,circuit.quiz.question{q}.options{o},'IgnoreCase',true));
+                circuit.quiz.question{q}.labelsind(o) = optind(1);
+                circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).rms];
+            case 'mean'
+                optind=find(contains(labels,circuit.quiz.question{q}.options{o},'IgnoreCase',true));
+                circuit.quiz.question{q}.labelsind(o) = optind(1);
+                circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).mean];
+            case 'op'
+                optind=find(contains(labels,circuit.quiz.question{q}.options{o},'IgnoreCase',true));
+                circuit.quiz.question{q}.labelsind(o) = optind(1);
+                circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).op];
+            case 'meas' % .meas
+                %                     circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).meas];
+                fields = fieldnames(circuit.LTspice.log.meas);
+                optind=find(contains(fields,circuit.quiz.question{q}.options{o}));
+                if optind
+                    eval(['circuit.quiz.question{q}.values(o)=circuit.LTspice.log.meas.' circuit.quiz.question{q}.options{o} ';'])
+                else
+                    disp('meas not FOUND!!')
+                end
+                %                     labels={circuit.LTspice.data.signals.label}; % Data variables
+            case 'log'
+                tmpstr=strsplit(circuit.quiz.question{q}.options{o},':'); %
+                labels={circuit.LTspice.log.sdop{:}.Name}; % Data variables
+                optind=find(contains(labels,tmpstr{1},'IgnoreCase',true));
+                
+                fields = fieldnames(circuit.LTspice.log.sdop{optind});
+                
+                if find(contains(fields,tmpstr{2}))
+                    
+                    eval(['circuit.quiz.question{q}.values(o)=circuit.LTspice.log.sdop{optind}.' tmpstr{2} ';'])
+                else
+                    disp('Log not FOUND!!')
+                end
+                
+            otherwise
+                disp('circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).mean];')
         end
+        %         else
+        %             disp([circuit.quiz.question{q}.options{o} ' NOT FOUND!!'])
+        %         end
     end
-        
+    
     
     
     
