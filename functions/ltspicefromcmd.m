@@ -8,6 +8,21 @@ for ind=1:length(circuit.parname)
 end
 circuit.LTspice.net.lines{circuit.LTspice.net.paramline}=paramstr; % Updates param line from net file
 
+if isfield(circuit,'cmdtype')
+    switch circuit.cmdtype
+        case '.op'
+            cmdstr = '.op';
+        case '.tran' % .tran Tprint Tstop Tstart
+            cmdstr = ['.tran 0 ' num2str(circuit.parvalue(circuit.cmdvarind),'%10.8e') ' 0'];
+        otherwise
+            cmdstr = '.op';
+    end
+else
+    cmdstr = '.op';
+end
+
+circuit.LTspice.net.lines{circuit.LTspice.net.cmdline}=cmdstr; 
+
 if(circuit.LTspice.tmpdir)  % Use system temp dir?
    circuit.LTspice.simsdir = tempdir;    
 end
@@ -15,6 +30,8 @@ end
 if(circuit.LTspice.tmpfile) % Create tmp file for simulation?
     tmpname=[circuit.LTspice.net.name strrep(char(java.util.UUID.randomUUID),'-','')];
     circuit.LTspice.net.file = [circuit.LTspice.simsdir tmpname '.net'];
+else
+    tmpname = circuit.LTspice.net.name;
 end
 
 [fileID,errmsg] = fopen(circuit.LTspice.net.file,'w'); % Abre arquivo para escrita
@@ -38,6 +55,8 @@ fclose(fileID); % Close
 
 % [status,cmdout]= 
 system(['XVIIx64.exe -Run -b -ascii ' circuit.LTspice.net.file]); % Executa simulação
+
+
 
 circuit.LTspice.raw.file = [circuit.LTspice.simsdir tmpname '.raw'];
 data.filename=circuit.LTspice.raw.file;
