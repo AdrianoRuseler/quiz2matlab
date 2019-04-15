@@ -13,33 +13,33 @@ if fileID == -1
     return;
 end
 
-l=1;
+ln=1;
 % tline=cell(1,20); % Pre allocation
 while ~feof(fileID)
-    tline{l} = fgetl(fileID);
-    if contains(tline{l},'.param') % Find .param line
-        circuit.LTspice.net.paramline=l;
-    elseif contains(tline{l},'.tran')
-        circuit.LTspice.net.cmdline=l;
+    tline{ln} = fgetl(fileID);
+    if contains(tline{ln},'.param') % Find .param line
+        circuit.LTspice.net.paramline=ln;
+    elseif contains(tline{ln},'.tran')
+        circuit.LTspice.net.cmdline=ln;
         circuit.LTspice.type = 'tran';
-    elseif contains(tline{l},'.ac')
-        circuit.LTspice.net.cmdline=l;
+    elseif contains(tline{ln},'.ac')
+        circuit.LTspice.net.cmdline=ln;
         circuit.LTspice.type = 'ac';
-    elseif contains(tline{l},'.dc')
-        circuit.LTspice.net.cmdline=l;
+    elseif contains(tline{ln},'.dc')
+        circuit.LTspice.net.cmdline=ln;
         circuit.LTspice.type = 'dc';
-    elseif contains(tline{l},'.noise')
-        circuit.LTspice.net.cmdline=l;
+    elseif contains(tline{ln},'.noise')
+        circuit.LTspice.net.cmdline=ln;
         circuit.LTspice.type = 'noise';
-    elseif contains(tline{l},'.tf')
-        circuit.LTspice.net.cmdline=l;
+    elseif contains(tline{ln},'.tf')
+        circuit.LTspice.net.cmdline=ln;
         circuit.LTspice.type = 'tf';
-    elseif contains(tline{l},'.op')
-        circuit.LTspice.net.cmdline=l;
+    elseif contains(tline{ln},'.op')
+        circuit.LTspice.net.cmdline=ln;
         circuit.LTspice.type = 'op';
     end
     % tran, ac, dc, noise, tf, op
-    l=l+1;
+    ln=ln+1;
 end
 fclose(fileID);
 
