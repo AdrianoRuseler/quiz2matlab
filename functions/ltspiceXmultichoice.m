@@ -103,21 +103,19 @@ for q=1:length(circuit.quiz.question)
                 if optind
                     eval(['circuit.quiz.question{q}.values(o)=circuit.LTspice.log.meas.' circuit.quiz.question{q}.options{o} ';'])
                 else
-                    disp('meas not FOUND!!')
+                    disp([ circuit.quiz.question{q}.options{o} ' -> meas not FOUND!!'])
                 end
                 %                     labels={circuit.LTspice.data.signals.label}; % Data variables
             case 'log'
                 tmpstr=strsplit(circuit.quiz.question{q}.options{o},':'); %
                 labels={circuit.LTspice.log.sdop{:}.Name}; % Data variables
-                optind=find(contains(labels,tmpstr{1},'IgnoreCase',true));
-                
+                optind=find(contains(labels,tmpstr{1},'IgnoreCase',true));                
                 fields = fieldnames(circuit.LTspice.log.sdop{optind});
                 
-                if find(contains(fields,tmpstr{2}))
-                    
+                if find(contains(fields,tmpstr{2}))                    
                     eval(['circuit.quiz.question{q}.values(o)=circuit.LTspice.log.sdop{optind}.' tmpstr{2} ';'])
                 else
-                    disp('Log not FOUND!!')
+                    disp([ tmpstr{2} ' -> Log not FOUND!!']) % O que fazer?
                 end
                 
             otherwise
@@ -127,23 +125,23 @@ for q=1:length(circuit.quiz.question)
         %             disp([circuit.quiz.question{q}.options{o} ' NOT FOUND!!'])
         %         end
     end
-    
-    
-    
-    
-    if isnumerical % NUMERICAL       
+
+    if isnumerical % NUMERICAL
         for o=1:lopts % get option value
-            [~,~, expstr, mantissa] = real2eng(circuit.quiz.question{q}.values(o),circuit.quiz.question{q}.units{o});
-            tempstr=[sprintf('%3.3f',mantissa) ':' sprintf('%3.3f',(mantissa*circuit.quiz.question{q}.opttol(o)/100))];  %  sprintf('%3.3f',mantissa) 
-            if(circuit.quiz.question{q}.optscore(o))
-                multicell = strcat(multicell,['~%' num2str(circuit.quiz.question{q}.optscore(o)) '%' tempstr ]);
+            if isfield(circuit.quiz.question{q},'values')
+                [~,~, expstr, mantissa] = real2eng(circuit.quiz.question{q}.values(o),circuit.quiz.question{q}.units{o});
+                tempstr=[sprintf('%3.3f',mantissa) ':' sprintf('%3.3f',(mantissa*circuit.quiz.question{q}.opttol(o)/100))];  %  sprintf('%3.3f',mantissa)
+                if(circuit.quiz.question{q}.optscore(o))
+                    multicell = strcat(multicell,['~%' num2str(circuit.quiz.question{q}.optscore(o)) '%' tempstr ]);
+                else
+                    multicell = strcat(multicell,['~' tempstr]);
+                end
             else
-                multicell = strcat(multicell,['~' tempstr]);
-            end
-            
-        end        
-        multicell = strcat(multicell,['}' expstr]);        
-    else  %   MULTICHOICE       
+                expstr ='';
+            end            
+        end
+        multicell = strcat(multicell,['}' expstr]);
+    else  %   MULTICHOICE
         [optscoresort,optscoreind] = sort(circuit.quiz.question{q}.optscore,'descend');
         circuit.quiz.question{q}.optscore = optscoresort;
         circuit.quiz.question{q}.values = circuit.quiz.question{q}.values(optscoreind);
@@ -164,7 +162,7 @@ for q=1:length(circuit.quiz.question)
         
         
         for o=1:lopts
-             optstr = real2eng(circuit.quiz.question{q}.values(o),circuit.quiz.question{q}.units{o}); % Gets option value with unit in eng format
+            optstr = real2eng(circuit.quiz.question{q}.values(o),circuit.quiz.question{q}.units{o}); % Gets option value with unit in eng format
             if(circuit.quiz.question{q}.optscore(o))
                 multicell = strcat(multicell,['~%' num2str(circuit.quiz.question{q}.optscore(o)) '%' optstr ]);
             else
@@ -173,7 +171,7 @@ for q=1:length(circuit.quiz.question)
         end
         
         multicell = strcat(multicell,'}');
-%         multicell = strrep(multicell,'u','&mu;'); % Substitui u por micro;
+        %         multicell = strrep(multicell,'u','&mu;'); % Substitui u por micro;
         
     end
     circuit.quiz.question{q}.choicestr=multicell;
