@@ -29,31 +29,53 @@ circuit.LTspice.log.lines=tline';
 
 tmpstr=strsplit(tline{1}); 
 circuit.LTspice.log.circuit=tmpstr{3}; % Circuit file
-circuit.LTspice.log.status=tline{2}; % Simulation method used and status
 
-% Semiconductor Device Operating Points
-for ln=3:length(tline)
-    if contains(tline{ln},'Date:')
-        circuit.LTspice.log.datesrt=tline{ln}(7:end); % Gets data str
-        circuit.LTspice.log.dateline=ln; % Relevant info comes before this
-        break
+
+if isfield(circuit,'cmdtype')
+    switch circuit.cmdtype
+        case '.op'
+            % Semiconductor Device Operating Points
+            for ln=3:length(tline)
+                if contains(tline{ln},'Semiconductor Device Operating Points:')
+                    circuit.LTspice.log.sdopline=ln;
+                elseif contains(tline{ln},'Date:')
+                    circuit.LTspice.log.datesrt=tline{ln}(7:end); % Gets data str
+                    circuit.LTspice.log.dateline=ln; % Relevant info comes before this
+                    break
+                end
+            end
+            circuit.LTspice.log.status=tline{2}; % Simulation method used and status
+            % Semiconductor Device Operating Points?
+            sd =0;
+            if isfield(circuit.LTspice.log,'sdopline')
+                sdopline=circuit.LTspice.log.sdopline+1;
+            else
+                sdopline=4;
+            end          
+            
+        case '.tran' % .tran Tprint Tstop Tstart            
+            for ln=3:length(tline)
+                if contains(tline{ln},'Date:')
+                    circuit.LTspice.log.datesrt=tline{ln}(7:end); % Gets data str
+                    circuit.LTspice.log.dateline=ln; % Relevant info comes before this
+                    break
+                end
+            end
+            circuit.LTspice.log.status=tline{2}; % Simulation method used and status
+            sdopline=3;
+            
+        otherwise
+            disp('cmdtype otherwise!!')
     end
-    
-    %     elseif contains(tline{ln},'Total elapsed time:')
-    %         circuit.LTspice.log.ttimestr=tline{ln};
-    
-    %     elseif contains(tline{ln},'tnom') % Find tnom
-    %         tmpstr=strsplit(tline{ln});
-    %         circuit.LTspice.log.tnom=str2double(tmpstr{3});
-    %     elseif contains(tline{ln},'temp')
-    %         tmpstr=strsplit(tline{ln});
-    %         circuit.LTspice.log.temp=str2double(tmpstr{3});
-    %     end
+else    
+    disp('cmdtype not found!!')
 end
 
-% Semiconductor Device Operating Points?
-sd =0;
-for ln=4:circuit.LTspice.log.dateline
+
+
+
+
+for ln=sdopline:circuit.LTspice.log.dateline
     if contains(tline{ln},'=') || contains(tline{ln},'Date') % .meas field or end of Semiconductor info
         circuit.LTspice.log.measline = ln;
         break
@@ -112,6 +134,8 @@ for ln=circuit.LTspice.log.measline:circuit.LTspice.log.dateline
 end
 
 circuit.LTspice.data.nvars=length(circuit.LTspice.data.signals);
+
+
 
 
 
