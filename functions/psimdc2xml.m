@@ -19,9 +19,9 @@ circuit.PSIMCMD.printstep=1; %Print step (default = 1). If the print step is set
 circuit = getpsimnet(circuit); % Reads or generates net file from psim
 circuit.PSIMCMD.net.run = 1;
 
-sortnquestions=600; % Number of simulations
+% sortnquestions=600; % Number of simulations
 [~,y]=size(circuit.Xi);
-nq=randperm(y,sortnquestions); % escolha as questoes
+nq=randperm(y,circuit.nsims); % escolha as questoes
 circuit.X=circuit.Xi(:,nq);
 
 circuit.Xi=[]; % Clear
@@ -70,7 +70,7 @@ end
 
 %% Generate quizstruct moodle question
 quizopts.name=circuit.name;
-quizopts.nquiz=500; % Number of quizes
+quizopts.nquiz=quiz.nquiz; % Number of quizes
 quizopts.permutquiz =1; % Permut quiz?
 quizopts.nquizperxml=1000; % Number of quizes per file
 quizopts.type = 'cloze';
