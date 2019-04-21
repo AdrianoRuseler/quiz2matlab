@@ -27,6 +27,34 @@ Vcesat=0.2;
 
 circuit.Xi=CombVec(Vcc,Rb,Rc,Beta,Vbe,Vcesat); %%
 
+
+% Select
+[~,y]=size(Xi);
+u0=1;
+for z=1:y
+    R1=Xi(1,z); % R
+    R2=Xi(2,z); % R
+    RC=Xi(3,z); % R
+    RE=Xi(4,z); % R  
+    VEE=Xi(5,z);
+    Beta=Xi(6,z);
+    Veb=Xi(7,z);
+    VecSat=Xi(8,z);
+    
+    Rx=RE+RC;
+    
+    iB=(VEE*R1^2-(R1^2+R2^2)*Veb)/(R1^2*R2^2 +(Rx*R1^2+R2^2*RE)*(Beta+1));
+    iCsat=(VEE-VecSat)/Rx;
+
+    if (iCsat-Beta*iB)>0 % Região ativa
+        X0(:,u0)=Xi(:,z);
+        u0=u0+1;
+    end    
+end
+
+%%
+
+
 % Generate question
 quiz.enunciado = ['Para o circuito contendo um transistor NPN apresentado na Figura 1, determine:' ]; % Enunciado da pergunta!
 
@@ -72,5 +100,9 @@ quiz.question{2}.type='NUMERICAL';
 
 
 %% Generates questions
+
+circuit.nsims=505; % Number of simulations
+quiz.nquiz = 500; % Number of quizes
+
 psimdc2xml(circuit,quiz); 
 

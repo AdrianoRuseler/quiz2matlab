@@ -79,5 +79,8 @@ quiz.question{3}.type='NUMERICAL';
 
 
 %% Generates questions
+circuit.nsims=505; % Number of simulations
+quiz.nquiz = 500; % Number of quizes
+
 psimdc2xml(circuit,quiz); 
 
