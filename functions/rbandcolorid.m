@@ -99,18 +99,20 @@ if isempty(tind) % Resistor not found
     return
 end
 
-str='{1:MULTICHOICE_S:';
+
+str='{1:MULTICHOICE:';
 for a=1:length(multiplier)
     if a==mind
-        str = strcat(str,['~%100%' num2eng(multiplier(a),1) '&Omega;']);
+        str = strcat(str,['~%100%' real2eng(multiplier(a),'&Omega;') ]);
     else
-        str = strcat(str,['~' num2eng(multiplier(a),1) '&Omega;']);
+        str = strcat(str,['~' real2eng(multiplier(a),'&Omega;')]);
     end
 end
 quiz.mulMULTICHOICE = strcat(str,'}');
 
 
-str='{1:MULTICHOICE_S:';
+
+str='{1:MULTICHOICE:';
 for a=1:length(torelancia)
     if a==tind % resposta correta
         str = strcat(str,['~%100%' num2str(torelancia(a)) '%']);
@@ -121,7 +123,7 @@ end
 quiz.tolMULTICHOICE = strcat(str,'}');         
  
 % Generate this: {1:MULTICHOICE_S:10~11~12~13~%100%15~16~18~20~22~24~27~30~33~36~39~43~47~51~56~62~68~75~82~91}
-quiz.f123MULTICHOICE=strrep(['{1:MULTICHOICE_S:' strrep(num2str(E),'  ','~') '}'],num2str(E(eind)),['%100%' num2str(E(eind))]); % Cool
+quiz.f123MULTICHOICE=strrep(['{1:MULTICHOICE:' strrep(num2str(E),'  ','~') '}'],num2str(E(eind)),['%100%' num2str(E(eind))]); % Cool
 
 f123 = dec2base(E(eind),10) - '0';
 f123 = f123+1; % Gera a sequência numérica
@@ -146,7 +148,7 @@ end
 
 % Creates color multichoice string
 for b=1:length(band) % multichoicestrresistor
-    bandidstr{b}='{1:MULTICHOICE_S:';    
+    bandidstr{b}='{1:MULTICHOICE:';    
     
     for a=1:length(colorname)
         if a==band(b)
@@ -190,15 +192,17 @@ elseif length(band)==5
         '</table>'];
 end
 
-    
-valuestr= [ num2eng(Value,1) '&Omega; ±' num2str(torelancia(tind)) '%']; 
+[str, ~ , expstr, mantissa, ~] = real2eng(Value,'&Omega;'); 
+
+valuestr= [ str ' ±' num2str(torelancia(tind)) '%']; 
 % Qual a melhor escala para medir o resistor
 escalasR={'200 &Omega;','2 k&Omega;','20 k&Omega;','200 k&Omega;','2 M&Omega;','20 M&Omega;','200 M&Omega;'};
 escala=[200 2e3 20e3 200e3 2e6 20e6 200e6];
 torelancia=[0.05 0.1 0.25 0.5 1 2 5 10 20]/100; % emt(3)
 
-quiz.valorNUMERICAL = ['{1:NUMERICAL:~%100%' num2str(Value) ':' ceil(num2str(Value*torelancia(tind))) '}'];
- 
+quiz.valorNUMERICAL = ['{1:NUMERICAL:~%100%' num2str(mantissa) ':' ceil(num2str(mantissa*torelancia(tind))) '}'];
+
+quiz.unitstr = expstr;
  
 indp=find((escala-Value)>0);
 
@@ -207,7 +211,7 @@ if isempty(indp)
 end
 
 
-strf5='{1:MULTICHOICE_S:';
+strf5='{1:MULTICHOICE:';
 for a=1:length(escalasR)
     if a==indp(1)
         strf5 = strcat(strf5,['~%100%' escalasR{a} ]);
