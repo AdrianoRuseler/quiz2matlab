@@ -1,7 +1,7 @@
 
 % Convert real number to str with SI prefix plus unit
 
-function [str, numstr, expstr, mantissa, exponent] = real2eng(number,unitstr)
+function [str, numstr, expstr, mantissa, exponent] = real2eng(number,unitstr,minabsval)
 
 if ~isreal(number) % Is this number real?
     str='Not a real munber!';
@@ -10,6 +10,14 @@ if ~isreal(number) % Is this number real?
     mantissa=NaN;
     exponent=NaN;
     return % only real numbers
+end
+
+if nargin < 3
+    minabsval = 1e-6;
+end
+
+if abs(number) < minabsval
+    number =0;
 end
 
 
@@ -32,7 +40,8 @@ end
 % expValue = [-24,-21,-18,-15,-12,-9,-6,-3,0,3,6,9,12,15,18,21,24];
 % numstr = strrep(num2str(mantissa,'%3.3f'),'.',',');
 
-str = [numstr expstr];
+% str = [numstr expstr];
 
+str = strtrim([numstr expstr]);
 
 
