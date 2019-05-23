@@ -38,7 +38,7 @@ for n=1:length(Values)
     else
         [Yc,~] = printresistor(band,theme);
     end
-    quizstruct.question.name{n}=[name ' genqs4rv(' strrep(valuestr,' ','') ')'];
+    quizstruct.question.name{n}=['genqs4rv(' strrep(valuestr,' ','') ')'];
     
     quizstruct.question.text{n}=['<p style="text-align: center;">Determine o valor da resistência do resistor apresentado na figura a seguir:<br></p><p style="text-align: center;"><img src="data:image/png;base64,' Yc...
         '" alt="" width="325" height="59"></p> <p style="text-align: center;">(' colornamestr ')<br>'...
