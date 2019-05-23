@@ -32,7 +32,7 @@ escalaVnum=[0.2 2 20 200 1000];
 resolucaoVnum=[10e-6 100e-6 1e-3 10e-3 100e-3];
 
 indp=find((escalaVnum-abs(varmed))>0); % Escolhe a melhor escala.
-strVe='{1:MULTICHOICE_S:';
+strVe='{1:MULTICHOICE:';
 for a=1:length(escalaVstr)
     if a==indp(1)
         strVe = strcat(strVe,['~%100%' escalaVstr{a} ]);
