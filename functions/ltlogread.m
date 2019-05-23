@@ -24,6 +24,10 @@ end
 fclose(fileID);
 circuit.LTspice.log.lines=tline';
 
+if(circuit.LTspice.data.error)
+   disp(circuit.LTspice.log.lines)
+   return;
+end
 
 % circuit.LTspice.log.lines{1}
 
