@@ -25,7 +25,7 @@
 % =========================================================================
 
 % str=param2str(Valor,parname,parunit)
-function [parstr]=param2str(circuit)
+function [parstr,nostepparstr]=param2str(circuit)
 
 valor=circuit.parvalue;
 parname=circuit.parname;
@@ -33,13 +33,17 @@ parunit=circuit.parunit;
 
 % [str, numstr, expstr, mantissa, exponent] = real2eng(valor(1),parunit{1});
 parstr=[ parname{1} '=' real2eng(valor(1),parunit{1}) ','];
+nostepparstr = '';
 for a=2:length(valor)
     if a==length(valor)
         parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ] );
+        nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ] );
     elseif a==length(valor)-1
         parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ' e'] );
+        nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ' e'] );
     else
         parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ','] );
+        nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ','] );
     end
 end
 
