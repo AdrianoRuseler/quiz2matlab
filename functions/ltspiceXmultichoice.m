@@ -41,40 +41,8 @@ labels={circuit.LTspice.data.signals.label}; % Data variables
 
 for q=1:length(circuit.quiz.question)
     
-    switch circuit.quiz.question{q}.type
-        case 'NUMERICAL'
-            multicell='{1:NUMERICAL:';
-            isnumerical=1;
-        case 'MULTICHOICE'
-            multicell='{1:MULTICHOICE:';
-            isnumerical=0;
-        case 'MULTICHOICE_H'
-            multicell='{1:MULTICHOICE_H:';
-            isnumerical=0;
-        case 'MULTICHOICE_V'
-            multicell='{1:MULTICHOICE_V:';
-            isnumerical=0;
-        case 'MULTICHOICE_S'
-            multicell='{1:MULTICHOICE_S:';
-            isnumerical=0;
-        case 'MULTICHOICE_HS'
-            multicell='{1:MULTICHOICE_HS:';
-            isnumerical=0;
-        case 'MULTICHOICE_VS'
-            multicell='{1:MULTICHOICE_VS:';
-            isnumerical=0;
-        otherwise
-            multicell='{1:MULTICHOICE_S:';
-            isnumerical=0;
-            %   MULTICHOICE
-    end
-    
-    
-    
     lopts=length(circuit.quiz.question{q}.options); % Number of options per question
     for o=1:lopts % Get option value
-        %         disp(['Look for ' circuit.quiz.question{q}.options{o} ' in:'])
-        %         disp(labels)
         switch circuit.quiz.question{q}.vartype{o}
             case 'max'
                 optind=find(contains(labels,circuit.quiz.question{q}.options{o},'IgnoreCase',true));
@@ -105,43 +73,87 @@ for q=1:length(circuit.quiz.question)
                 else
                     disp([ circuit.quiz.question{q}.options{o} ' -> meas not FOUND!!'])
                 end
-                %                     labels={circuit.LTspice.data.signals.label}; % Data variables
             case 'log'
                 tmpstr=strsplit(circuit.quiz.question{q}.options{o},':'); %
                 labels={circuit.LTspice.log.sdop{:}.Name}; % Data variables
-                optind=find(contains(labels,tmpstr{1},'IgnoreCase',true));                
+                optind=find(contains(labels,tmpstr{1},'IgnoreCase',true));
                 fields = fieldnames(circuit.LTspice.log.sdop{optind});
                 
-                if find(contains(fields,tmpstr{2}))                    
+                if find(contains(fields,tmpstr{2}))
                     eval(['circuit.quiz.question{q}.values(o)=circuit.LTspice.log.sdop{optind}.' tmpstr{2} ';'])
                 else
                     disp([ tmpstr{2} ' -> Log not FOUND!!']) % O que fazer?
                 end
                 
+            case 'pbc'
+                tbj=tbj2quiz(circuit,circuit.quiz.question{q}.options{o});
+                tbjmchoice = tbj.pbc;
+            case 'pbe'
+                tbj=tbj2quiz(circuit,circuit.quiz.question{q}.options{o});
+                tbjmchoice = tbj.pbe;
+            case 'mop'
+                tbj=tbj2quiz(circuit,circuit.quiz.question{q}.options{o});
+                tbjmchoice = tbj.mop;
+            case 're'
+                tbj=tbj2quiz(circuit,circuit.quiz.question{q}.options{o});
+                circuit.quiz.question{q}.values(o)=tbj.re;
+            case 'ro'
+                tbj=tbj2quiz(circuit,circuit.quiz.question{q}.options{o});
+                circuit.quiz.question{q}.values(o)=tbj.Ro;
             otherwise
                 disp('circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).mean];')
         end
-        %         else
-        %             disp([circuit.quiz.question{q}.options{o} ' NOT FOUND!!'])
-        %         end
     end
-
-    if isnumerical % NUMERICAL
-        for o=1:lopts % get option value
-            if isfield(circuit.quiz.question{q},'values')
-                [~,~, expstr, mantissa] = real2eng(circuit.quiz.question{q}.values(o),circuit.quiz.question{q}.units{o});
-                tempstr=[sprintf('%3.3f',mantissa) ':' sprintf('%3.3f',(mantissa*circuit.quiz.question{q}.opttol(o)/100))];  %  sprintf('%3.3f',mantissa)
-                if(circuit.quiz.question{q}.optscore(o))
-                    multicell = strcat(multicell,['~%' num2str(circuit.quiz.question{q}.optscore(o)) '%' tempstr ]);
+    
+    ismultichoice=0;
+    switch circuit.quiz.question{q}.type
+        case 'STRING'
+            multicell='';
+        case 'NUMERICAL'
+            multicell='{1:NUMERICAL:'; %  {1:NUMERICAL:~%100%704.000:70.400} mV
+            for o=1:lopts % get option value
+                if isfield(circuit.quiz.question{q},'values')
+                    [~,~, expstr, mantissa] = real2eng(circuit.quiz.question{q}.values(o),circuit.quiz.question{q}.units{o});
+                    tempstr=[sprintf('%3.3f',mantissa) ':' sprintf('%3.3f',(mantissa*circuit.quiz.question{q}.opttol(o)/100))];  %  sprintf('%3.3f',mantissa)
+                    if(circuit.quiz.question{q}.optscore(o))
+                        multicell = strcat(multicell,['~%' num2str(circuit.quiz.question{q}.optscore(o)) '%' tempstr ]);
+                    else
+                        multicell = strcat(multicell,['~' tempstr]);
+                    end
                 else
-                    multicell = strcat(multicell,['~' tempstr]);
+                    expstr ='';
                 end
-            else
-                expstr ='';
-            end            
-        end
-        multicell = strcat(multicell,['}' expstr]);
-    else  %   MULTICHOICE
+            end
+            multicell = strcat(multicell,['}' expstr]);
+            
+        case 'TBJ'
+            multicell = tbjmchoice;
+            
+        case 'MULTICHOICE'
+            multicell='{1:MULTICHOICE:';
+            ismultichoice=1;
+        case 'MULTICHOICE_H'
+            multicell='{1:MULTICHOICE_H:';
+            ismultichoice=1;
+        case 'MULTICHOICE_V'
+            multicell='{1:MULTICHOICE_V:';
+            ismultichoice=1;
+        case 'MULTICHOICE_S'
+            multicell='{1:MULTICHOICE_S:';
+            ismultichoice=1;
+        case 'MULTICHOICE_HS'
+            multicell='{1:MULTICHOICE_HS:';
+            ismultichoice=1;
+        case 'MULTICHOICE_VS'
+            multicell='{1:MULTICHOICE_VS:';
+            ismultichoice=1;
+        otherwise
+            multicell='{1:MULTICHOICE_S:';
+            ismultichoice=1;
+    end
+    
+    
+    if ismultichoice   %   MULTICHOICE
         [optscoresort,optscoreind] = sort(circuit.quiz.question{q}.optscore,'descend');
         circuit.quiz.question{q}.optscore = optscoresort;
         circuit.quiz.question{q}.values = circuit.quiz.question{q}.values(optscoreind);
