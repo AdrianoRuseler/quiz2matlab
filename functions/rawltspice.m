@@ -2,6 +2,7 @@
 function data = rawltspice(data)
 % Elapsed time is 0.053146 seconds.
 
+data.error=0; 
 
 tstart = tic;
 fprintf('Extracting LTspice ASCII results ...\n');
@@ -9,6 +10,7 @@ fprintf('Extracting LTspice ASCII results ...\n');
 if ~exist(data.filename,'file') % Verifica se existe o arquivo
     disp(['File not found:' data.filename ])
 %     data=[];
+    data.error=1; 
     return;
 end
 
@@ -18,6 +20,7 @@ fileID = fopen(data.filename,'rb'); % Opens file
 if fileID == -1
     disp(['Could not open:' data.filename ])
 %     data=[];
+    data.error=1; 
     return;
 end
 
@@ -50,17 +53,21 @@ while ~feof(fileID) % Get header
         tline{Line} = tmpchar;
         if contains(tline{Line},'Values:') % Find Values: line
             data.rawfile.valuesposition = ftell(fileID);
-            dataArray = textscan(fileID,'%f%f%f', 'Delimiter', '\t', 'TextType', 'string', 'HeaderLines' ,0, 'ReturnOnError', false, 'EndOfLine', '\r\n'); % read data values
+            try
+                dataArray = textscan(fileID,'%f%f%f', 'Delimiter', '\t', 'TextType', 'string', 'HeaderLines' ,0, 'ReturnOnError', false, 'EndOfLine', '\r\n'); % read data values
+            catch
+                data.error=1;
+                fclose(fileID);
+                return;
+            end            
             fclose(fileID);
             data.rawfile.valuesline = Line+1;
             break;
         end
-    end
-    
-%     disp(tline{Line})
+    end    
+    %     disp(tline{Line})
     Line=Line+1; % increment line counter
 end
-% 
 
 % 
 data.rawfile.lines=tline;
