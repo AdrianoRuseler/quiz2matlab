@@ -36,8 +36,8 @@ quizstruct.question.type = 'multichoice';
      
      quizstruct.question.answernumbers{n}=5; % Numero de escolhas
      
-     [band,colornamestr,valuestr] = rband(Values(n),tol,EXX);
-     
+%      [band,colornamestr,valuestr] = rband(Values(n),tol,EXX);
+     [band,~,valuestr,colornamestr] = rbandcolorid(Values(n),tol,EXX);
      
      quizstruct.question.text{n}=['Qual dos resistores abaixo possui uma resistência de ' valuestr '?'];
      [Yc,~] = printresistor(band,theme);
@@ -76,7 +76,7 @@ quizstruct.question.type = 'multichoice';
      end
      
      
-     quizstruct.question.name{n}=[name ' genqs4remc(' strrep(valuestr,' ','') ')'];
+     quizstruct.question.name{n}=['genqs4remc(' strrep(valuestr,' ','') ')'];
      disp(quizstruct.question.name{n}) % Mostra nome da questão
      
      quizstruct.question.generalfeedback{n}='';
