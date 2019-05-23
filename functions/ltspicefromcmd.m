@@ -8,20 +8,37 @@ for ind=1:length(circuit.parname)
 end
 circuit.LTspice.net.lines{circuit.LTspice.net.paramline}=paramstr; % Updates param line from net file
 
-if isfield(circuit,'cmdtype')
-    switch circuit.cmdtype
-        case '.op'
-            cmdstr = '.op';
-        case '.tran' % .tran Tprint Tstop Tstart
-            cmdstr = ['.tran 0 ' num2str(circuit.parvalue(circuit.cmdvarind),'%10.8e') ' 0'];
-        otherwise
-            cmdstr = '.op';
-    end
-else
-    cmdstr = '.op';
+if isfield(circuit,'model')
+    circuit.LTspice.net.lines{circuit.LTspice.net.modelline}=circuit.model.modelstr; % Updates param line from net file
 end
 
-circuit.LTspice.net.lines{circuit.LTspice.net.cmdline}=cmdstr; 
+% step?
+if isfield(circuit.LTspice.net,'stepline')
+%     disp('Step line exists!!')
+    circuit.LTspice.net.lines{circuit.LTspice.net.stepline}=circuit.stepstr;
+% else
+%     disp('NO Step line this time!!')
+end
+
+if(circuit.cmdupdate)
+    if isfield(circuit,'cmdtype')
+        switch circuit.cmdtype
+            case '.op'
+                cmdstr = '.op';
+            case '.tran' % .tran Tprint Tstop Tstart
+                cmdstr = ['.tran 0 ' num2str(circuit.parvalue(circuit.cmdvarind),'%10.8e') ' 0'];
+            otherwise
+                cmdstr = '.op';
+        end
+    else
+        cmdstr = '.op';
+        circuit.cmdtype = '.op';
+    end
+    
+    circuit.LTspice.net.lines{circuit.LTspice.net.cmdline}=cmdstr;
+    
+end
+
 
 if(circuit.LTspice.tmpdir)  % Use system temp dir?
    circuit.LTspice.simsdir = tempdir;    
@@ -56,17 +73,20 @@ fclose(fileID); % Close
 % [status,cmdout]= 
 system(['XVIIx64.exe -Run -b -ascii ' circuit.LTspice.net.file]); % Executa simulação
 
-
-
 circuit.LTspice.raw.file = [circuit.LTspice.simsdir tmpname '.raw'];
+circuit.LTspice.log.file = [circuit.LTspice.simsdir tmpname '.log'];
+
 data.filename=circuit.LTspice.raw.file;
+% data.log.file=circuit.LTspice.log.file;
+
 circuit.LTspice.data = rawltspice(data); % Read data
 
-
-circuit.LTspice.log.file = [circuit.LTspice.simsdir tmpname '.log'];
 circuit = ltlogread(circuit); % Reads log file
 
 % circuit.LTspice.raw.data.signals.op
 
+ 
+ 
+ 
 
 
