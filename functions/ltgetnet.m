@@ -19,6 +19,10 @@ while ~feof(fileID)
     tline{ln} = fgetl(fileID);
     if contains(tline{ln},'.param') % Find .param line
         circuit.LTspice.net.paramline=ln;
+    elseif contains(tline{ln},'.model')    
+        circuit.LTspice.net.modelline=ln; % Find .model line
+    elseif contains(tline{ln},'.step')
+        circuit.LTspice.net.stepline=ln; % Just one step line please
     elseif contains(tline{ln},'.tran')
         circuit.LTspice.net.cmdline=ln;
         circuit.LTspice.type = 'tran';
