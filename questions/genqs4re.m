@@ -53,9 +53,9 @@ for n=1:length(Values)
         
     end
     pergunta=['Qual dos resistores abaixo possui uma resistência de ' valuestr '? ']; 
-    quizstruct.question.text{n}=['<p style="text-align: center;">' pergunta '<br></p>  <p style="text-align: center;">{1:MULTICHOICE_V:~%100%' Rfig{1} '~' Rfig{2} '~' Rfig{3} '~' Rfig{4} '~' Rfig{5} '}</p>'];    
+    quizstruct.question.text{n}=['<p style="text-align: center;">' pergunta '<br></p>  <p style="text-align: center;">{1:MULTICHOICE_VS:~%100%' Rfig{1} '~' Rfig{2} '~' Rfig{3} '~' Rfig{4} '~' Rfig{5} '}</p>'];    
     
-    quizstruct.question.name{n}=[name ' genqs4re(' valuestr ')'];    
+    quizstruct.question.name{n}=['genqs4re(' valuestr ')'];    
      
     disp(quizstruct.question.name{n})
     
