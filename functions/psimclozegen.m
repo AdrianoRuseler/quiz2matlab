@@ -20,8 +20,17 @@ else
 end
 
 for q=1:quizopts.nquiz
-
-    quizstruct.question.name{q}=[tmpcircuits{q}.quiz.name 'q' num2str(q,'%03i') '(' strrep(tmpcircuits{q}.parstr,' ','') ')']; % Gera nome da questão
+    if isfield(tmpcircuits{q},'parstr')
+        if isfield(tmpcircuits{q},'model')
+            quizstruct.question.name{q}=[tmpcircuits{q}.quiz.name 'q' num2str(q,'%03i') '(' strrep(tmpcircuits{q}.parstr,' ','') ')'  '(' strrep(tmpcircuits{q}.model.parstr,' ','') ')' ]; % Generates quiz name
+        else
+            quizstruct.question.name{q}=[tmpcircuits{q}.quiz.name 'q' num2str(q,'%03i') '(' strrep(tmpcircuits{q}.parstr,' ','') ')']; % Generates quiz name
+        end
+    elseif isfield(tmpcircuits{q},'nostepparstr')
+        quizstruct.question.name{q}=[tmpcircuits{q}.quiz.name 'q' num2str(q,'%03i') '(' strrep(tmpcircuits{q}.nostepparstr,' ','') ')']; % Generates quiz name
+    else
+        quizstruct.question.name{q}=[tmpcircuits{q}.quiz.name 'q' num2str(q,'%03i')]; % Generates quiz name
+    end
     
     quizstruct.question.text{q}=tmpcircuits{q}.quiz.text;
     
