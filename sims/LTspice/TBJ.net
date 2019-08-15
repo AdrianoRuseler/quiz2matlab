@@ -1,0 +1,13 @@
+* A:\Dropbox\GitHub\quiz2matlab\sims\LTspice\TBJ.asc
+Rb1 cc B {Rb}
+Rc1 cc C {Rc}
+Vcc1 cc 0 {Vcc}
+Q1 C B 0 0 TBJ
+.model NPN NPN
+.model PNP PNP
+.lib C:\Users\ruseler\OneDrive\Documents\LTspiceXVII\lib\cmp\standard.bjt
+.param Vcc=30 Rb=820k Rc=680
+.op
+.model TBJ NPN(IS=10F BF=350)
+.backanno
+.end

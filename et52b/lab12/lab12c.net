@@ -1,0 +1,11 @@
+* A:\Dropbox\GitHub\quiz2matlab\et52b\lab12\lab12c.asc
+XU1 i 0 Vpp Vnn out LMX24
+V1 Vpp 0 {Vpp}
+V2 0 Vnn {Vnn}
+Vi i 0 {Vi}
+R1 out 0 1k
+.include A:\Dropbox\GitHub\quiz2matlab\et52b\lab12\LMx24.lib
+.param Vpp=5 Vnn=5 Vi=2 RL=1k
+.op
+.backanno
+.end

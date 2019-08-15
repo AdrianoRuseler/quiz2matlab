@@ -1,0 +1,17 @@
+* A:\Dropbox\GitHub\quiz2matlab\et52b\lab07\TBJ03a.asc
+V1 V1 0 {Vcc}
+Rb V1 B {Rb}
+Q1 V1 B E 0 BC546B
+Re E 0 {Re}
+.model NPN NPN
+.model PNP PNP
+.lib C:\Users\ruseler\OneDrive\Documents\LTspiceXVII\lib\cmp\standard.bjt
+.op
+.param Vcc=50 Rb=680k Re=100
+.meas VRb param V(V1)-V(b)
+.meas PRb param VRb*I(Rb)
+.meas Beta param Ic(Q1)/Ib(Q1)
+.meas VRe param V(e)
+.meas PRe param VRe*I(Re)
+.backanno
+.end

@@ -1,0 +1,16 @@
+* F:\Dropbox\GitHub\quiz2matlab\sims\LTspice\DR01tran.asc
+V1 V1 0 SINE(0 {Vpk} {freq})
+D1 V1 R1 1N4148
+R1 R1 0 {R1}
+.model D D
+.lib C:\Users\Adriano Ruseler\Documents\LTspiceXVII\lib\cmp\standard.dio
+.param Vpk=25 R1=1.5k freq=60
+.tran 0 0.01667 0
+.meas Pout AVG V(R1)*I(R1)
+.meas V1rms RMS V(V1)
+.meas I1rms RMS I(V1)
+.meas Sin param V1rms*I1rms
+.meas Pin AVG -V(V1)*I(V1)
+.meas Pf param Pin/Sin
+.backanno
+.end

@@ -2,23 +2,24 @@
 % Run LTspice simulation from cmd
 function  circuit = ltspicefromcmd(circuit)
 
-paramstr='.param'; % Generates the param string
-for ind=1:length(circuit.parname)
-    paramstr=[paramstr ' ' circuit.parname{ind} '=' num2str(circuit.parvalue(ind),'%10.8e')];
+if isfield(circuit,'parname') && isfield(circuit,'parvalue')
+    paramstr='.param'; % Generates the param string
+    for ind=1:length(circuit.parname)
+        paramstr=[paramstr ' ' circuit.parname{ind} '=' num2str(circuit.parvalue(ind),'%10.8e')];
+    end
+    circuit.LTspice.net.lines{circuit.LTspice.net.paramline}=paramstr; % Updates param line from net file
 end
-circuit.LTspice.net.lines{circuit.LTspice.net.paramline}=paramstr; % Updates param line from net file
 
 if isfield(circuit,'model')
     circuit.LTspice.net.lines{circuit.LTspice.net.modelline}=circuit.model.modelstr; % Updates param line from net file
 end
 
 % step?
-if isfield(circuit.LTspice.net,'stepline')
-%     disp('Step line exists!!')
+if isfield(circuit.LTspice.net,'stepline') && isfield(circuit,'stepstr')   
     circuit.LTspice.net.lines{circuit.LTspice.net.stepline}=circuit.stepstr;
-% else
-%     disp('NO Step line this time!!')
-end
+elseif isfield(circuit.LTspice.net,'stepline') && isfield(circuit,'steppedstr') 
+      circuit.LTspice.net.lines{circuit.LTspice.net.stepline}=circuit.steppedstr;        
+ end
 
 if(circuit.cmdupdate)
     if isfield(circuit,'cmdtype')
@@ -77,6 +78,7 @@ circuit.LTspice.raw.file = [circuit.LTspice.simsdir tmpname '.raw'];
 circuit.LTspice.log.file = [circuit.LTspice.simsdir tmpname '.log'];
 
 data.filename=circuit.LTspice.raw.file;
+data.paramstr=paramstr;
 % data.log.file=circuit.LTspice.log.file;
 
 circuit.LTspice.data = rawltspice(data); % Read data

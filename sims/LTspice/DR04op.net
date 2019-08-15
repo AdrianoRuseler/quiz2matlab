@@ -1,0 +1,17 @@
+* F:\Dropbox\GitHub\quiz2matlab\sims\LTspice\DR04op.asc
+V1 V1 0 {Vcc}
+D2 D1 R2 LedRed
+R1 D1 V1 {R1}
+R2 R2 0 {R2}
+D1 0 D1 1N750
+.model D D
+.lib C:\Users\Adriano Ruseler\Documents\LTspiceXVII\lib\cmp\standard.dio
+.op
+.param Vcc=20 R1=1k R2=1k
+.model LedRed D (IS=93.2P RS=42M N=3.73 BV=4 IBV=10U 
++CJO=2.97P VJ=.75 M=.333 TT=4.32U Iave=40m Vpk=4 type=LED)
+.meas Vled param V(D1)-V(R2)
+.meas Pled param Vled*I(D2)
+.meas Pz param -I(D1)*V(D1)
+.backanno
+.end

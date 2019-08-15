@@ -1,0 +1,14 @@
+* A:\Dropbox\GitHub\quiz2matlab\et52b\lab13\lab13b.asc
+XU1 i N001 Vpp Vnn out LMX24
+V1 Vpp 0 {Vpp}
+V2 0 Vnn {Vnn}
+Vi i 0 {Vi}
+R0 out 0 1k
+R1 N001 0 {R1}
+R2 out N001 {R2}
+.include A:\Dropbox\GitHub\quiz2matlab\et52b\lab13\LMx24.lib
+.param Vpp=10 Vnn=10 R1=1k R2= 1k Vi=2
+.op
+.meas Gio param V(out)/V(i)
+.backanno
+.end

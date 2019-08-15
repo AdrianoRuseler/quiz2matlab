@@ -1,0 +1,13 @@
+* F:\Dropbox\GitHub\quiz2matlab\sims\LTspice\steptest.asc
+V1 V1 0 {Vcc}
+R1 R 0 {R1}
+D1 V1 R 1N4148
+R2 R 0 {R2}
+.model D D
+.lib C:\Users\Adriano Ruseler\Documents\LTspiceXVII\lib\cmp\standard.dio
+.op
+.param Vcc=5 R1=1k R2=1k
+.meas vd1 param V(V1)-V(R)
+.meas pd param vd1*I(D1)
+.backanno
+.end

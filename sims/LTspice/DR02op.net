@@ -1,0 +1,12 @@
+* F:\Dropbox\GitHub\quiz2matlab\sims\LTspice\DR02op.asc
+V1 V1 0 {Vcc}
+D1 V1 R1 1N4148
+R1 R1 0 {R1}
+.model D D
+.lib C:\Users\Adriano Ruseler\Documents\LTspiceXVII\lib\cmp\standard.dio
+.op
+.param Vcc=25 R1=1.2k
+.meas Vd param V(V1)-V(R1)
+.meas Pd param Vd*I(D1)
+.backanno
+.end

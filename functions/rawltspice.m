@@ -6,6 +6,7 @@ data.error=0;
 
 tstart = tic;
 fprintf('Extracting LTspice ASCII results ...\n');
+disp(data.paramstr)
     
 if ~exist(data.filename,'file') % Verifica se existe o arquivo
     disp(['File not found:' data.filename ])
@@ -93,29 +94,34 @@ data.flags=linestr{2};
 linestr = strtrim(strsplit(tline{5},':')); % No. Variables:
 data.nvars=str2double(linestr{2});
 
-% 
+%
 % Gets variables name
 vars=cell(1,data.nvars); % reserve space
-Line=data.rawfile.valuesline-data.nvars-1;
-if data.containstime % Time data
-    Line=Line+1; % skip time variable
-    for nv=2:data.nvars %
-        vars{nv}=strsplit(strtrim(tline{Line}),char(9));
-        U = matlab.lang.makeValidName(char(vars{nv}(2)),'ReplacementStyle','delete');
-        data.signals(nv-1).label=char(U);
-        data.signals(nv-1).type=char(vars{nv}(3));
-%         data.signals(nv-1).ID=str2double(char(vars{nv}(1)));
-        Line=Line+1;
+if isfield(data.rawfile,'valuesline')
+    Line=data.rawfile.valuesline-data.nvars-1;
+    if data.containstime % Time data
+        Line=Line+1; % skip time variable
+        for nv=2:data.nvars %
+            vars{nv}=strsplit(strtrim(tline{Line}),char(9));
+            U = matlab.lang.makeValidName(char(vars{nv}(2)),'ReplacementStyle','delete');
+            data.signals(nv-1).label=char(U);
+            data.signals(nv-1).type=char(vars{nv}(3));
+            %         data.signals(nv-1).ID=str2double(char(vars{nv}(1)));
+            Line=Line+1;
+        end
+    else % No time data
+        for nv=1:data.nvars % OK
+            vars{nv}=strsplit(strtrim(tline{Line}),char(9));
+            U = matlab.lang.makeValidName(char(vars{nv}(2)),'ReplacementStyle','delete');
+            data.signals(nv).label=char(U);
+            data.signals(nv).type=char(vars{nv}(3));
+            %         data.signals(nv).ID=str2double(char(vars{nv}(1)));
+            Line=Line+1;
+        end
     end
-else % No time data
-    for nv=1:data.nvars % OK
-        vars{nv}=strsplit(strtrim(tline{Line}),char(9));
-        U = matlab.lang.makeValidName(char(vars{nv}(2)),'ReplacementStyle','delete');
-        data.signals(nv).label=char(U);
-        data.signals(nv).type=char(vars{nv}(3));
-%         data.signals(nv).ID=str2double(char(vars{nv}(1)));
-        Line=Line+1;
-    end
+else
+    data.error=1; 
+    return
 end
 
 linestr = strtrim(strsplit(tline{6},':')); % No. Points:

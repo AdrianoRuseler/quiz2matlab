@@ -60,18 +60,31 @@ for t=1:x % n tabels loop
             end
             
             switch tablecircuit.quiz.table{t,c}.vartype
-                case 'op'
+                case 'opstep' % Not sure
                     labels={circuit.LTspice.data.signals.label}; % Data variables
                     optind=find(contains(labels,tablecircuit.quiz.table{t,c}.options,'IgnoreCase',true));
                     tablecircuit.quiz.table{t,c}.labelsind = optind(1);
                     tablecircuit.quiz.table{t,c}.values=[circuit.LTspice.data.signals(tablecircuit.quiz.table{t,c}.labelsind).op];
+                case 'op'
+                    try % error in simulation
+                        labels={circuit.LTspice.data.signals.label}; % Data variables
+                        optind=find(contains(labels,tablecircuit.quiz.table{t,c}.options,'IgnoreCase',true));
+                        tablecircuit.quiz.table{t,c}.labelsind = optind(1);
+                        tablecircuit.quiz.table{t,c}.values=[circuit.LTspice.data.signals(tablecircuit.quiz.table{t,c}.labelsind).op];
+                    catch
+                        tablecircuit.quiz.table{t,c}.values=0;
+                    end
                 case 'meas' % meas
-                    fields = fieldnames(circuit.LTspice.log.meas);
-                    optind=find(contains(fields,tablecircuit.quiz.table{t,c}.options));
-                    if optind
-                        eval(['tablecircuit.quiz.table{t,c}.values=circuit.LTspice.log.meas.' tablecircuit.quiz.table{t,c}.options ';']);
-                    else
-                        disp([ tablecircuit.quiz.table{t,c}.options ' -> meas not FOUND!!'])
+                    try % error in simulation
+                        fields = fieldnames(circuit.LTspice.log.meas);
+                        optind=find(contains(fields,tablecircuit.quiz.table{t,c}.options));
+                        if optind
+                            eval(['tablecircuit.quiz.table{t,c}.values=circuit.LTspice.log.meas.' tablecircuit.quiz.table{t,c}.options ';']);
+                        else
+                            disp([ tablecircuit.quiz.table{t,c}.options ' -> meas not FOUND!!'])
+                        end
+                    catch
+                        tablecircuit.quiz.table{t,c}.values=0;
                     end
                 case 'log'
                     tmpstr=strsplit(tablecircuit.quiz.table{t,c}.options,':'); %
@@ -82,23 +95,23 @@ for t=1:x % n tabels loop
                         eval(['tablecircuit.quiz.table{t,c}.values=circuit.LTspice.log.sdop{optind}.' tmpstr{2} ';'])
                     else
                         disp([ tmpstr{2} ' -> Log not FOUND!!']) % O que fazer?
-                    end                    
+                    end
                 case 'pbc'
                     tbj=tbj2quiz(circuit,tablecircuit.quiz.table{t,c}.options);
-                     tbjmchoice = tbj.pbc;   
+                    tbjmchoice = tbj.pbc;
                 case 'pbe'
-                    tbj=tbj2quiz(circuit,tablecircuit.quiz.table{t,c}.options); 
+                    tbj=tbj2quiz(circuit,tablecircuit.quiz.table{t,c}.options);
                     tbjmchoice = tbj.pbe;
                 case 'pcb'
                     tbj=tbj2quiz(circuit,tablecircuit.quiz.table{t,c}.options);
-                     tbjmchoice = tbj.pcb;   
+                    tbjmchoice = tbj.pcb;
                 case 'peb'
-                    tbj=tbj2quiz(circuit,tablecircuit.quiz.table{t,c}.options); 
+                    tbj=tbj2quiz(circuit,tablecircuit.quiz.table{t,c}.options);
                     tbjmchoice = tbj.peb;
                 case 'mop'
                     tbj=tbj2quiz(circuit,tablecircuit.quiz.table{t,c}.options);
                     tbjmchoice = tbj.mop;
-
+                    
                 otherwise
                     disp([ tablecircuit.quiz.table{t,c}.vartype ' -> vartype not FOUND!!'])
             end
@@ -113,10 +126,10 @@ for t=1:x % n tabels loop
                     tablecell{s,c} = strcat(tablecell{s,c},['~%' num2str(tablecircuit.quiz.table{t,c}.optscore) '%' tempstr '} ' expstr]);
                 case 'SCALE'
                     tablecell{s,c} = num2scale(tablecircuit.quiz.table{t,c}.values,tablecircuit.quiz.table{t,c}.units);
-               
+                    
                 case 'TBJ'
-%                     disp('TBJ case!!')
-%                     disp(tbjmchoice)
+                    %                     disp('TBJ case!!')
+                    %                     disp(tbjmchoice)
                     tablecell{s,c} = tbjmchoice;
                 otherwise
                     disp([ tablecircuit.quiz.table{t,c}.type ' -> type not FOUND!!'])

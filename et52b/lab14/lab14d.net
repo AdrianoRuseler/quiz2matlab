@@ -1,0 +1,17 @@
+* A:\Dropbox\GitHub\quiz2matlab\et52b\lab14\lab14d.asc
+V1 Vpp 0 {Vpp}
+V2 0 Vnn {Vnn}
+Vi i 0 {Vi}
+R0 out 0 {R0}
+R1 out N001 {R1}
+XU2 0 N001 Vpp Vnn out LMX24
+Q1 N001 0 i 0 BC546B
+.model NPN NPN
+.model PNP PNP
+.lib C:\Users\ruseler\OneDrive\Documents\LTspiceXVII\lib\cmp\standard.bjt
+.include A:\Dropbox\GitHub\quiz2matlab\et52b\lab14\LMx24.lib
+.param Vpp=10 Vnn=10 R1=100 R0= 10k Vi=1
+.op
+.meas Gio param V(out)/V(i)
+.backanno
+.end
