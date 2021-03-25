@@ -5,7 +5,7 @@ clc
 % circuit.dir ='F:\Dropbox\GitHub\quiz2matlab\sims\LTspice\'; % Home
 circuit.name = 'DR01op'; % File name
 circuit.dir = getsimdir([circuit.name '.m']); % Sets simulation dir
-circuit.theme  = 'clean'; % clean or boost
+circuit.theme  = 'boost39'; % clean or boost
 
 
 % Config simulation
@@ -14,17 +14,17 @@ circuit.parname={'Vcc','R1'}; % Variables names
 circuit.parunit={'V','&Omega;'}; % Variables unit
 
 % parameters input
-Vcc=5:2.5:30; 
+Vcc=5:5:30; 
 
 circuit.stepvar = Vcc;
 % Vz=[2.7 3.3 3.9 4.7 5.6 6.8 8.2 3.0 3.6 4.3 5.1 6.2 7.5 9.1];
 % R1 = combres(1,10,'E48'); %
-% Rb = combres(1,[100],'E12'); %
-R1 = combres(1,[10 100],'E24'); % 
+R1 = combres(1,[100],'E12'); %
+% R1 = combres(1,[10 100],'E24'); % 
 
 circuit.Xi=CombVec(Vcc,R1); %%
 
-
+circuit.cmdupdate=0; % .op and .tran supported 
 
 % V(n001):	 25	 voltage
 % V(vr1):	 24.2933	 voltage

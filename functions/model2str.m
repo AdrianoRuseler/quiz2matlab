@@ -24,37 +24,53 @@
 % ***
 % =========================================================================
 
+% length(tmpcircuits{c}.model)
+
+% circuit=tmpcircuits{c};
 % str=param2str(Valor,parname,parunit)
 function [circuit]=model2str(circuit)
 
-valor=circuit.model.parvalue;
-parname=circuit.model.parname;
-parunit=circuit.model.parunit;
-
-modelstr=['.model ' circuit.model.name ' ' circuit.model.tipo '('];
+for m=1:length(circuit.model)
     
-% [str, numstr, expstr, mantissa, exponent] = real2eng(valor(1),parunit{1});
-parstr=[ parname{1} '=' real2eng(valor(1),parunit{1},0) ','];
-modelstr=[modelstr parname{1} '=' num2str(valor(1),'%10.8e')];
-% nostepparstr = '';
-for a=2:length(valor)
-    if a==length(valor)
-        parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a},0) ] );
-%         nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ] );
-        modelstr=strcat(modelstr,[ ' ' parname{a} '=' num2str(valor(a),'%10.8e') ')']);
-    elseif a==length(valor)-1
-        parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a},0) ' e'] );
-%         nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ' e'] );
-        modelstr=strcat(modelstr,[' ' parname{a} '=' num2str(valor(a),'%10.8e') ]);
-    else
-        parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a},0) ','] );
-%         nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ','] );
-        modelstr=strcat(modelstr,[ ' ' parname{a} '=' num2str(valor(a),'%10.8e') ]);
-    end
+    valor=circuit.model(m).parvalue;
+    parname=circuit.model(m).parname;
+    parunit=circuit.model(m).parunit;
+    
+    modelstr=['.model ' circuit.model(m).name ' ' circuit.model(m).tipo '('];
+    
+    % [str, numstr, expstr, mantissa, exponent] = real2eng(valor(1),parunit{1});
+      
+%     parstr=[ parname{1} '=' real2eng(valor(1),parunit{1},0) ','];
+    
+if length(valor)==2
+    parstr=[ parname{1} '=' real2eng(valor(1),parunit{1},0) ' e'];
+else
+    parstr=[ parname{1} '=' real2eng(valor(1),parunit{1},0) ','];
 end
-
-circuit.model.parstr=parstr;
-circuit.model.modelstr=modelstr;
+    
+    
+    modelstr=[modelstr parname{1} '=' num2str(valor(1),'%1.3e')];
+    % nostepparstr = '';
+    for a=2:length(valor)
+        if a==length(valor)
+            parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a},0) ';'] );
+            %         nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ] );
+            modelstr=strcat(modelstr,[ ' ' parname{a} '=' num2str(valor(a),'%1.3e') ')']);
+        elseif a==length(valor)-1
+            parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a},0) ' e'] );
+            %         nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ' e'] );
+            modelstr=strcat(modelstr,[' ' parname{a} '=' num2str(valor(a),'%1.3e') ]);
+        else
+            parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a},0) ','] );
+            %         nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ','] );
+            modelstr=strcat(modelstr,[ ' ' parname{a} '=' num2str(valor(a),'%1.3e') ]);
+        end
+    end
+    
+    circuit.model(m).parstr=parstr;
+    circuit.model(m).modelstr=modelstr;
+    
+end
 
 
 

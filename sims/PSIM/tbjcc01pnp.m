@@ -1,9 +1,6 @@
 clear all
 clc
 
-% Sets simulation dir
-% circuit.dir='F:\Dropbox\GitHub\quiz2matlab\sims\PSIM\'; % Home
-% circuit.dir='A:\Dropbox\GitHub\quiz2matlab\sims\PSIM\'; % UTFPR
 
 % Config simulation
 % circuit.name = 'zener01'; % File name

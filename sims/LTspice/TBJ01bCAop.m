@@ -5,7 +5,7 @@ clc
 % circuit.dir ='F:\Dropbox\GitHub\quiz2matlab\sims\LTspice\'; % Home
 circuit.name = 'TBJ01bCAop'; % File name
 circuit.dir = getsimdir([circuit.name '.m']); % Sets simulation dir
-circuit.theme  = 'clean'; % clean or boost
+circuit.theme  = 'boost39'; % clean or boost
 
 % Config simulation
 circuit.parnamesim={'Vcc','Rb','Rc'}; % Variables names
@@ -25,6 +25,9 @@ Va=100:50:200;
 % Rb = combres(1,[100],'E12'); %
 circuit.Xi=CombVec(Vcc,Rb,Rc,Is,Beta,Va); %%
 
+circuit.parind=[1 2 3];
+circuit.modind=[4 5 6];
+
 circuit.model.parnamesim={'IS','BF','VAF'};
 circuit.model.parname={'IS','BF','VAF'};
 circuit.model.parunit={'A','','V'};
@@ -34,6 +37,7 @@ circuit.model.parunit={'A','','V'};
 circuit.model.name='TBJ';
 circuit.model.tipo='PNP';
 
+circuit.cmdupdate=0; % .op and .tran supported 
 circuit.cmdtype = '.op'; % Operation Point Simulation
 
 % Generate question
@@ -67,6 +71,7 @@ quiz.enunciado = 'Simule em CC o circuito apresentado na Figura 1 e determine:';
 % prb: vrb*i(rb)=0.00356956
 % prc: vrc*i(rc)=0.101005
 
+quiz.tbjeval=1;
 quiz.tbjtype='q1:pnp';
 
 % q=1;
@@ -142,8 +147,8 @@ quiz.question{q}.opttol=[10]; % tolerance in percentage %
 quiz.question{q}.type='TBJ';
 
 %% 
-circuit.nsims=550; % Number of simulations
-quiz.nquiz = 500; % Number of quizes
+circuit.nsims=50; % Number of simulations
+quiz.nquiz = 50; % Number of quizes
 
 % circuit.nsims=length(circuit.Xi);
 % quiz.nquiz = length(circuit.Xi);

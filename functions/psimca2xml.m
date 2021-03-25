@@ -12,31 +12,44 @@ circuit.PSIMCMD.tmpdir=1; % Use system temp dir?
 circuit.PSIMCMD.tmpfiledel=1; % Delete tmp files?
 
 % circuit.PSIMCMD.totaltime=10E-005; % Total simulation time, in sec.
-circuit.PSIMCMD.steptime=1E-005; % Simulation time step, in sec.  
+circuit.PSIMCMD.steptime=5E-007; % Simulation time step, in sec.  
 % circuit.PSIMCMD.printtime=0; %Time from which simulation results are saved to the output file (default = 0). No output is saved before this time. 
 circuit.PSIMCMD.printstep=1; %Print step (default = 1). If the print step is set to 1, every data point will be saved to the output file. 
 % If it is 10, only one out of 10 data points will be saved. This helps to reduce the size of the output file. 
 
-circuit = getpsimnet(circuit); % Reads or generates net file from psim
-circuit.PSIMCMD.net.run = 1;
+circuit.PSIMCMD.net.run = 0; % Flag to use netlist file in simulation
+% circuit = getpsimnet(circuit); % Reads or generates net file from psim
 
-sortnquestions=500; % Number of simulations
+% sortnquestions=300; % Number of simulations
 [~,y]=size(circuit.Xi);
-nq=randperm(y,sortnquestions); % escolha as questoes
+nq=randperm(y,circuit.nsims); % escolha as questoes
 circuit.X=circuit.Xi(:,nq);
 
+circuit = rmfield(circuit,'Xi');
 % circuit.cycles = 3; % Number of periods
 
-
-for c=1:length(circuit.X)
-    tmpcircuits{c}=circuit;
+[~,y]=size(circuit.X);
+for c=1:y
+    tmpcircuits{c}=rmfield(circuit,'X'); % Not used here
+    tmpcircuits{c}.parnamesim = circuit.parnamesim;
     tmpcircuits{c}.parvalue=circuit.X(:,c); % Variables values
     tmpcircuits{c}.parstr = param2str(tmpcircuits{c});
     tmpcircuits{c}.PSIMCMD.totaltime=circuit.cycles/tmpcircuits{c}.parvalue(circuit.fundfreqind); % Total simulation time, in sec.
-    tmpcircuits{c}.PSIMCMD.printtime=(circuit.printcycle-1)/tmpcircuits{c}.parvalue(circuit.fundfreqind);
+    tmpcircuits{c}.PSIMCMD.printtime=(circuit.printcycle-1)/tmpcircuits{c}.parvalue(circuit.fundfreqind);   
 end
 
-%   Runs simulation OK!
+% Eval functions
+if isfield(circuit,'funcstr')     
+    for c=1:y
+        parvalues = tmpcircuits{c}.parvalue; % Its used in function input eval
+        for f=1:length(circuit.funcstr) % Functions loop            
+            tmpcircuits{c}.funcvalue(f)=eval(circuit.funcstr{f}); % Eval functions
+        end
+    end
+end
+
+
+%  Runs simulation OK!
 [~,y]=size(circuit.X);
 parfor n=1:y
     tmpcircuits{n} = psimfromcmd(tmpcircuits{n}); % Simula via CMD
@@ -54,14 +67,18 @@ for c=1:length(tmpcircuits)
     end
 end
 
+if ~isfield(quiz,'nquiz')
+    quiz.nquiz=length(circuits);
+end
+
 pngfile=[circuit.dir circuit.name '.png']; % Fig png file
 
-if isfiled(circuit,'theme')
+if isfield(circuit,'theme')
     imgout=[circuit.dir circuit.name circuit.theme '.png']; % Fig png file
     pngchangewhite(pngfile,imgout,circuit.theme)
 else
-    imgout=[circuit.dir circuit.name 'clean.png']; % Fig png file
-    pngchangewhite(pngfile,imgout,'clean')
+    imgout=[circuit.dir circuit.name 'boost.png']; % Fig png file
+    pngchangewhite(pngfile,imgout,'boost')
 end
 
 quiz.name = [circuit.name 'quiz'];
@@ -75,7 +92,7 @@ end
 
 %% Generate quizstruct moodle question
 quizopts.name=[circuit.name 'quiz'];
-quizopts.nquiz=250; % Number of quizes
+quizopts.nquiz=quiz.nquiz; % Number of quizes
 quizopts.permutquiz =1; % Permut quiz?
 quizopts.nquizperxml=500; % Number of quizes per file
 quizopts.type = 'cloze';

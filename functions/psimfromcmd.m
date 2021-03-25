@@ -27,9 +27,10 @@
 
 function  circuit = psimfromcmd(circuit)
 
-% Copyright ® 2006-2018 Powersim Inc.  All Rights Reserved.
+% Copyright ® 2006-2020 Powersim Inc.  All Rights Reserved.
 % 
 % Usage: PsimCmd.exe -i "[input file]" -o "[output file]" -v "VarName1=VarValue"  -v "VarName2=VarValue"  -g -K1 -L1 -t "TotalTime" -s "TimeStep" -pt "PrintTime" -ps "PrintStep" -Net "Netlist file name" -m "file name for errors"
+% 
 % 
 % Except input file, all other parameters are optional.
 % All file names should be enclosed by " or ' characters.
@@ -49,15 +50,36 @@ function  circuit = psimfromcmd(circuit)
 % -L or -L1 :  Set 'Load flag' in Simulation control. Continue from previous simulation result.
 % -L0 :  Remove 'Load flag' in Simulation control. Starts simulation from beginning.
 % -Net : Generate netlist file. Simulation will not run. Followed by optional Netlist file name.
+% -NetXml : Generate XML netlist file. Simulation will not run. Followed by optional XML file name.
+% -NetXmlU : Generate XML netlist file in UTF16 format. Simulation will not run. Followed by optional XML file name.
 % -c :  Followed by input netlist file.
-% -SP  or -SPICE : Run Spice simulation. (Requires Spice module)
 % -LT : Run LTspice simulation. (Requires Spice module)
+% Run Script: Input file must be a .script file.
+% ///////////////////////////////////////////////
+% //		psimcmd return values:
+% /////////////////////////////
+% //		0: Success
+% //
+% //		Errors:
+% //		2:  Failed to run simulation or execute script or generate an XML file.
+% //		3:  Can not open input schematic file
+% //		4:  Input file is missing
+% //		10: unable to retrieve valid license.
+% //
+% ///////////////////////////////////////////////
 
 %  varstrcmd -v "VarName1=VarValue"  -v "VarName2=VarValue"
 varstrcmd='';
 for ind=1:length(circuit.parname)
     varstrcmd=[varstrcmd ' -v "' circuit.parnamesim{ind} '=' num2str(circuit.parvalue(ind),'%10.8e') '"'];
 end
+% print functions values
+if isfield(circuit,'funcvalue')
+    for ind=1:length(circuit.funcvalue)
+        varstrcmd=[varstrcmd ' -v "func' num2str(ind) '=' num2str(circuit.funcvalue(ind),'%10.8e') '"'];
+    end
+end
+
 circuit.PSIMCMD.extracmd = varstrcmd;
 
 simfilebase = [circuit.PSIMCMD.simsdir circuit.PSIMCMD.name '.psimsch']; % Sim base file
@@ -74,7 +96,7 @@ if(circuit.PSIMCMD.net.run) % run net file
     copyfile(circuit.PSIMCMD.net.file,circuit.PSIMCMD.infile)
 else
     if(circuit.PSIMCMD.tmpfile) % Create tmp file for simulation?        
-        circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir tmpname '.psimsch'];
+        circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir tmpname '.psimsch'];        
         copyfile(simfilebase,circuit.PSIMCMD.infile) % Copia arquivo
     else
         tmpname = circuit.PSIMCMD.name;
@@ -84,8 +106,6 @@ end
 
 circuit.PSIMCMD.outfile = [circuit.PSIMCMD.simsdir tmpname '.txt'];
 circuit.PSIMCMD.msgfile = [circuit.PSIMCMD.simsdir tmpname 'msg.txt'];
-
-
 
 % Cria string de comando
 infile = ['"' circuit.PSIMCMD.infile '"'];
@@ -164,14 +184,18 @@ for i=2:length(header)
     circuit.PSIMCMD.data.signals(i-1).label=U;
     circuit.PSIMCMD.data.signals(i-1).values=M(:,i);
     circuit.PSIMCMD.data.signals(i-1).mean=mean(M(:,i));
+    circuit.PSIMCMD.data.signals(i-1).meanround=round(mean(M(:,i)),0);
     circuit.PSIMCMD.data.signals(i-1).rms=rms(M(:,i));
     circuit.PSIMCMD.data.signals(i-1).max=max(M(:,i));
     circuit.PSIMCMD.data.signals(i-1).min=min(M(:,i)); % 
+    circuit.PSIMCMD.data.signals(i-1).delta=abs( max(M(:,i)) - min(M(:,i)) ); % 
 %     circuit.PSIMCMD.data.signals(i-1).std=std(M(:,i)); % Standard deviation
 %     circuit.PSIMCMD.data.signals(i-1).median=median(M(:,i)); % Standard deviation
     circuit.PSIMCMD.data.signals(i-1).dimensions=1;
     circuit.PSIMCMD.data.signals(i-1).title=U;
     circuit.PSIMCMD.data.signals(i-1).plotStyle=[0,0];
+    
+    disp(circuit.PSIMCMD.data.signals(i-1))
 end
 
 circuit.PSIMCMD.data.blockName=tmpname;

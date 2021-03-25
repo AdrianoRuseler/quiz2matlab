@@ -22,7 +22,12 @@ end
 for q=1:quizopts.nquiz
     if isfield(tmpcircuits{q},'parstr')
         if isfield(tmpcircuits{q},'model')
-            quizstruct.question.name{q}=[tmpcircuits{q}.quiz.name 'q' num2str(q,'%03i') '(' strrep(tmpcircuits{q}.parstr,' ','') ')'  '(' strrep(tmpcircuits{q}.model.parstr,' ','') ')' ]; % Generates quiz name
+            tmpstr='';
+            for ml=1:length(tmpcircuits{q}.model) % number of .model lines
+                tmpstr=[tmpstr '(' strrep(tmpcircuits{q}.model(ml).parstr,' ','') ')'];
+            end
+            quizstruct.question.name{q}=[tmpcircuits{q}.quiz.name 'q' num2str(q,'%03i') '(' strrep(tmpcircuits{q}.parstr,' ','') ')'  tmpstr ]; % Generates quiz name
+            
         else
             quizstruct.question.name{q}=[tmpcircuits{q}.quiz.name 'q' num2str(q,'%03i') '(' strrep(tmpcircuits{q}.parstr,' ','') ')']; % Generates quiz name
         end
@@ -31,6 +36,8 @@ for q=1:quizopts.nquiz
     else
         quizstruct.question.name{q}=[tmpcircuits{q}.quiz.name 'q' num2str(q,'%03i')]; % Generates quiz name
     end
+    
+    
     
     quizstruct.question.text{q}=tmpcircuits{q}.quiz.text;
     

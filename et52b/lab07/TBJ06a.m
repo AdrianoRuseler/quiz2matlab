@@ -6,7 +6,7 @@ clear all
 
 circuit.name = 'TBJ06a'; % File name
 circuit.dir = getsimdir([circuit.name '.m'],'LTspice'); % Sets simulation dir
-circuit.theme  = 'clean'; % clean or boost
+circuit.theme  = 'boost'; % clean or boost
 
 % Config simulation
 circuit.parnamesim={'Vcc','Rc','R1','Re','R2'}; % Variables names
@@ -15,7 +15,7 @@ circuit.parunit={'V','&Omega;','&Omega;','&Omega;','&Omega;'}; % Variables unit
 
 % circuit.stepstr = '.step param Vcc list 1 2 3 4 5';
 % circuit.parstep = 1; % Must be the first
-circuit.stepvalues = [15];
+circuit.stepvalues = [10 15];
 
 R1 = combres(1,10000,'E12'); % 12 resistores
 % R2 = combres(1,10000,'E12'); % 12 resistores
@@ -31,6 +31,11 @@ circuit.X = circuit.Xi;
 % 
 circuit.nsims=length(circuit.X);
 
+circuit.timeout = 5; % Simulation timeout in seconds
+circuit.cmdtype = '.op'; % Operation Point Simulation
+circuit.cmdupdate = 0;
+quiz.tbjtype = 'q1:npn';
+quiz.tbjeval = 0; % Evaluate tbj op
 
 % circuit.nsims=5; % Number of simulations
 % [~,y]=size(circuit.Xi);
@@ -55,10 +60,10 @@ circuit.nsims=length(circuit.X);
 
 
 
-quiz.enunciado = 'Monte o circuito apresentado na Figura 1 e preencha as tabelas a seguir:';
+quiz.enunciado = 'Simule no LTspice o circuito apresentado na Figura 1 e preencha as tabelas a seguir:';
 t=1;
-quiz.tablecaption{t}='Tabela 1: Grandezas medidas com multímetro digital (Valor médio)!';
-quiz.tablequestion{t}='Utilize o multímetro digital no modo CC:';
+quiz.tablecaption{t}='Tabela 1: Grandezas medidas (Valor médio)!';
+quiz.tablequestion{t}='Análog ao multímetro digital no modo CC:';
 c=1;
 quiz.table{t,c}.header = 'Vcc';
 quiz.table{t,c}.units='V';
@@ -165,8 +170,8 @@ quiz.table{t,4}.type='TBJ';
 
 
 
-quiz.tablecaption{3}='Tabela 3: Grandezas medidas com multímetro digital (Valor médio)!';
-quiz.tablequestion{3}='Utilize o multímetro digital no modo CC:';
+quiz.tablecaption{3}='Tabela 3: Grandezas medidas no LTspice (Valor médio)!';
+quiz.tablequestion{3}='Medição no LTspice, análogo ao multímetro digital no modo CC:';
 
 t=3;
 c=1;
@@ -389,11 +394,10 @@ quiz.table{t,c}.type='NUMERICAL';
 
 
 %%
-quiz.nquiz=length(circuit.X);
-% 
-% circuit.nsims = 500; % Number of simulations
-%  quiz.nquiz = 5; % Number of quizes
+circuit.nsims = 50; % Number of simulations
+quiz.nquiz = 50; % Number of quizes
 
+circuit.LTspice.net.run =1;
 ltspicetable2xml(circuit,quiz); % 
 
 

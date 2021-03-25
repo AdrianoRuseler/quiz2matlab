@@ -5,7 +5,7 @@ clc
 % circuit.dir ='F:\Dropbox\GitHub\quiz2matlab\sims\LTspice\'; % Home
 circuit.name = 'DR01tran'; % File name
 circuit.dir = getsimdir([circuit.name '.m']); % Sets simulation dir
-circuit.theme  = 'clean'; % clean or boost
+circuit.theme  = 'boost39'; % clean or boost
 
 
 % Config simulation
@@ -22,6 +22,7 @@ freq=60;
 
 circuit.Xi=CombVec(Vcc,freq,R1); %%
 
+circuit.cmdupdate=1; % .op and .tran supported 
 circuit.cmdtype='.tran';
 circuit.cmdvarind=2;
 % .tran Tprint Tstop Tstart
@@ -71,11 +72,11 @@ quiz.question{4}.type='NUMERICAL';
 
 
 %% 
-% circuit.nsims=252; % Number of simulations
-% quiz.nquiz = 250; % Number of quizes
+circuit.nsims=25; % Number of simulations
+quiz.nquiz = 25; % Number of quizes
 
-circuit.nsims=length(circuit.Xi);
-quiz.nquiz = length(circuit.Xi);
+% circuit.nsims=length(circuit.Xi);
+% quiz.nquiz = length(circuit.Xi);
 ltspice2xml(circuit,quiz); % 
 
 

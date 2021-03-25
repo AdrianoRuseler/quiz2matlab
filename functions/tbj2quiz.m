@@ -14,8 +14,6 @@ function [tbj]=tbj2quiz(circuit,device)
 
 tmpstr=strsplit(device,':'); %
 
-
-
 tbj.name = tmpstr{1};
 tbj.type = tmpstr{2};
 
@@ -25,85 +23,59 @@ tbj.vcesat = 0.25; % Sat if less than this
 % tbj.beon;
 % tbj.bcon;
 
-labels={circuit.LTspice.log.sdop{:}.Name}; % Data variables
-optind=find(contains(labels,tbj.name,'IgnoreCase',true)); % Find TBJ
-
-if isempty(optind)
-    disp('TBJ not FOUND!!')
-    return
+if isfield(circuit,'model')
+    for ml=1:length(circuit.model) % number of .model lines
+        for p=1:length(circuit.model(ml).parnamesim)
+            tbj.(circuit.model(ml).parnamesim{p})=circuit.model(ml).parvalue(p);
+        end
+    end
 end
 
-tbj.fields = fieldnames(circuit.LTspice.log.sdop{optind}); % Get TBJ parameters
 
-tbj.Ib=circuit.LTspice.log.sdop{optind}.Ib;
-tbj.Ic=circuit.LTspice.log.sdop{optind}.Ic;
+ndevgroups=length(circuit.LTspice.log.sdop); % Number os groups, TBJ, Fet...
+for g=1:ndevgroups
+    devnames={circuit.LTspice.log.sdop{g}.Name}; % Data variables
+    devfields{g} = fieldnames(circuit.LTspice.log.sdop{g}); % Grupo g
+    devind=find(contains(devnames{:},tbj.name,'IgnoreCase',true));
+    
+    if devind % Found device in group
+        tbj.fields = devfields{g};
+        optind=g;
+        for p=1:length(devfields{g})
+            tbj.(devfields{g}{p})=circuit.LTspice.log.sdop{g}.(devfields{g}{p})(devind);
+        end
+    end
+end
+
+
 tbj.Ie=tbj.Ib+tbj.Ic;
-
-tbj.Vbe=circuit.LTspice.log.sdop{optind}.Vbe;
-tbj.Vbc=circuit.LTspice.log.sdop{optind}.Vbc;
-tbj.Vce=circuit.LTspice.log.sdop{optind}.Vce;
-tbj.BetaDC=circuit.LTspice.log.sdop{optind}.BetaDC;
-
-tbj.Gm=circuit.LTspice.log.sdop{optind}.Gm;
-tbj.Rpi=circuit.LTspice.log.sdop{optind}.Rpi;
-
 tbj.re=tbj.Rpi/(tbj.BetaDC+1);
-
-tbj.Rx=circuit.LTspice.log.sdop{optind}.Rx;
-tbj.Ro=circuit.LTspice.log.sdop{optind}.Ro;
-tbj.Cbe=circuit.LTspice.log.sdop{optind}.Cbe;
-tbj.Cbc=circuit.LTspice.log.sdop{optind}.Cbc;
-tbj.Cjs=circuit.LTspice.log.sdop{optind}.Cjs;
-
-tbj.BetaAC=circuit.LTspice.log.sdop{optind}.BetaAC;
-tbj.Cbx=circuit.LTspice.log.sdop{optind}.Cbx;
-tbj.Ft=circuit.LTspice.log.sdop{optind}.Ft;
-
-
 tbj.Veb=-tbj.Vbe;
 tbj.Vcb=-tbj.Vbc;
 tbj.Vec=-tbj.Vce;
 
-% PNP
-if tbj.Veb < tbj.jvon % off
-    tbj.peb='{1:MULTICHOICE:~Direta~%100%Reversa}';
-    tbj.ebon = 0;
-else
-    tbj.peb='{1:MULTICHOICE:~%100%Direta~Reversa}';
-    tbj.ebon = 1;
-end
-
-% NPN
-if tbj.Vbe < tbj.jvon % off
-    tbj.pbe='{1:MULTICHOICE:~Direta~%100%Reversa}';
-    tbj.beon = 0;
-else
-    tbj.pbe='{1:MULTICHOICE:~%100%Direta~Reversa}';
-    tbj.beon = 1;
-end
-
-% NPN
-if tbj.Vbc <= 0.1 % off
-    tbj.pbc='{1:MULTICHOICE:~Direta~%100%Reversa}';
-    tbj.bcon = 0;
-else
-    tbj.pbc='{1:MULTICHOICE:~%100%Direta~Reversa}';
-    tbj.bcon = 1;
-end
-% PNP
-if tbj.Vcb <= 0.1 % off
-    tbj.pcb='{1:MULTICHOICE:~Direta~%100%Reversa}';
-    tbj.cbon = 0;
-else
-    tbj.pcb='{1:MULTICHOICE:~%100%Direta~Reversa}';
-    tbj.cbon = 1;
-end
-
-
-
+% disp(tbj)
 
 switch tbj.type
     case 'npn'
+        
+        % NPN
+        if tbj.Vbe < tbj.jvon % off
+            tbj.pbe='{1:MULTICHOICE:~Direta~%100%Reversa}';
+            tbj.beon = 0;
+        else
+            tbj.pbe='{1:MULTICHOICE:~%100%Direta~Reversa}';
+            tbj.beon = 1;
+        end
+                
+        % NPN
+        if tbj.Vbc <= 0.1 % off
+            tbj.pbc='{1:MULTICHOICE:~Direta~%100%Reversa}';
+            tbj.bcon = 0;
+        else
+            tbj.pbc='{1:MULTICHOICE:~%100%Direta~Reversa}';
+            tbj.bcon = 1;
+        end
         
         % NPN
         tbj.sat=0; % is saturate
@@ -122,8 +94,26 @@ switch tbj.type
         end
         
     case 'pnp'
+        % PNP
+        if tbj.Veb < tbj.jvon % off
+            tbj.peb='{1:MULTICHOICE:~Direta~%100%Reversa}';
+            tbj.ebon = 0;
+        else
+            tbj.peb='{1:MULTICHOICE:~%100%Direta~Reversa}';
+            tbj.ebon = 1;
+        end
         
-             % NPN
+        % PNP
+        if tbj.Vcb <= 0.1 % off
+            tbj.pcb='{1:MULTICHOICE:~Direta~%100%Reversa}';
+            tbj.cbon = 0;
+        else
+            tbj.pcb='{1:MULTICHOICE:~%100%Direta~Reversa}';
+            tbj.cbon = 1;
+        end
+        
+        
+        % NPN
         tbj.sat=0; % is saturate
         tbj.ampmode=0;
         if (tbj.ebon&&tbj.cbon) %||(tbj.Vce<tbj.vcesat)||(tbj.BetaDC<tbj.betasat) % Saturado
@@ -137,25 +127,10 @@ switch tbj.type
             tbj.mop='{1:MULTICHOICE:~Corte~Saturação~Ativo Direto~%100%Ativo Reverso}';
         else
             tbj.mop='{1:MULTICHOICE:~%100%Corte~Saturação~Ativo Direto~Ativo Reverso}';
-        end   
+        end
         
     otherwise
-        
-         % NPN
-        tbj.sat=0; % is saturate
-        tbj.ampmode=0;
-        if (tbj.beon&&tbj.bcon) %||(tbj.Vce<tbj.vcesat)||(tbj.BetaDC<tbj.betasat) % Saturado
-            tbj.mop='{1:MULTICHOICE:~Corte~%100%Saturação~Ativo Direto~Ativo Reverso}';
-            tbj.sat=1;
-            disp('Modo Saturado!')
-        elseif tbj.beon
-            tbj.mop='{1:MULTICHOICE:~Corte~Saturação~%100%Ativo Direto~Ativo Reverso}';
-            tbj.ampmode=1;
-        elseif tbj.bcon
-            tbj.mop='{1:MULTICHOICE:~Corte~Saturação~Ativo Direto~%100%Ativo Reverso}';
-        else
-            tbj.mop='{1:MULTICHOICE:~%100%Corte~Saturação~Ativo Direto~Ativo Reverso}';
-        end      
-        
-        
+         disp('TBJ type not found!!!!')
+         disp(tbj)
+       
 end

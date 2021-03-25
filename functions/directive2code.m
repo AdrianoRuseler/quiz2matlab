@@ -25,33 +25,25 @@
 % =========================================================================
 
 % str=param2str(Valor,parname,parunit)
-function [parstr,nostepparstr]=param2str(circuit)
+function [dcode]=directive2code(circuit)
 
-valor=circuit.parvalue;
-parname=circuit.parname;
-parunit=circuit.parunit;
 
-% [str, numstr, expstr, mantissa, exponent] = real2eng(valor(1),parunit{1});
-if length(valor)==2
-    parstr=[ parname{1} '=' real2eng(valor(1),parunit{1}) ' e'];
-else
-    parstr=[ parname{1} '=' real2eng(valor(1),parunit{1}) ','];
-end
+% valor=circuit.parvalue;
+% parname=circuit.parname;
 
-nostepparstr = '';
-for a=2:length(valor)
-    if a==length(valor)
-        parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ] );
-        nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ] );
-    elseif a==length(valor)-1
-        parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ' e'] );
-        nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ' e'] );
+% [str, numstr, expstr, mantissa, exponent] = real2eng(valor(4),parunit{4})
+
+
+dcode=['<code>' circuit.paramstr '<br>'];
+
+for m=1:length(circuit.model)
+    if m==length(circuit.model)
+        dcode= strcat(dcode, [circuit.model(m).modelstr '</code>'] );
     else
-        parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ','] );
-        nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ','] );
+        dcode= strcat(dcode, [circuit.model(m).modelstr '<br>'] );
     end
 end
 
 
 
-% disp(parstr)
+

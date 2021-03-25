@@ -32,14 +32,38 @@ switch theme
         R=217;
         G=237;
         B=247;
+    case 'classic'
+        R=231;
+        G=243;
+        B=243;
     case 'boost'
+        R=231;
+        G=243;
+        B=245;
+    case 'clean39'
+        R=204;
+        G=230;
+        B=234;
+    case 'boost39'
+        R=204;
+        G=230;
+        B=234;
+    case 'classic310'
+        R=231;
+        G=243;
+        B=243;
+    case 'boost310'
+        R=231;
+        G=243;
+        B=245;
+    case 'boost38'
         R=222;
         G=242;
         B=248;
-    otherwise % boost
-        R=222;
-        G=242;
-        B=248;
+    otherwise % boost39
+        R=204;
+        G=230;
+        B=234;
 end
 
 

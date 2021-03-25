@@ -1,17 +1,18 @@
 % LTspice Table Test
+% .include C:\Users\adria\Dropbox\GitHub\quiz2matlab\et52b\lab14\LMx24.lib
 
 clc
 clear all
 % tline=circuit.LTspice.log.lines;
 
 circuit.name = 'lab14a'; % File name
-circuit.dir = 'A:\Dropbox\GitHub\quiz2matlab\et52b\lab14\'; % Sets simulation dir
+circuit.dir = 'C:\Users\adria\Dropbox\GitHub\quiz2matlab\et52b\lab14\'; % Sets simulation dir
 % circuit.dir = 'C:\Users\adria\Dropbox\GitHub\quiz2matlab\et52b\lab12\'; % Sets simulation dir
 circuit.theme  = 'clean'; % clean or boost, classic
 
 % Config simulation
 circuit.parnamesim={'Vi','Vpp','Vnn','R1','R2'}; % Variables names
-circuit.parname={'Vi','Vpp','Vnn','R1','R2'}; % Variables names
+circuit.parname={'Vi','Vpp','Vnn','R1','R2'}; % Variables names with special caracteres
 circuit.parunit={'V','V','V','&Omega;','&Omega;'}; % Variables unit
 
 % circuit.stepstr = '.step param Vcc list 1 2 3 4 5';

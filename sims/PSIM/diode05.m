@@ -2,13 +2,15 @@ clear all
 clc
 
 % Sets simulation dir
+circuit.dir='E:\Dropbox\GitHub\quiz2matlab\sims\PSIM\'; % Home
 % circuit.dir='F:\Dropbox\GitHub\quiz2matlab\sims\PSIM\'; % Home
-circuit.dir='C:\Users\adria\Dropbox\GitHub\quiz2matlab\sims\PSIM\'; % Note
+% circuit.dir='C:\Users\adria\Dropbox\GitHub\quiz2matlab\sims\PSIM\'; % Note
 % circuit.dir='A:\Dropbox\GitHub\quiz2matlab\sims\PSIM\'; % UTFPR
 
 % Config simulation
 circuit.name = 'diode05'; % File name
 circuit.parname={'Vi','Von1','ron1','Von2','ron2','R0'}; % Variables names
+circuit.parnamesim={'Vi','Von1','ron1','Von2','ron2','R0'}; % Variables names
 circuit.parunit={'V','V','&Omega;','V','&Omega;','&Omega;'}; % Variables unit
 
 
@@ -22,8 +24,8 @@ R0 = combres(1,[100],'E12'); %
 ron1 = combres(1,0.001,'E12'); %
 ron2 = combres(1,0.001,'E12'); %
 
-
 circuit.Xi=CombVec(Vi,Von1,ron1,Von2,ron2,R0); %%
+circuit.nsims =250;
 
 % Generate question
 quiz.enunciado = ['Para o circuito contendo dois diodos com tensão de polarização direta Von1 e Von2'...

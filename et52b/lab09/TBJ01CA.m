@@ -5,7 +5,7 @@ clc
 % circuit.dir ='F:\Dropbox\GitHub\quiz2matlab\sims\LTspice\'; % Home
 circuit.name = 'TBJ01CA'; % File name
 % circuit.dir = getsimdir([circuit.name '.m']); % Sets simulation dir 
-circuit.dir = 'A:\Dropbox\GitHub\quiz2matlab\et52b\lab09\';
+circuit.dir = 'E:\Dropbox\GitHub\quiz2matlab\et52b\lab09\';
 circuit.theme  = 'clean'; % clean or boost
 
 % Config simulation
@@ -92,11 +92,11 @@ quiz.question{q}.type='NUMERICAL';
 
 
 %% 
-% circuit.nsims=505; % Number of simulations
-% quiz.nquiz = 500; % Number of quizes
+circuit.nsims=5; % Number of simulations
+quiz.nquiz = 5; % Number of quizes
 
-circuit.nsims=length(circuit.Xi);
-quiz.nquiz = length(circuit.Xi);
+% circuit.nsims=length(circuit.Xi);
+% quiz.nquiz = length(circuit.Xi);
 
 ltspice2xml(circuit,quiz); % 
 

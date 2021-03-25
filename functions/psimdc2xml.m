@@ -16,15 +16,18 @@ circuit.PSIMCMD.printtime=5E-005; %Time from which simulation results are saved 
 circuit.PSIMCMD.printstep=1; %Print step (default = 1). If the print step is set to 1, every data point will be saved to the output file. 
 % If it is 10, only one out of 10 data points will be saved. This helps to reduce the size of the output file. 
 
-circuit = getpsimnet(circuit); % Reads or generates net file from psim
-circuit.PSIMCMD.net.run = 1;
+circuit.PSIMCMD.net.run = 0; % Generate netlist and run from it?
 
-% sortnquestions=600; % Number of simulations
+if circuit.PSIMCMD.net.run
+    circuit = getpsimnet(circuit); % Reads or generates net file from psim
+end
+
+% sortnquestions=250; % Number of simulations
 [~,y]=size(circuit.Xi);
 nq=randperm(y,circuit.nsims); % escolha as questoes
 circuit.X=circuit.Xi(:,nq);
 
-circuit.Xi=[]; % Clear
+% circuit.Xi=[]; % Clear
 
 for c=1:length(circuit.X)
     tmpcircuits{c}=circuit;
@@ -50,16 +53,21 @@ for c=1:length(tmpcircuits)
     end
 end
 
+if ~isfield(quiz,'nquiz')
+    quiz.nquiz=length(circuits);
+end
+
 pngfile=[circuit.dir circuit.name '.png']; % Fig png file
 if isfield(circuit,'theme')
     imgout=[circuit.dir circuit.name circuit.theme '.png']; % Fig png file
     pngchangewhite(pngfile,imgout,circuit.theme)
 else
-    imgout=[circuit.dir circuit.name 'clean.png']; % Fig png file
-    pngchangewhite(pngfile,imgout,'clean')
+    imgout=[circuit.dir circuit.name 'boost.png']; % Fig png file
+    pngchangewhite(pngfile,imgout,'boost')
 end
 
-quiz.name = [circuit.name 'quiz'];
+quiz.name = [circuit.name];
+% quiz.name = [circuit.name 'quiz'];
 for n=1:length(circuits)
     circuits{n}.quiz=quiz;
     figlegendastr=['Figura 1: Considere ' circuits{n}.parstr ';']; % Legenda da figura
@@ -69,6 +77,7 @@ for n=1:length(circuits)
 end
 
 %% Generate quizstruct moodle question
+
 quizopts.name=circuit.name;
 quizopts.nquiz=quiz.nquiz; % Number of quizes
 quizopts.permutquiz =1; % Permut quiz?

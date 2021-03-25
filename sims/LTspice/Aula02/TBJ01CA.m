@@ -5,12 +5,12 @@ clc
 % circuit.dir ='F:\Dropbox\GitHub\quiz2matlab\sims\LTspice\'; % Home
 circuit.name = 'TBJ01CA'; % File name
 circuit.dir = getsimdir([circuit.name '.m']); % Sets simulation dir
-circuit.theme  = 'clean'; % clean or boost
+circuit.theme  = 'boost'; % clean or boost
 
 % Config simulation
-circuit.parnamesim={'Vcc','Rb','Rc'}; % Variables names
-circuit.parname={'Vcc','Rb','Rc'}; % Variables names
-circuit.parunit={'V','&Omega;','&Omega;'}; % Variables unit
+circuit.parnamesim={'Vcc','Rb','Rc','Cx'}; % Variables names
+circuit.parname={'Vcc','Rb','Rc','Cx'}; % Variables names
+circuit.parunit={'V','&Omega;','&Omega;','F'}; % Variables unit
 
 % parameters input
 Vcc=15:5:30; 
@@ -18,28 +18,33 @@ Vcc=15:5:30;
 % R1 = combres(1,1000,'E12');
 % R2 = combres(1,1000,'E12');
 Rc = combres(1,10,'E12'); %
-Rb = combres(1,10000,'E12'); %
+Rb = combres(1,1000,'E12'); %
+Cx=100e-6;
 
 Is=[10e-15 15e-15 20e-15];
-Beta=100:50:300;
+Beta=50:50:300;
 Va=100:50:200;
 
 % Rb = combres(1,[100],'E12'); %
-circuit.Xi=CombVec(Vcc,Rb,Rc,Is,Beta,Va); %%
+circuit.Xi=CombVec(Vcc,Rb,Rc,Cx,Is,Beta,Va); %%
+circuit.timeout = 5; % Simulation timeout in seconds
 
-circuit.parind=1:3;
+circuit.parind=1:4;
+
 circuit.model.parnamesim={'IS','BF','VAF'};
 circuit.model.parname={'IS','BF','VAF'};
 circuit.model.parunit={'A','','V'};
 % circuit.model.parvalue=[10e-15 250 100];
-circuit.modind=4:6;
+circuit.modind=5:7;
 
 % circuit.Xm=CombVec(Is,Beta,Va); %%
 circuit.model.name='TBJ';
 circuit.model.tipo='NPN';
 
 circuit.cmdtype = '.op'; % Operation Point Simulation
-circuit.cmdupdate = 0;
+circuit.cmdupdate = 0; % 
+% circuit.cmdvarind
+
 quiz.tbjtype = 'q1:npn';
 quiz.tbjeval = 0; % Evaluate tbj op
 % Generate question
@@ -66,6 +71,7 @@ quiz.question{q}.vartype={'meas'}; % meas
 quiz.question{q}.optscore=[100]; % Score per option
 quiz.question{q}.opttol=[5]; % tolerance in percentage %
 quiz.question{q}.type='NUMERICAL';
+
 q=3;
 quiz.question{q}.str='c) Qual o valor do ganho de tensão vo/vi?';
 quiz.question{q}.units={'V/V'};
@@ -78,12 +84,13 @@ quiz.question{q}.type='NUMERICAL';
 
 
 %% 
-circuit.nsims=505; % Number of simulations
-quiz.nquiz = 500; % Number of quizes
+circuit.nsims=150; % Number of simulations
+quiz.nquiz = 150; % Number of quizes
 
 % circuit.nsims=length(circuit.Xi);
 % quiz.nquiz = length(circuit.Xi);
 
+circuit.LTspice.net.run =1;
 ltspicemd2xml(circuit,quiz); % 
 
 

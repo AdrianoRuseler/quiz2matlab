@@ -5,11 +5,11 @@ clc
 % circuit.dir ='F:\Dropbox\GitHub\quiz2matlab\sims\LTspice\'; % Home
 circuit.name = 'TBJ02CA'; % File name
 circuit.dir = getsimdir([circuit.name '.m']); % Sets simulation dir
-circuit.theme  = 'clean'; % clean or boost
+circuit.theme  = 'boost'; % clean or boost
 % Config simulation
-circuit.parnamesim={'Vcc','R1','R2','Rc','Re'}; % Variables names
-circuit.parname={'Vcc','R1','R2','Rc','Re'}; % Variables names
-circuit.parunit={'V','&Omega;','&Omega;','&Omega;','&Omega;'}; % Variables unit
+circuit.parnamesim={'Vcc','R1','R2','Rc','Re','Cx'}; % Variables names
+circuit.parname={'Vcc','R1','R2','Rc','Re','Cx'}; % Variables names
+circuit.parunit={'V','&Omega;','&Omega;','&Omega;','&Omega;','F'}; % Variables unit
 
 % parameters input
 Vcc=15:5:30; 
@@ -18,21 +18,23 @@ R1 = combres(1,1000,'E12');
 R2 = combres(1,1000,'E12');
 Re = combres(1,10,'E12'); %
 Rc = combres(1,10,'E12'); %
+Cx = 100e-6;
 
 Is=[10e-15 15e-15 20e-15];
 Beta=100:50:300;
 Va=100:50:200;
 
 % Rb = combres(1,[100],'E12'); %
-circuit.Xi=CombVec(Vcc,R1,R2,Rc,Re,Is,Beta,Va); %%
+circuit.Xi=CombVec(Vcc,R1,R2,Rc,Re,Cx,Is,Beta,Va); %%
+circuit.timeout = 5; % Simulation timeout in seconds
 
-circuit.parind=1:5;
+circuit.parind=1:6;
 
 circuit.model.parnamesim={'IS','BF','VAF'};
 circuit.model.parname={'IS','BF','VAF'};
 circuit.model.parunit={'A','','V'};
 % circuit.model.parvalue=[10e-15 250 100];
-circuit.modind=6:8;
+circuit.modind=7:9;
 
 % circuit.Xm=CombVec(Is,Beta,Va); %%
 circuit.model.name='TBJ';
@@ -79,12 +81,13 @@ quiz.question{q}.type='NUMERICAL';
 
 
 %% 
-circuit.nsims=550; % Number of simulations
-quiz.nquiz = 500; % Number of quizes
+circuit.nsims=150; % Number of simulations
+quiz.nquiz = 150; % Number of quizes
 
 % circuit.nsims=length(circuit.Xi);
 % quiz.nquiz = length(circuit.Xi);
 
+circuit.LTspice.net.run =1;
 ltspicemd2xml(circuit,quiz); % 
 
 

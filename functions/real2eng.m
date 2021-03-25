@@ -12,8 +12,17 @@ if ~isreal(number) % Is this number real?
     return % only real numbers
 end
 
+if isnan(number)
+    str='It is a NaN!';
+    numstr='';
+    expstr='';
+    mantissa=NaN;
+    exponent=NaN;
+    return % only real numbers
+end
+
 if nargin < 3
-    minabsval = 1e-6;
+    minabsval = 1e-12;
 end
 
 if abs(number) < minabsval
@@ -23,6 +32,8 @@ end
 
 exponent = 3*floor(log10(abs(number))/3); % find exponent
 mantissa = number/(10^exponent); % find mantissa
+
+% disp(number)
 
 expHTML = {' y',' z', ' a', ' f', ' p', ' n', ' &micro;', ' m', ' ', ' k', ' M', ' G', ' T', ' P', ' E', ' Z',' Y'};
 % expName = {' y',' z', ' a', ' f', ' p', ' n', ' u', ' m', '', ' k', ' M', ' G', ' T', ' P', ' E', ' Z',' Y'};

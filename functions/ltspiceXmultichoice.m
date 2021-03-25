@@ -36,14 +36,19 @@ function [circuit]=ltspiceXmultichoice(circuit)
 % MULTICHOICE_HS
 % MULTICHOICE_VS
 
-labels={circuit.LTspice.data.signals.label}; % Data variables
-
+if isfield(circuit.LTspice.data,'signals')
+    labels={circuit.LTspice.data.signals.label}; % Data variables
+end
 
 for q=1:length(circuit.quiz.question)
     
     lopts=length(circuit.quiz.question{q}.options); % Number of options per question
     for o=1:lopts % Get option value
-        switch circuit.quiz.question{q}.vartype{o}
+        
+        tmpvartype=strsplit(circuit.quiz.question{q}.vartype{o},':'); %
+        switch tmpvartype{1}
+            case 'func'
+                circuit.quiz.question{q}.values(o)=circuit.funcvalue(circuit.quiz.question{q}.options{o});
             case 'max'
                 optind=find(contains(labels,circuit.quiz.question{q}.options{o},'IgnoreCase',true));
                 circuit.quiz.question{q}.labelsind(o) = optind(1);
@@ -75,14 +80,18 @@ for q=1:length(circuit.quiz.question)
                 end
             case 'log'
                 tmpstr=strsplit(circuit.quiz.question{q}.options{o},':'); %
-                labels={circuit.LTspice.log.sdop{:}.Name}; % Data variables
-                optind=find(contains(labels,tmpstr{1},'IgnoreCase',true));
-                fields = fieldnames(circuit.LTspice.log.sdop{optind});
-                
-                if find(contains(fields,tmpstr{2}))
-                    eval(['circuit.quiz.question{q}.values(o)=circuit.LTspice.log.sdop{optind}.' tmpstr{2} ';'])
-                else
-                    disp([ tmpstr{2} ' -> Log not FOUND!!']) % O que fazer?
+                ndevgroups=length(circuit.LTspice.log.sdop); % Number os groups, TBJ, Fet...
+                for g=1:ndevgroups
+                    devnames={circuit.LTspice.log.sdop{g}.Name}; % Data variables
+                    devfields{g} = fieldnames(circuit.LTspice.log.sdop{g}); % Grupo g
+                    if find(contains(devfields{g},tmpstr{2}))
+                        devind=find(contains(devnames{:},tmpstr{1},'IgnoreCase',true));
+                        if devind
+                            eval(['circuit.quiz.question{q}.values(o)=circuit.LTspice.log.sdop{g}.' tmpstr{2} '(' num2str(devind) ');'])
+                        else
+                            disp([ tmpstr{2} ' -> Log not FOUND!!']) % O que fazer?
+                        end
+                    end
                 end
                 
             case 'pbc'
@@ -92,14 +101,30 @@ for q=1:length(circuit.quiz.question)
                 tbj=tbj2quiz(circuit,circuit.quiz.question{q}.options{o});
                 tbjmchoice = tbj.pbe;
             case 'mop'
+                %                 if strcmp(circuit.quiz.question{q}.type,'FET')
+                %                     fet=fet2quiz(circuit,circuit.quiz.question{q}.options{o});
+                %                     fetmchoice = fet.mop;
+                %                 else
                 tbj=tbj2quiz(circuit,circuit.quiz.question{q}.options{o});
                 tbjmchoice = tbj.mop;
+                %                 end
             case 're'
                 tbj=tbj2quiz(circuit,circuit.quiz.question{q}.options{o});
                 circuit.quiz.question{q}.values(o)=tbj.re;
             case 'ro'
                 tbj=tbj2quiz(circuit,circuit.quiz.question{q}.options{o});
                 circuit.quiz.question{q}.values(o)=tbj.Ro;
+                
+            case 'feteval'
+                switch tmpvartype{2}
+                    case 'mop'
+                        fet=fet2quiz(circuit,circuit.quiz.question{q}.options{o});
+                        fetmchoice = fet.mop;
+                    otherwise
+                        fet=fet2quiz(circuit,circuit.quiz.question{q}.options{o});
+                        circuit.quiz.question{q}.values(o)=fet.(tmpvartype{2});                       
+                end
+                
             otherwise
                 disp('circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).mean];')
         end
@@ -128,7 +153,8 @@ for q=1:length(circuit.quiz.question)
             
         case 'TBJ'
             multicell = tbjmchoice;
-            
+        case 'FET'
+            multicell = fetmchoice;
         case 'MULTICHOICE'
             multicell='{1:MULTICHOICE:';
             ismultichoice=1;
@@ -171,7 +197,6 @@ for q=1:length(circuit.quiz.question)
                 end
             end % Loop
         end
-        
         
         for o=1:lopts
             optstr = real2eng(circuit.quiz.question{q}.values(o),circuit.quiz.question{q}.units{o}); % Gets option value with unit in eng format

@@ -2,7 +2,7 @@
 % Generates netlist file .net from asc file
 function [circuit] = ltasc2net(circuit)
 
-circuit.LTspice.ascfile = [circuit.LTspice.simsdir circuit.LTspice.name '.asc']; % Sim base file
+% circuit.LTspice.ascfile = [circuit.LTspice.simsdir circuit.LTspice.name '.asc']; % Sim base file
 
 if ~exist(circuit.LTspice.ascfile,'file') % Caso arquivo não exista
     disp(['File not found: ' circuit.LTspice.ascfile])

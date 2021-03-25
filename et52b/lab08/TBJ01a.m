@@ -6,7 +6,7 @@ clear all
 
 circuit.name = 'TBJ01a'; % File name
 circuit.dir = getsimdir([circuit.name '.m'],'LTspice'); % Sets simulation dir
-circuit.theme  = 'clean'; % clean or boost, classic
+circuit.theme  = 'boost'; % clean or boost, classic
 
 % Config simulation
 circuit.parnamesim={'Vcc','Rb','Rc'}; % Variables names
@@ -50,7 +50,7 @@ quiz.tbjeval = 0; % Evaluate tbj op
 
 
 
-quiz.enunciado = 'Monte o circuito apresentado na Figura 1 e preencha as tabelas a seguir:';
+quiz.enunciado = 'Simule no LTspice o circuito apresentado na Figura 1 e preencha as tabelas a seguir:';
 
 quiz.table{1,1}.header = 'Vcc';
 quiz.table{1,1}.units='V';
@@ -114,8 +114,8 @@ quiz.table{1,7}.opttol=20; % tolerance in percentage %
 quiz.table{1,7}.weight='1'; % Item weight
 quiz.table{1,7}.type='SCALE';
 
-quiz.tablecaption{1}='Tabela 1: Grandezas medidas com multímetro digital (Valor médio)!';
-quiz.tablequestion{1}='Utilize o multímetro digital no modo CC:';
+quiz.tablecaption{1}='Tabela 1: Grandezas medidas (Valor médio)!';
+quiz.tablequestion{1}='Analogia com multímetro digital no modo CC:';
 
 
 quiz.table{2,1}.header = 'Vcc';
@@ -158,8 +158,8 @@ quiz.table{2,4}.weight='1'; % Item weight
 quiz.table{2,4}.type='TBJ';
 
 
-quiz.tablecaption{3}='Tabela 3: Grandezas medidas com multímetro digital (Valor médio)!';
-quiz.tablequestion{3}='Utilize o multímetro digital no modo CC:';
+quiz.tablecaption{3}='Tabela 3: Grandezas medidas (Valor médio)!';
+quiz.tablequestion{3}='Medição similar ao multímetro digital no modo CC:';
 
 
 t=3;
@@ -286,10 +286,14 @@ quiz.table{t,c}.type='NUMERICAL';
 
 
 %%
-quiz.nquiz=length(circuit.X);
+% quiz.nquiz=length(circuit.X);
 % 
 % circuit.nsims = 500; % Number of simulations
 % quiz.nquiz = 5; % Number of quizes
+circuit.nsims = 50; % Number of simulations
+quiz.nquiz = 50; % Number of quizes
+
+circuit.LTspice.net.run =0;
 
 ltspicetable2xml(circuit,quiz); % 
 

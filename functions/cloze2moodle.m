@@ -45,7 +45,7 @@ end
 
 % Compatibilidade
 if ~isfield(quizstruct,'comb')
-  quizstruct.comb=1:quizstruct.questionnumbers;
+    quizstruct.comb=1:quizstruct.questionnumbers;
 end
 
 
@@ -96,7 +96,9 @@ for co=1:length(quizstruct.comb)
     
     
     if n==quizstruct.questionMAX
-        xmlwrite([quizstruct.xmlpath '\' quizstruct.name 'f' num2str(file,'%02i') '.xml'],docNode);        
+        %         xmlwrite([quizstruct.xmlpath '\' quizstruct.name 'f' num2str(file,'%02i') '.xml'],docNode);
+        dt = datestr(now,'yyyymmddTHHMMSS');
+        xmlwrite([quizstruct.xmlpath '\' quizstruct.name 'F' num2str(file,'%02i') 'D' dt 'NQ' num2str(quizstruct.questionnumbers,'%03i') '.xml'],docNode);
         
         % Create the document node and root element, toc:
         docNode = com.mathworks.xml.XMLUtils.createDocument('quiz');
@@ -109,6 +111,7 @@ for co=1:length(quizstruct.comb)
     n=n+1;
 end
 
-xmlwrite([quizstruct.xmlpath '\' quizstruct.name 'f' num2str(file,'%02i') '.xml'],docNode);
+dt = datestr(now,'yyyymmddTHHMMSS');
+xmlwrite([quizstruct.xmlpath '\' quizstruct.name 'F' num2str(file,'%02i') 'D' dt 'NQ' num2str(quizstruct.questionnumbers,'%03i') '.xml'],docNode);
 
 winopen(quizstruct.xmlpath)

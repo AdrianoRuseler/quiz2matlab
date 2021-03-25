@@ -2,7 +2,7 @@ clear all
 clc
 
 % Sets simulation dir
-quiz2matlabdir='F:\Dropbox\GitHub\quiz2matlab'; % Home
+quiz2matlabdir='E:\Dropbox\GitHub\quiz2matlab'; % Home
 % quiz2matlabdir='A:\Dropbox\GitHub\quiz2matlab'; % UTFPR
 
 quiz2matlabsdir=[quiz2matlabdir '\sims'];
@@ -47,6 +47,7 @@ for c=1:length(X)
     tmpcircuits{c}.parvalue=X(:,c); % Variables values
     tmpcircuits{c}.parstr = param2str(tmpcircuits{c});
 end
+
 %%   Runs simulation OK!
 [~,y]=size(X);
 parfor n=1:y

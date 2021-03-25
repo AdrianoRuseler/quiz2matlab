@@ -6,7 +6,7 @@ clear all
 
 circuit.name = 'TBJ01a'; % File name
 circuit.dir = getsimdir([circuit.name '.m'],'LTspice'); % Sets simulation dir
-circuit.theme  = 'clean'; % clean or boost
+circuit.theme  = 'boost'; % clean or boost
 
 % Config simulation
 circuit.parnamesim={'Vcc','Rb','Rc'}; % Variables names
@@ -20,13 +20,17 @@ circuit.stepvalues = [5 10];
 Rb = combres(1,10000,'E12'); % 12 resistores
 Rc = combres(1,10,'E12'); % 12 resistores
 circuit.X=CombVec(Rb,Rc);
+circuit.timeout = 5; % Simulation timeout in seconds
 
 circuit.nsims=length(circuit.X);
 % circuit.nsims=5; % Number of simulations
 % [~,y]=size(circuit.Xi);
 % nq=randperm(y,circuit.nsims); % escolha as questoes
 % circuit.X=circuit.Xi(:,nq);
-
+circuit.cmdtype = '.op'; % Operation Point Simulation
+circuit.cmdupdate = 0;
+quiz.tbjtype = 'q1:npn';
+quiz.tbjeval = 0; % Evaluate tbj op
 
 %%
 
@@ -45,7 +49,7 @@ circuit.nsims=length(circuit.X);
 
 
 
-quiz.enunciado = 'Monte o circuito apresentado na Figura 1 e preencha as tabelas a seguir:';
+quiz.enunciado = 'Simule no LTspice o circuito apresentado na Figura 1 e preencha as tabelas a seguir:';
 
 quiz.table{1,1}.header = 'Vcc';
 quiz.table{1,1}.units='V';
@@ -109,8 +113,8 @@ quiz.table{1,7}.opttol=20; % tolerance in percentage %
 quiz.table{1,7}.weight='1'; % Item weight
 quiz.table{1,7}.type='SCALE';
 
-quiz.tablecaption{1}='Tabela 1: Grandezas medidas com multímetro digital (Valor médio)!';
-quiz.tablequestion{1}='Utilize o multímetro digital no modo CC:';
+quiz.tablecaption{1}='Tabela 1: Grandezas medidas (Valor médio)!';
+quiz.tablequestion{1}='Analogia de medição com o multímetro digital no modo CC:';
 
 
 quiz.table{2,1}.header = 'Vcc';
@@ -124,7 +128,7 @@ quiz.table{2,1}.type='STRING';
 
 quiz.table{2,2}.header = 'Polarização BE';
 quiz.table{2,2}.units='V';
-quiz.table{2,2}.options='q1';
+quiz.table{2,2}.options='q1:npn';
 quiz.table{2,2}.vartype='pbe'; % pbc pbe mop
 quiz.table{2,2}.optscore=100; % Score per option
 quiz.table{2,2}.opttol=20; % tolerance in percentage %
@@ -133,7 +137,7 @@ quiz.table{2,2}.type='TBJ';
 
 quiz.table{2,3}.header = 'Polarização BC';
 quiz.table{2,3}.units='V';
-quiz.table{2,3}.options='q1';
+quiz.table{2,3}.options='q1:npn';
 quiz.table{2,3}.vartype='pbc'; % pbc pbe mop
 quiz.table{2,3}.optscore=100; % Score per option
 quiz.table{2,3}.opttol=20; % tolerance in percentage %
@@ -145,16 +149,17 @@ quiz.tablequestion{2}='Complete a tabela abaixo com base nos valores medidos na 
 
 quiz.table{2,4}.header = 'Modo';
 quiz.table{2,4}.units='V';
-quiz.table{2,4}.options='q1';
+quiz.table{2,4}.options='q1:npn';
 quiz.table{2,4}.vartype='mop'; % pbc pbe mop
 quiz.table{2,4}.optscore=100; % Score per option
 quiz.table{2,4}.opttol=20; % tolerance in percentage %
 quiz.table{2,4}.weight='1'; % Item weight
 quiz.table{2,4}.type='TBJ';
 
+%% 
 
-quiz.tablecaption{3}='Tabela 3: Grandezas medidas com multímetro digital (Valor médio)!';
-quiz.tablequestion{3}='Utilize o multímetro digital no modo CC:';
+quiz.tablecaption{3}='Tabela 3: Grandezas medidas (Valor médio)!';
+quiz.tablequestion{3}='Analogia de medição com o multímetro digital no modo CC:';
 
 
 t=3;
@@ -250,11 +255,12 @@ quiz.table{t,c}.type='NUMERICAL';
 
 
 %%
-quiz.nquiz=length(circuit.X);
+% quiz.nquiz=length(circuit.X);
 % 
-% circuit.nsims = 500; % Number of simulations
-% quiz.nquiz = 5; % Number of quizes
+circuit.nsims = 50; % Number of simulations
+quiz.nquiz = 50; % Number of quizes
 
+circuit.LTspice.net.run =1;
 ltspicetable2xml(circuit,quiz); % 
 
 

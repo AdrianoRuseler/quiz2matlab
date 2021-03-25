@@ -48,8 +48,8 @@ if isfield(circuit,'theme')
     imgout=[circuit.dir circuit.name circuit.theme '.png']; % Fig png file
     pngchangewhite(pngfile,imgout,circuit.theme)
 else
-    imgout=[circuit.dir circuit.name 'clean.png']; % Fig png file
-    pngchangewhite(pngfile,imgout,'clean')
+    imgout=[circuit.dir circuit.name 'boost39.png']; % Fig png file
+    pngchangewhite(pngfile,imgout,'boost39')
 end
 
 quiz.name = [circuit.name 'quiz'];

@@ -25,33 +25,24 @@
 % =========================================================================
 
 % str=param2str(Valor,parname,parunit)
-function [parstr,nostepparstr]=param2str(circuit)
+function [parcode]=param2code(circuit)
 
 valor=circuit.parvalue;
-parname=circuit.parname;
-parunit=circuit.parunit;
+parname=circuit.parnamesim;
 
-% [str, numstr, expstr, mantissa, exponent] = real2eng(valor(1),parunit{1});
-if length(valor)==2
-    parstr=[ parname{1} '=' real2eng(valor(1),parunit{1}) ' e'];
-else
-    parstr=[ parname{1} '=' real2eng(valor(1),parunit{1}) ','];
-end
+% [str, numstr, expstr, mantissa, exponent] = real2eng(valor(4),parunit{4})
 
-nostepparstr = '';
+
+parcode=['<code>' parname{1} '=' num2str(valor(1),'%4.3e') '<br>'];
+
 for a=2:length(valor)
     if a==length(valor)
-        parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ] );
-        nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ] );
-    elseif a==length(valor)-1
-        parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ' e'] );
-        nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ' e'] );
+        parcode= strcat(parcode, [parname{a} '=' num2str(valor(a),'%4.3e') '</code>'] );
     else
-        parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ','] );
-        nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ','] );
+        parcode= strcat(parcode, [parname{a} '=' num2str(valor(a),'%4.3e') '<br>'] );
     end
 end
 
 
 
-% disp(parstr)
+

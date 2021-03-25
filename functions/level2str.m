@@ -2,7 +2,7 @@
 % ***
 % *** The MIT License (MIT)
 % ***
-% *** Copyright (c) 2018 AdrianoRuseler
+% *** Copyright (c) 2019 AdrianoRuseler
 % ***
 % *** Permission is hereby granted, free of charge, to any person obtaining a copy
 % *** of this software and associated documentation files (the "Software"), to deal
@@ -24,34 +24,39 @@
 % ***
 % =========================================================================
 
+% length(tmpcircuits{c}.model)
+
+% circuit=tmpcircuits{c};
 % str=param2str(Valor,parname,parunit)
-function [parstr,nostepparstr]=param2str(circuit)
+function circuit=level2str(circuit)
 
-valor=circuit.parvalue;
-parname=circuit.parname;
-parunit=circuit.parunit;
+circuit.level.parstr='';
 
-% [str, numstr, expstr, mantissa, exponent] = real2eng(valor(1),parunit{1});
-if length(valor)==2
-    parstr=[ parname{1} '=' real2eng(valor(1),parunit{1}) ' e'];
-else
-    parstr=[ parname{1} '=' real2eng(valor(1),parunit{1}) ','];
-end
-
-nostepparstr = '';
-for a=2:length(valor)
-    if a==length(valor)
-        parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ] );
-        nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ] );
-    elseif a==length(valor)-1
-        parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ' e'] );
-        nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ' e'] );
+for v=1:length(circuit.level.varname) % update values
+    k = strfind(circuit.level.name,circuit.level.varname{v});
+    idx = find(not(cellfun('isempty',k)));
+    circuit.level.value{idx}=num2str(circuit.level.varvalue(v),'%10.8e');
+    if v==length(circuit.level.varname)
+        circuit.level.parstr = strcat(circuit.level.parstr, [' ' circuit.level.varname{v} '=' real2eng(circuit.level.varvalue(v),circuit.level.varunit{v},0) ';'] );
+    elseif v==length(circuit.level.varname)-1
+        circuit.level.parstr = strcat(circuit.level.parstr, [' ' circuit.level.varname{v} '=' real2eng(circuit.level.varvalue(v),circuit.level.varunit{v},0) ' e'] );
     else
-        parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ','] );
-        nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ','] );
+        circuit.level.parstr = strcat(circuit.level.parstr, [circuit.level.varname{v} '=' real2eng(circuit.level.varvalue(v),circuit.level.varunit{v},0) ','] );
     end
 end
 
+lvlstr = strsplit(circuit.level.linestr,'Avol');
+circuit.level.linestr = lvlstr{1}; % XU1 0 - Vpp Vnn o level.2 
 
 
-% disp(parstr)
+for s=1:length(circuit.level.name)
+    circuit.level.linestr=strcat(circuit.level.linestr,[ ' ' circuit.level.name{s} '=' circuit.level.value{s}]);    
+end
+
+
+disp(circuit.level.linestr)
+
+
+
+
+

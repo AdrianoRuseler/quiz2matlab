@@ -39,8 +39,10 @@ circuit.modind=4:6;
 circuit.model.name='TBJ';
 circuit.model.tipo='NPN';
 
+circuit.cmdupdate = 0;
 circuit.cmdtype = '.op'; % Operation Point Simulation
 quiz.tbjtype = 'q1:npn';
+quiz.tbjeval = 1; % Evaluate tbj op
 
 % Generate question
 quiz.enunciado = 'Simule o circuito apresentado na Figura 1 e determine:';
@@ -146,8 +148,8 @@ quiz.question{q}.opttol=[5]; % tolerance in percentage %
 quiz.question{q}.type='TBJ';
 
 %% 
-circuit.nsims=700; % Number of simulations
-quiz.nquiz = 500; % Number of quizes
+circuit.nsims=7; % Number of simulations
+quiz.nquiz = 5; % Number of quizes
 
 % circuit.nsims=length(circuit.Xi);
 % quiz.nquiz = length(circuit.Xi);

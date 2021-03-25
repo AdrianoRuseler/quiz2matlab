@@ -48,9 +48,10 @@ while ~feof(fileID) % Get header
         if contains(tline{Line},'Binary:') % Find Values: line
             data.rawfile.valuesline = Line+1;
             data.rawfile.valuesposition = ftell(fileID);
+            disp('Binary DATA!!!')
             break;
         end
-    else % Binary data
+    else % ascii data
         tline{Line} = tmpchar;
         if contains(tline{Line},'Values:') % Find Values: line
             data.rawfile.valuesposition = ftell(fileID);
@@ -136,7 +137,7 @@ data.command=linestr{2};
 %% Get data binary
 
 if data.rawfile.isbinary
-%     disp('RAW file is in binary format!')
+   disp('RAW file is in binary format!')
     fseek(fileID,data.rawfile.valuesposition+1, 'bof'); % data position
     vardata = fread(fileID, 1, 'double'); % .op
     
@@ -152,7 +153,7 @@ if data.rawfile.isbinary
     fprintf('Finished extracting LTspice ASCII results after %d seconds.\n',toc(tstart));
     return
 else
-%     disp('RAW file is in ascii format!')
+    disp('RAW file is in ascii format!')
 end
 
 
