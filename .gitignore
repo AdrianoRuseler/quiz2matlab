@@ -44,3 +44,8 @@ octave-workspace
 
 *.psimsch
 *.txt
+
+# Some folders to ignore
+et52b/
+sims/
+api/
