@@ -46,6 +46,6 @@ octave-workspace
 *.txt
 
 # Some folders to ignore
-et52b/
-sims/
-api/
+et52b
+sims
+api
