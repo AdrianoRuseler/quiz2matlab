@@ -81,7 +81,7 @@ else
     pngchangewhite(pngfile,imgout,'boost')
 end
 
-quiz.name = [circuit.name 'quiz'];
+quiz.name = [circuit.name];
 for n=1:length(circuits)
     circuits{n}.quiz=quiz;
     figlegendastr=['Figura 1: Considere ' circuits{n}.parstr ';']; % Legenda da figura
