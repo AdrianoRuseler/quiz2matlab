@@ -71,12 +71,18 @@ for q=1:length(circuit.quiz.question)
                 circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).op];
             case 'meas' % .meas
                 %                     circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).meas];
-                fields = fieldnames(circuit.LTspice.log.meas);
-                optind=find(contains(fields,circuit.quiz.question{q}.options{o}));
-                if optind
-                    eval(['circuit.quiz.question{q}.values(o)=circuit.LTspice.log.meas.' circuit.quiz.question{q}.options{o} ';'])
+                if isfield(circuit.LTspice.log,'meas')
+                    fields = fieldnames(circuit.LTspice.log.meas);
+                    optind=find(contains(fields,circuit.quiz.question{q}.options{o}));
+                    if optind
+                        eval(['circuit.quiz.question{q}.values(o)=circuit.LTspice.log.meas.' circuit.quiz.question{q}.options{o} ';'])
+                    else
+                        disp([ circuit.quiz.question{q}.options{o} ' -> meas not FOUND!!'])
+                        circuit.quiz.question{q}.values(o)=[];
+                    end
                 else
                     disp([ circuit.quiz.question{q}.options{o} ' -> meas not FOUND!!'])
+                    circuit.quiz.question{q}.values(o)=[];
                 end
             case 'log'
                 tmpstr=strsplit(circuit.quiz.question{q}.options{o},':'); %
@@ -122,7 +128,7 @@ for q=1:length(circuit.quiz.question)
                         fetmchoice = fet.mop;
                     otherwise
                         fet=fet2quiz(circuit,circuit.quiz.question{q}.options{o});
-                        circuit.quiz.question{q}.values(o)=fet.(tmpvartype{2});                       
+                        circuit.quiz.question{q}.values(o)=fet.(tmpvartype{2});
                 end
                 
             otherwise
