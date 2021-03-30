@@ -29,7 +29,7 @@ if isfield(circuit,'parind') && isfield(circuit,'modind')
         tmpcircuits{c}.parstr = param2str(tmpcircuits{c});
         
         for m=1:length(circuit.model)
-            tmpcircuits{c}.model(m).parvalue=X(circuit.modind{m,:},c); % Variables values
+            tmpcircuits{c}.model(m).parvalue=X(circuit.modind(m,:),c); % Variables values
         end
         
         tmpcircuits{c} = model2str(tmpcircuits{c});
