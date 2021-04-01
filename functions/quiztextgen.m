@@ -35,5 +35,3 @@ for q=1:length(circuit.quiz.question)
 end
 
 
-
-

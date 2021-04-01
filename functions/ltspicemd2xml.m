@@ -140,7 +140,15 @@ else
     pngchangewhite(pngfile,imgout,'clean')
 end
 
-quiz.name = [circuit.name 'quiz'];
+quiz.name = [circuit.name];
+
+% Auto add item letter: a), b)... 97 - 122; 65 - 90
+if isfield(quiz,'autoitem') && quiz.autoitem
+    for q=1:length(quiz.question)
+        quiz.question{q}.str=[ char(96+q) ') ' quiz.question{q}.str]; 
+        disp(quiz.question{q}.str)
+    end
+end
 
 for n=1:length(circuits)
     circuits{n}.quiz=quiz;
