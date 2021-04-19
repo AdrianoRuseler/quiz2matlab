@@ -15,6 +15,10 @@ circuit = ltgetasc(circuit); % reads asc file
 circuit = ltasc2net(circuit); % Generates the .net file
 circuit = ltgetnet(circuit); % Reads net file
 
+if ~isfield(circuit.LTspice.net,'run')
+    circuit.LTspice.net.run =0;
+end
+
 % circuit.nsims=600; % Number of simulations
 [~,y]=size(circuit.Xi);
 nq=randperm(y,circuit.nsims); % escolha as questoes
