@@ -33,19 +33,17 @@ function [circuit]=model2str(circuit)
 if length(circuit.model)==1
     m=1; % Just 1 parameter
     
-        valor=circuit.model(m).parvalue;
-        parname=circuit.model(m).parname;
-        parunit=circuit.model(m).parunit;
-        
-        modelstr=['.model ' circuit.model(m).name ' ' circuit.model(m).tipo '('];
-        modelstr=[modelstr parname{1} '=' num2str(valor(1),'%1.3e') ')'];
+    valor=circuit.model(m).parvalue;
+    parname=circuit.model(m).parname;
+    parunit=circuit.model(m).parunit;
     
-        parstr=[ parname{1} '=' real2eng(valor(1),parunit{1},0) ';'];
-        
-        circuit.model(m).parstr=parstr;
-        circuit.model(m).modelstr=modelstr;
-        
+    modelstr=['.model ' circuit.model(m).name ' ' circuit.model(m).tipo '('];
+    modelstr=[modelstr parname{1} '=' num2str(valor(1),'%1.3e') ')'];
     
+    parstr=[ parname{1} '=' real2eng(valor(1),parunit{1},0) ';'];
+    
+    circuit.model(m).parstr=parstr;
+    circuit.model(m).modelstr=modelstr;
 else
     for m=1:length(circuit.model)
         
