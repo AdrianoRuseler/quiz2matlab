@@ -33,7 +33,17 @@ function R = combres(Rn,Mult,EXX)
 % EXX - String com série E12, E24...
 % colorname={'Preto','Marrom','Vermelho','Laranja','Amarelo','Verde','Azul','Violeta','Cinza','Branco','Dourado','Prata','Ausente'};
 
-
+% Verifica argumentos fornecidos
+switch nargin
+    case  0
+        R=[];
+        return
+    case  1
+       Mult=1;
+       EXX='E12';
+    case  2
+       EXX='E12';       
+end
 
 % multiplier=[0.01 0.1 1 10 100 1e3 10e3 100e3 1e6 10e6 100e6 1e9];
 % torelancia=[0.05 0.1 0.25 0.5 1 2 5 10 20];
@@ -78,7 +88,6 @@ for mx=1:x % Resistor multiplier
         n=n+1;
     end
 end
-
 
 switch Rn % Numero de resistores
     case 1
