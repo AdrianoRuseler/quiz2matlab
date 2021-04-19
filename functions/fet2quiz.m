@@ -65,6 +65,12 @@ end
 switch fet.type
     case 'njf'
         fet.Vgst=fet.Vgs-fet.Vto;
+        if fet.Vgs>0
+            fet.ok=0;
+            disp('Vgs > 0 for NJF!')
+        else
+            fet.ok=1;
+        end
         fet.rd=fet.Vds/fet.Id;
         fet.Idss=fet.Beta*fet.Vto^2;
         % FET operates in four region
@@ -85,6 +91,12 @@ switch fet.type
             fet.sat=1;
         end
     case 'pjf'
+        if fet.Vgs<0
+            fet.ok=0;
+            disp('Vgs < 0 for PJF!')
+        else
+            fet.ok=1;
+        end
         fet.Vgst=fet.Vgs+fet.Vto;
         fet.rd=fet.Vds/fet.Id;
         fet.Idss=-fet.Beta*fet.Vto^2;
