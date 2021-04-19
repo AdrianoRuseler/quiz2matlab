@@ -34,16 +34,19 @@ function [dcode]=directive2code(circuit)
 % [str, numstr, expstr, mantissa, exponent] = real2eng(valor(4),parunit{4})
 
 
-dcode=['<code>' circuit.paramstr '<br>'];
-
-for m=1:length(circuit.model)
-    if m==length(circuit.model)
-        dcode= strcat(dcode, [circuit.model(m).modelstr '</code>'] );
-    else
-        dcode= strcat(dcode, [circuit.model(m).modelstr '<br>'] );
+if isfield(circuit,'model')
+    dcode=['<code>' circuit.paramstr '<br>'];
+    for m=1:length(circuit.model)
+        if m==length(circuit.model)
+            dcode= strcat(dcode, [circuit.model(m).modelstr '</code>'] );
+        else
+            dcode= strcat(dcode, [circuit.model(m).modelstr '<br>'] );
+        end
     end
+    
+else
+    dcode=['<code>' circuit.paramstr '</code>'];
 end
-
 
 
 
