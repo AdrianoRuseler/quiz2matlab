@@ -67,6 +67,10 @@ for c=1:length(tmpcircuits)
     end
 end
 
+if ~exist('circuits','var')
+    return
+end
+
 if ~isfield(quiz,'nquiz')
     quiz.nquiz=length(circuits);
 end

@@ -130,8 +130,7 @@ circuit.PSIMCMD.simtime=toc; % Tempo total de simulação
 disp(cmdout)
 circuit.PSIMCMD.cmdout=cmdout;
 
-
-if contains(cmdout,'Error:','IgnoreCase',true)
+if contains(cmdout,'Error:','IgnoreCase',true) || contains(cmdout,'Failed','IgnoreCase',true)
     disp('Simulation with error!')
     return
 else
