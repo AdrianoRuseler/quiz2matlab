@@ -33,17 +33,17 @@ codegen/
 octave-workspace
 
 # End of https://www.gitignore.io/api/matlab
-*.xml
+#*.xml
 *.smv
-*.png
+#*.png
 
 *.mat
 *.raw
 *.tmp
 *.log
 
-*.psimsch
-*.txt
+#*.psimsch
+#*.txt
 
 # Some folders to ignore
 et52b
