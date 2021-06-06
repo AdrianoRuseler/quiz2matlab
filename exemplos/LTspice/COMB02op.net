@@ -1,0 +1,20 @@
+* C:\Users\Ruseler\Documents\GitHub\quiz2matlab\exemplos\LTspice\COMB02op.asc
+J1 N001 B N002 JFET
+RD cc N001 {RD}
+Vcc cc 0 {Vcc}
+Q1 N002 B E 0 TBJ
+RE E 0 {RE}
+R1 cc B {R1}
+R2 B 0 {R2}
+.model NPN NPN
+.model PNP PNP
+.lib C:\Users\Ruseler\Documents\LTspiceXVII\lib\cmp\standard.bjt
+.model NJF NJF
+.model PJF PJF
+.lib C:\Users\Ruseler\Documents\LTspiceXVII\lib\cmp\standard.jft
+.op
+.model JFET njf(Beta=1m Vto=-6)
+.param Vcc=30 R1=33k R2=18k RD=680 RE=330
+.model TBJ NPN(IS=10F BF=350)
+.backanno
+.end

@@ -1,0 +1,19 @@
+* C:\Users\Ruseler\Documents\GitHub\quiz2matlab\exemplos\LTspice\NE55501.asc
+XU1 0 N003 out N001 NC_01 N003 N002 N001 NE555
+RA N001 N002 {RA}
+RB N002 N003 {RB}
+Vcc N001 0 {Vcc}
+C1 N003 0 {CA}
+RL N001 out {RL}
+.param Vcc=15 RA=5k RB=3k RL=1k CA=0.15u
+.tran 0.01
+.meas tran Tr1 find time when V(out)=Vcc/2 rise 2
+.meas tran Tf1 find time when V(out)=Vcc/2 fall 3
+.meas tran Tr2 find time when V(out)=Vcc/2 rise 3
+.meas tran th param Tf1-Tr1
+.meas tran tl param Tr2-Tf1
+.meas tran fosc param 1/(th+tl)
+.meas tran duty param 100*th/(th+tl)
+.lib NE555.sub
+.backanno
+.end
