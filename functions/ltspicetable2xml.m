@@ -15,6 +15,10 @@ circuit = ltgetasc(circuit); % reads asc file
 circuit = ltasc2net(circuit); % Generates the .net file
 circuit = ltgetnet(circuit); % Reads net file
 
+if ~isfield(circuit.LTspice.net,'run')
+    circuit.LTspice.net.run =0;
+end
+
 steps=length(circuit.stepvalues);
 for c=1:length(circuit.X)
     for s=1:steps
