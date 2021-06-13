@@ -87,14 +87,20 @@ for t=1:x % n tabels loop
                         tablecircuit.quiz.table{t,c}.values=0;
                     end
                 case 'log'
+                    
                     tmpstr=strsplit(tablecircuit.quiz.table{t,c}.options,':'); %
-                    labels={circuit.LTspice.log.sdop{:}.Name}; % Data variables
-                    optind=find(contains(labels,tmpstr{1},'IgnoreCase',true));
-                    fields = fieldnames(circuit.LTspice.log.sdop{optind});
-                    if find(contains(fields,tmpstr{2}))
-                        eval(['tablecircuit.quiz.table{t,c}.values=circuit.LTspice.log.sdop{optind}.' tmpstr{2} ';'])
-                    else
-                        disp([ tmpstr{2} ' -> Log not FOUND!!']) % O que fazer?
+                    ndevgroups=length(circuit.LTspice.log.sdop); % Number os groups, TBJ, Fet...
+                    for g=1:ndevgroups
+                        devnames={circuit.LTspice.log.sdop{g}.Name}; % Data variables
+                        devfields{g} = fieldnames(circuit.LTspice.log.sdop{g}); % Grupo g
+                        if find(contains(devfields{g},tmpstr{2}))
+                            devind=find(contains(devnames{:},tmpstr{1},'IgnoreCase',true));
+                            if devind
+                                eval(['tablecircuit.quiz.table{t,c}.values=circuit.LTspice.log.sdop{g}.' tmpstr{2} '(' num2str(devind) ');'])
+                            else
+                                disp([ tmpstr{2} ' -> Log not FOUND!!']) % O que fazer?
+                            end
+                        end
                     end
                 case 'pbc'
                     tbj=tbj2quiz(circuit,tablecircuit.quiz.table{t,c}.options);
