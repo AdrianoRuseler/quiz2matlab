@@ -6,9 +6,8 @@ clear all
 % tline=circuit.LTspice.log.lines;
 
 circuit.name = 'lab01a'; % File name
-circuit.dir = 'C:\Users\adria\Dropbox\GitHub\quiz2matlab\et52b\lab01\'; % Sets simulation dir
-% circuit.dir = 'C:\Users\adria\Dropbox\GitHub\quiz2matlab\et52b\lab12\'; % Sets simulation dir
-circuit.theme  = 'clean'; % clean or boost, classic
+circuit.dir = getsimdir([circuit.name '.m']); % Sets simulation dir
+circuit.theme  = 'boost'; % clean or boost, classic
 
 % Config simulation
 circuit.parnamesim={'Vcc','R1'}; % Variables names
@@ -25,12 +24,16 @@ circuit.X=CombVec(R1);
 
 
 circuit.nsims=length(circuit.X);
-% circuit.nsims=5; % Number of simulations
+% circuit.multiplesims=[5 5]; % Number of simulations
+circuit.nsims = 5; % Numero de circuitos a serem simulados
+
 % [~,y]=size(circuit.Xi);
 % nq=randperm(y,circuit.nsims); % escolha as questoes
 % circuit.X=circuit.Xi(:,nq);
 circuit.cmdtype = '.op'; % Operation Point Simulation
 circuit.cmdupdate = 0;
+circuit.LTspice.net.run = 0;
+
 quiz.tbjtype = 'm1:nmos';
 quiz.tbjeval = 0; % Evaluate tbj op
 
@@ -40,12 +43,12 @@ quiz.tbjeval = 0; % Evaluate tbj op
 % Figura 1: Considere o MOSFET sendo o contido no CI4007
 quiz.enunciado = 'Monte o circuito apresentado na Figura 1 e preencha as tabelas a seguir:';
 
-quiz.tablecaption{1}='Tabela 1: Grandezas medidas com multímetro digital (Valor médio)!';
-quiz.tablequestion{1}='Utilize o multímetro digital no modo CC:';
-
 t=1; % Table
-c=1; % Coluna
+quiz.tablecaption{t}='Tabela 1: Grandezas medidas com multímetro digital (Valor médio)!';
+quiz.tablequestion{t}='Utilize o multímetro digital no modo CC:';
 
+
+c=1; % Coluna
 quiz.table{t,c}.header = 'Vcc';
 quiz.table{t,c}.units='V';
 quiz.table{t,c}.options='Vcc';
@@ -54,7 +57,7 @@ quiz.table{t,c}.optscore=100; % Score per option
 quiz.table{t,c}.opttol=20; % tolerance in percentage %
 quiz.table{t,c}.type='STRING';
 
-c=2; % Coluna
+c=c+1; % Coluna
 quiz.table{t,c}.header = 'Vcc (medido)';
 quiz.table{t,c}.units='V';
 quiz.table{t,c}.options='Vcc';
@@ -64,7 +67,7 @@ quiz.table{t,c}.opttol=20; % tolerance in percentage %
 quiz.table{t,c}.weight='1'; % Item weight
 quiz.table{t,c}.type='NUMERICAL';
 
-c=3; % Coluna
+c=c+1;  % Coluna
 quiz.table{t,c}.header = 'Vcc (escala)';
 quiz.table{t,c}.units='V';
 quiz.table{t,c}.options='Vcc';
@@ -74,7 +77,7 @@ quiz.table{t,c}.opttol=20; % tolerance in percentage %
 quiz.table{t,c}.weight='1'; % Item weight
 quiz.table{t,c}.type='SCALE';
 
-c=4; % Coluna
+c=c+1;  % Coluna
 quiz.table{t,c}.header = 'VR1 (medido)';
 quiz.table{t,c}.units='V';
 quiz.table{t,c}.options='vr1';
@@ -84,7 +87,7 @@ quiz.table{t,c}.opttol=20; % tolerance in percentage %
 quiz.table{t,c}.weight='1'; % Item weight
 quiz.table{t,c}.type='NUMERICAL';
 
-c=5; % Coluna
+c=c+1;  % Coluna
 quiz.table{t,c}.header = 'VR1 (escala)';
 quiz.table{t,c}.units='V';
 quiz.table{t,c}.options='vr1';
@@ -94,7 +97,7 @@ quiz.table{t,c}.opttol=20; % tolerance in percentage %
 quiz.table{t,c}.weight='1'; % Item weight
 quiz.table{t,c}.type='SCALE';
 
-c=6; % Coluna
+c=c+1;  % Coluna
 quiz.table{t,c}.header = 'VD1 (medido)';
 quiz.table{t,c}.units='V';
 quiz.table{t,c}.options='vd';
@@ -104,7 +107,7 @@ quiz.table{t,c}.opttol=20; % tolerance in percentage %
 quiz.table{t,c}.weight='1'; % Item weight
 quiz.table{t,c}.type='NUMERICAL';
 
-c=7; % Coluna
+c=c+1;  % Coluna
 quiz.table{t,c}.header = 'VD1 (escala)';
 quiz.table{t,c}.units='V';
 quiz.table{t,c}.options='vd';
@@ -116,9 +119,10 @@ quiz.table{t,c}.type='SCALE';
 
 
 %
-quiz.tablecaption{2}='Tabela 2: Grandezas calculadas com base na tabela 01.';
-quiz.tablequestion{2}='Calcule as grandezas da tabela 2 com base nas medições da tabela 1;';
 t=2;
+quiz.tablecaption{t}='Tabela 2: Grandezas calculadas com base na tabela 01.';
+quiz.tablequestion{t}='Calcule as grandezas da tabela 2 com base nas medições da tabela 1;';
+
 c=1;
 quiz.table{t,c}.header = 'Vcc';
 quiz.table{t,c}.units='V';
@@ -128,7 +132,7 @@ quiz.table{t,c}.optscore=100; % Score per option
 quiz.table{t,c}.opttol=20; % tolerance in percentage %
 quiz.table{t,c}.type='STRING';
 
-c=2;
+c=c+1; 
 quiz.table{t,c}.header = 'iD1';
 quiz.table{t,c}.units='A';
 quiz.table{t,c}.options='id1';
@@ -138,7 +142,7 @@ quiz.table{t,c}.opttol=20; % tolerance in percentage %
 quiz.table{t,c}.weight='1'; % Item weight
 quiz.table{t,c}.type='NUMERICAL';
 
-c=3;
+c=c+1; 
 quiz.table{t,c}.header = 'pD1';
 quiz.table{t,c}.units='W';
 quiz.table{t,c}.options='pd';
@@ -148,7 +152,7 @@ quiz.table{t,c}.opttol=20; % tolerance in percentage %
 quiz.table{t,c}.weight='1'; % Item weight
 quiz.table{t,c}.type='NUMERICAL';
 
-c=4;
+c=c+1; 
 quiz.table{t,c}.header = 'pR1';
 quiz.table{t,c}.units='W';
 quiz.table{t,c}.options='pr';
@@ -159,19 +163,22 @@ quiz.table{t,c}.weight='1'; % Item weight
 quiz.table{t,c}.type='NUMERICAL';
 
 
-%%
-quiz.nquiz=length(circuit.X);
-% 
-% circuit.nsims = 500; % Number of simulations
-% quiz.nquiz = 5; % Number of quizes
 
-ltspicetable2xml(circuit,quiz); % 
-
-
-
-
-
-
+%% Generate quizes
+if quizcircheck(circuit,quiz) % Verify data entry
+    if isfield(circuit,'multiplesims')
+        for ms=1:length(circuit.multiplesims)
+            circuit.nsims=circuit.multiplesims(ms); % Number of simulations
+            quiz.nquiz = circuit.nsims;
+            ltspicetable2xml(circuit,quiz); %
+        end
+    else
+        quiz.nquiz = circuit.nsims;
+        ltspicetable2xml(circuit,quiz); %
+    end    
+else
+    disp('Verify data entry!!')
+end
 
 
 
