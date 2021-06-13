@@ -6,7 +6,7 @@ clear all
 
 circuit.name = 'TBJ01b'; % File name
 circuit.dir = getsimdir([circuit.name '.m'],'LTspice'); % Sets simulation dir
-circuit.theme  = 'clean'; % clean or boost
+circuit.theme  = 'boost'; % clean or boost
 
 % Config simulation
 circuit.parnamesim={'Vcc','Rb','Rc'}; % Variables names
@@ -21,8 +21,10 @@ Rb = combres(1,1000,'E12'); % 12 resistores
 Rc = combres(1,10,'E12'); % 12 resistores
 circuit.X=CombVec(Rb,Rc);
 
-circuit.nsims=length(circuit.X);
-% circuit.nsims=5; % Number of simulations
+% circuit.nsims=length(circuit.X);
+% circuit.multiplesims=[5 5]; % Number of simulations
+circuit.nsims = 5; % Numero de circuitos a serem simulados
+
 % [~,y]=size(circuit.Xi);
 % nq=randperm(y,circuit.nsims); % escolha as questoes
 % circuit.X=circuit.Xi(:,nq);
@@ -34,180 +36,179 @@ quiz.tbjeval = 0; % Evaluate tbj op
 
 
 %%
-
-% Name:       q1
-% Model:    bc546b
-% Ib:       7.25e-05
-% Ic:       3.18e-02
-% Vbe:      7.32e-01
-% Vbc:     -4.61e+01
-% Vce:      4.68e+01
-% BetaDC:   4.39e+02
-% 
-% vrc: v(v1)-v(c)=3.17813
-% vrb: v(v1)-v(b)=49.2677
-
-
-
-
 quiz.enunciado = 'Monte o circuito apresentado na Figura 1 e preencha as tabelas a seguir:';
 
-quiz.table{1,1}.header = 'Vcc';
-quiz.table{1,1}.units='V';
-quiz.table{1,1}.options='Vv1';
-quiz.table{1,1}.vartype='op'; %
-quiz.table{1,1}.optscore=100; % Score per option
-quiz.table{1,1}.opttol=20; % tolerance in percentage %
-quiz.table{1,1}.type='STRING';
+t=1;
+quiz.tablecaption{t}='Tabela 1: Grandezas medidas com multímetro digital (Valor médio)!';
+quiz.tablequestion{t}='Utilize o multímetro digital no modo CC:';
 
-quiz.table{1,2}.header = 'Vbe (medido)';
-quiz.table{1,2}.units='V';
-quiz.table{1,2}.options='q1:Vbe';
-quiz.table{1,2}.vartype='log'; % Single only
-quiz.table{1,2}.optscore=100; % Score per option
-quiz.table{1,2}.opttol=20; % tolerance in percentage %
-quiz.table{1,2}.weight='1'; % Item weight
-quiz.table{1,2}.type='NUMERICAL';
+c=1;
+quiz.table{t,c}.header = 'Vcc';
+quiz.table{t,c}.units='V';
+quiz.table{t,c}.options='Vv1';
+quiz.table{t,c}.vartype='op'; %
+quiz.table{t,c}.optscore=100; % Score per option
+quiz.table{t,c}.opttol=20; % tolerance in percentage %
+quiz.table{t,c}.type='STRING';
 
-quiz.table{1,3}.header = 'Vbe (escala)';
-quiz.table{1,3}.units='V';
-quiz.table{1,3}.options='q1:Vbe';
-quiz.table{1,3}.vartype='log'; % Single only
-quiz.table{1,3}.optscore=100; % Score per option
-quiz.table{1,3}.opttol=20; % tolerance in percentage %
-quiz.table{1,3}.weight='1'; % Item weight
-quiz.table{1,3}.type='SCALE';
+c=c+1;
+quiz.table{t,c}.header = 'Vbe (medido)';
+quiz.table{t,c}.units='V';
+quiz.table{t,c}.options='q1:Vbe';
+quiz.table{t,c}.vartype='log'; % Single only
+quiz.table{t,c}.optscore=100; % Score per option
+quiz.table{t,c}.opttol=20; % tolerance in percentage %
+quiz.table{t,c}.weight='1'; % Item weight
+quiz.table{t,c}.type='NUMERICAL';
 
-quiz.table{1,4}.header = 'Vbc (medido)';
-quiz.table{1,4}.units='V';
-quiz.table{1,4}.options='q1:Vbc';
-quiz.table{1,4}.vartype='log'; % Single only
-quiz.table{1,4}.optscore=100; % Score per option
-quiz.table{1,4}.opttol=20; % tolerance in percentage %
-quiz.table{1,4}.weight='1'; % Item weight
-quiz.table{1,4}.type='NUMERICAL';
+c=c+1;
+quiz.table{t,c}.header = 'Vbe (escala)';
+quiz.table{t,c}.units='V';
+quiz.table{t,c}.options='q1:Vbe';
+quiz.table{t,c}.vartype='log'; % Single only
+quiz.table{t,c}.optscore=100; % Score per option
+quiz.table{t,c}.opttol=20; % tolerance in percentage %
+quiz.table{t,c}.weight='1'; % Item weight
+quiz.table{t,c}.type='SCALE';
 
-quiz.table{1,5}.header = 'Vbc (escala)';
-quiz.table{1,5}.units='V';
-quiz.table{1,5}.options='q1:Vbc';
-quiz.table{1,5}.vartype='log'; % Single only
-quiz.table{1,5}.optscore=100; % Score per option
-quiz.table{1,5}.opttol=20; % tolerance in percentage %
-quiz.table{1,5}.weight='1'; % Item weight
-quiz.table{1,5}.type='SCALE';
+c=c+1;
+quiz.table{t,c}.header = 'Vbc (medido)';
+quiz.table{t,c}.units='V';
+quiz.table{t,c}.options='q1:Vbc';
+quiz.table{t,c}.vartype='log'; % Single only
+quiz.table{t,c}.optscore=100; % Score per option
+quiz.table{t,c}.opttol=20; % tolerance in percentage %
+quiz.table{t,c}.weight='1'; % Item weight
+quiz.table{t,c}.type='NUMERICAL';
 
-quiz.table{1,6}.header = 'Vce (medido)';
-quiz.table{1,6}.units='V';
-quiz.table{1,6}.options='q1:Vce';
-quiz.table{1,6}.vartype='log'; % Single only
-quiz.table{1,6}.optscore=100; % Score per option
-quiz.table{1,6}.opttol=20; % tolerance in percentage %
-quiz.table{1,6}.weight='1'; % Item weight
-quiz.table{1,6}.type='NUMERICAL';
+c=c+1;
+quiz.table{t,c}.header = 'Vbc (escala)';
+quiz.table{t,c}.units='V';
+quiz.table{t,c}.options='q1:Vbc';
+quiz.table{t,c}.vartype='log'; % Single only
+quiz.table{t,c}.optscore=100; % Score per option
+quiz.table{t,c}.opttol=20; % tolerance in percentage %
+quiz.table{t,c}.weight='1'; % Item weight
+quiz.table{t,c}.type='SCALE';
 
-quiz.table{1,7}.header = 'Vce (escala)';
-quiz.table{1,7}.units='V';
-quiz.table{1,7}.options='q1:Vce';
-quiz.table{1,7}.vartype='log'; % Single only
-quiz.table{1,7}.optscore=100; % Score per option
-quiz.table{1,7}.opttol=20; % tolerance in percentage %
-quiz.table{1,7}.weight='1'; % Item weight
-quiz.table{1,7}.type='SCALE';
+c=c+1;
+quiz.table{t,c}.header = 'Vce (medido)';
+quiz.table{t,c}.units='V';
+quiz.table{t,c}.options='q1:Vce';
+quiz.table{t,c}.vartype='log'; % Single only
+quiz.table{t,c}.optscore=100; % Score per option
+quiz.table{t,c}.opttol=20; % tolerance in percentage %
+quiz.table{t,c}.weight='1'; % Item weight
+quiz.table{t,c}.type='NUMERICAL';
 
-quiz.tablecaption{1}='Tabela 1: Grandezas medidas com multímetro digital (Valor médio)!';
-quiz.tablequestion{1}='Utilize o multímetro digital no modo CC:';
-
-
-quiz.table{2,1}.header = 'Vcc';
-quiz.table{2,1}.units='V';
-quiz.table{2,1}.options='Vv1';
-quiz.table{2,1}.vartype='op'; %
-quiz.table{2,1}.optscore=100; % Score per option
-quiz.table{2,1}.opttol=20; % tolerance in percentage %
-quiz.table{2,1}.type='STRING';
-
-
-quiz.table{2,2}.header = 'Polarização BE';
-quiz.table{2,2}.units='V';
-quiz.table{2,2}.options='q1:npn';
-quiz.table{2,2}.vartype='pbe'; % pbc pbe mop
-quiz.table{2,2}.optscore=100; % Score per option
-quiz.table{2,2}.opttol=20; % tolerance in percentage %
-quiz.table{2,2}.weight='1'; % Item weight
-quiz.table{2,2}.type='TBJ';
-
-quiz.table{2,3}.header = 'Polarização BC';
-quiz.table{2,3}.units='V';
-quiz.table{2,3}.options='q1:npn';
-quiz.table{2,3}.vartype='pbc'; % pbc pbe mop
-quiz.table{2,3}.optscore=100; % Score per option
-quiz.table{2,3}.opttol=20; % tolerance in percentage %
-quiz.table{2,3}.weight='1'; % Item weight
-quiz.table{2,3}.type='TBJ';
-
-quiz.tablecaption{2}='Tabela 2: Polarização das junções BE e BC e modo de operação do transistor TBJ.';
-quiz.tablequestion{2}='Complete a tabela abaixo com base nos valores medidos na Tabela 1.';
-
-quiz.table{2,4}.header = 'Modo';
-quiz.table{2,4}.units='V';
-quiz.table{2,4}.options='q1:npn';
-quiz.table{2,4}.vartype='mop'; % pbc pbe mop
-quiz.table{2,4}.optscore=100; % Score per option
-quiz.table{2,4}.opttol=20; % tolerance in percentage %
-quiz.table{2,4}.weight='1'; % Item weight
-quiz.table{2,4}.type='TBJ';
+c=c+1;
+quiz.table{t,c}.header = 'Vce (escala)';
+quiz.table{t,c}.units='V';
+quiz.table{t,c}.options='q1:Vce';
+quiz.table{t,c}.vartype='log'; % Single only
+quiz.table{t,c}.optscore=100; % Score per option
+quiz.table{t,c}.opttol=20; % tolerance in percentage %
+quiz.table{t,c}.weight='1'; % Item weight
+quiz.table{t,c}.type='SCALE';
 
 
 
-quiz.tablecaption{3}='Tabela 3: Grandezas medidas com multímetro digital (Valor médio)!';
-quiz.tablequestion{3}='Utilize o multímetro digital no modo CC:';
+t=2;
+quiz.tablecaption{t}='Tabela 2: Polarização das junções BE e BC e modo de operação do transistor TBJ.';
+quiz.tablequestion{t}='Complete a tabela abaixo com base nos valores medidos na Tabela 1.';
+
+c=1;
+quiz.table{t,c}.header = 'Vcc';
+quiz.table{t,c}.units='V';
+quiz.table{t,c}.options='Vv1';
+quiz.table{t,c}.vartype='op'; %
+quiz.table{t,c}.optscore=100; % Score per option
+quiz.table{t,c}.opttol=20; % tolerance in percentage %
+quiz.table{t,c}.type='STRING';
+
+c=c+1;
+quiz.table{t,c}.header = 'Polarização BE';
+quiz.table{t,c}.units='V';
+quiz.table{t,c}.options='q1:npn';
+quiz.table{t,c}.vartype='pbe'; % pbc pbe mop
+quiz.table{t,c}.optscore=100; % Score per option
+quiz.table{t,c}.opttol=20; % tolerance in percentage %
+quiz.table{t,c}.weight='1'; % Item weight
+quiz.table{t,c}.type='TBJ';
+
+c=c+1;
+quiz.table{t,c}.header = 'Polarização BC';
+quiz.table{t,c}.units='V';
+quiz.table{t,c}.options='q1:npn';
+quiz.table{t,c}.vartype='pbc'; % pbc pbe mop
+quiz.table{t,c}.optscore=100; % Score per option
+quiz.table{t,c}.opttol=20; % tolerance in percentage %
+quiz.table{t,c}.weight='1'; % Item weight
+quiz.table{t,c}.type='TBJ';
+
+c=c+1;
+quiz.table{t,c}.header = 'Modo';
+quiz.table{t,c}.units='V';
+quiz.table{t,c}.options='q1:npn';
+quiz.table{t,c}.vartype='mop'; % pbc pbe mop
+quiz.table{t,c}.optscore=100; % Score per option
+quiz.table{t,c}.opttol=20; % tolerance in percentage %
+quiz.table{t,c}.weight='1'; % Item weight
+quiz.table{t,c}.type='TBJ';
 
 
 t=3;
+quiz.tablecaption{t}='Tabela 3: Grandezas medidas com multímetro digital (Valor médio)!';
+quiz.tablequestion{t}='Utilize o multímetro digital no modo CC:';
+
 c=1;
-quiz.table{3,1}.header = 'Vcc';
-quiz.table{3,1}.units='V';
-quiz.table{3,1}.options='Vv1';
-quiz.table{3,1}.vartype='op'; %
-quiz.table{3,1}.optscore=100; % Score per option
-quiz.table{3,1}.opttol=20; % tolerance in percentage %
-quiz.table{3,1}.type='STRING';
+quiz.table{t,c}.header = 'Vcc';
+quiz.table{t,c}.units='V';
+quiz.table{t,c}.options='Vv1';
+quiz.table{t,c}.vartype='op'; %
+quiz.table{t,c}.optscore=100; % Score per option
+quiz.table{t,c}.opttol=20; % tolerance in percentage %
+quiz.table{t,c}.type='STRING';
 
-quiz.table{3,2}.header = 'VRb (medido)';
-quiz.table{3,2}.units='V';
-quiz.table{3,2}.options='vrb';
-quiz.table{3,2}.vartype='meas'; % Single only
-quiz.table{3,2}.optscore=100; % Score per option
-quiz.table{3,2}.opttol=20; % tolerance in percentage %
-quiz.table{3,2}.weight='1'; % Item weight
-quiz.table{3,2}.type='NUMERICAL';
+c=c+1;
+quiz.table{t,c}.header = 'VRb (medido)';
+quiz.table{t,c}.units='V';
+quiz.table{t,c}.options='vrb';
+quiz.table{t,c}.vartype='meas'; % Single only
+quiz.table{t,c}.optscore=100; % Score per option
+quiz.table{t,c}.opttol=20; % tolerance in percentage %
+quiz.table{t,c}.weight='1'; % Item weight
+quiz.table{t,c}.type='NUMERICAL';
 
-quiz.table{3,3}.header = 'VRb (escala)';
-quiz.table{3,3}.units='V';
-quiz.table{3,3}.options='vrb';
-quiz.table{3,3}.vartype='meas'; % Single only
-quiz.table{3,3}.optscore=100; % Score per option
-quiz.table{3,3}.opttol=20; % tolerance in percentage %
-quiz.table{3,3}.weight='1'; % Item weight
-quiz.table{3,3}.type='SCALE';
+c=c+1;
+quiz.table{t,c}.header = 'VRb (escala)';
+quiz.table{t,c}.units='V';
+quiz.table{t,c}.options='vrb';
+quiz.table{t,c}.vartype='meas'; % Single only
+quiz.table{t,c}.optscore=100; % Score per option
+quiz.table{t,c}.opttol=20; % tolerance in percentage %
+quiz.table{t,c}.weight='1'; % Item weight
+quiz.table{t,c}.type='SCALE';
 
-quiz.table{3,4}.header = 'VRc (medido)';
-quiz.table{3,4}.units='V';
-quiz.table{3,4}.options='vrc';
-quiz.table{3,4}.vartype='meas'; % Single only
-quiz.table{3,4}.optscore=100; % Score per option
-quiz.table{3,4}.opttol=20; % tolerance in percentage %
-quiz.table{3,4}.weight='1'; % Item weight
-quiz.table{3,4}.type='NUMERICAL';
+c=c+1;
+quiz.table{t,c}.header = 'VRc (medido)';
+quiz.table{t,c}.units='V';
+quiz.table{t,c}.options='vrc';
+quiz.table{t,c}.vartype='meas'; % Single only
+quiz.table{t,c}.optscore=100; % Score per option
+quiz.table{t,c}.opttol=20; % tolerance in percentage %
+quiz.table{t,c}.weight='1'; % Item weight
+quiz.table{t,c}.type='NUMERICAL';
 
-quiz.table{3,5}.header = 'VRc (escala)';
-quiz.table{3,5}.units='V';
-quiz.table{3,5}.options='vrc';
-quiz.table{3,5}.vartype='meas'; % Single only
-quiz.table{3,5}.optscore=100; % Score per option
-quiz.table{3,5}.opttol=20; % tolerance in percentage %
-quiz.table{3,5}.weight='1'; % Item weight
-quiz.table{3,5}.type='SCALE';
+c=c+1;
+quiz.table{t,c}.header = 'VRc (escala)';
+quiz.table{t,c}.units='V';
+quiz.table{t,c}.options='vrc';
+quiz.table{t,c}.vartype='meas'; % Single only
+quiz.table{t,c}.optscore=100; % Score per option
+quiz.table{t,c}.opttol=20; % tolerance in percentage %
+quiz.table{t,c}.weight='1'; % Item weight
+quiz.table{t,c}.type='SCALE';
 
 
 quiz.tablecaption{4}='Tabela 4: Grandezas calculadas com base na tabela 03.';
@@ -222,7 +223,7 @@ quiz.table{t,c}.optscore=100; % Score per option
 quiz.table{t,c}.opttol=20; % tolerance in percentage %
 quiz.table{t,c}.type='STRING';
 
-c=2;
+c=c+1;
 quiz.table{t,c}.header = 'IRb (calculado)';
 quiz.table{t,c}.units='A';
 quiz.table{t,c}.options='q1:Ib';
@@ -233,7 +234,7 @@ quiz.table{t,c}.weight='1'; % Item weight
 quiz.table{t,c}.type='NUMERICAL';
 
 
-c=3;
+c=c+1;
 quiz.table{t,c}.header = 'IRc (calculado)';
 quiz.table{t,c}.units='A';
 quiz.table{t,c}.options='q1:Ic';
@@ -244,7 +245,7 @@ quiz.table{t,c}.weight='1'; % Item weight
 quiz.table{t,c}.type='NUMERICAL';
 
 % 
-% c=4;
+% c=c+1;
 % quiz.table{t,c}.header = 'Ic/Ib (calculado)';
 % quiz.table{t,c}.units='A/A';
 % quiz.table{t,c}.options='beta';
@@ -255,14 +256,21 @@ quiz.table{t,c}.type='NUMERICAL';
 % quiz.table{t,c}.type='NUMERICAL';
 
 
-%%
-quiz.nquiz=length(circuit.X);
-% 
-% circuit.nsims = 500; % Number of simulations
-% quiz.nquiz = 5; % Number of quizes
-
-ltspicetable2xml(circuit,quiz); % 
-
+%% Generate quizes
+if quizcircheck(circuit,quiz) % Verify data entry
+    if isfield(circuit,'multiplesims')
+        for ms=1:length(circuit.multiplesims)
+            circuit.nsims=circuit.multiplesims(ms); % Number of simulations
+            quiz.nquiz = circuit.nsims;
+            ltspicetable2xml(circuit,quiz); %
+        end
+    else
+        quiz.nquiz = circuit.nsims;
+        ltspicetable2xml(circuit,quiz); %
+    end    
+else
+    disp('Verify data entry!!')
+end
 
 
 
