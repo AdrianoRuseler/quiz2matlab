@@ -7,6 +7,13 @@ if isfield(circuit,'parname') && isfield(circuit,'parvalue')
     for ind=1:length(circuit.parname)
         paramstr=[paramstr ' ' circuit.parname{ind} '=' num2str(circuit.parvalue(ind),'%1.3e')];
     end
+    
+    if isfield(circuit,'funcvalue')        
+        for ind=1:length(circuit.funcvalue)
+            paramstr=[paramstr ' func' num2str(ind) '=' num2str(circuit.funcvalue(ind),'%1.3e')];
+        end       
+    end
+    
     circuit.paramstr = paramstr;
     circuit.LTspice.net.lines{circuit.LTspice.net.paramline}=paramstr; % Updates param line from net file
     newStr = split(circuit.LTspice.asc.lines{circuit.LTspice.asc.paramline},'!');
