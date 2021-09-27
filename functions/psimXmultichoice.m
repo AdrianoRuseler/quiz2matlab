@@ -39,20 +39,23 @@ function [circuit]=psimXmultichoice(circuit)
 labels={circuit.PSIMCMD.data.signals.label}; % Data variables
 
 for q=1:length(circuit.quiz.question)
-    
+
     switch circuit.quiz.question{q}.type
         case 'NUMERICAL'
             multicell='{1:NUMERICAL:';
             isnumerical=1;
             ispsimchoice=0;
+            isstringchoice=0;
         case 'MULTICHOICE'
             multicell='{1:MULTICHOICE:';
             isnumerical=0;
             ispsimchoice=0;
+            isstringchoice=0;
         case 'MULTICHOICE_H'
             multicell='{1:MULTICHOICE_H:';
             isnumerical=0;
             ispsimchoice=0;
+            isstringchoice=0;
         case 'MULTICHOICE_V'
             multicell='{1:MULTICHOICE_V:';
             isnumerical=0;
@@ -61,39 +64,67 @@ for q=1:length(circuit.quiz.question)
             multicell='{1:MULTICHOICE_S:';
             isnumerical=0;
             ispsimchoice=0;
+            isstringchoice=0;
         case 'MULTICHOICE_HS'
             multicell='{1:MULTICHOICE_HS:';
             isnumerical=0;
             ispsimchoice=0;
+            isstringchoice=0;
         case 'MULTICHOICE_VS'
             multicell='{1:MULTICHOICE_VS:';
             isnumerical=0;
             ispsimchoice=0;
+            isstringchoice=0;
         case 'PSIMCHOICE'
             multicell='{1:MULTICHOICE:';
             isnumerical=0;
             ispsimchoice=1;
+            isstringchoice=0;
         case 'PSIMCHOICE_S'
             multicell='{1:MULTICHOICE_S:';
             isnumerical=0;
             ispsimchoice=1;
+            isstringchoice=0;
+        case 'STRINGCHOICE'
+            multicell='{1:MULTICHOICE:';
+            isnumerical=0;
+            ispsimchoice=0;
+            isstringchoice=1;
+        case 'STRINGCHOICE_S'
+            multicell='{1:MULTICHOICE_S:';
+            isnumerical=0;
+            ispsimchoice=0;
+            isstringchoice=1;
+        case 'STRINGCHOICE_HS'
+            multicell='{1:MULTICHOICE_HS:';
+            isnumerical=0;
+            ispsimchoice=0;
+            isstringchoice=1;
+        case 'STRINGCHOICE_VS'
+            multicell='{1:MULTICHOICE_VS:';
+            isnumerical=0;
+            ispsimchoice=0;
+            isstringchoice=1;
         otherwise
             multicell='{1:MULTICHOICE_S:';
             isnumerical=0;
             ispsimchoice=0;
+            isstringchoice=0;
             %   MULTICHOICE
     end
-    
+
     % Gets option value from simulated data
     lopts=length(circuit.quiz.question{q}.options); % Number of options per question
     for o=1:lopts % Get option value
         if strcmp(circuit.quiz.question{q}.vartype{o},'func')
             circuit.quiz.question{q}.values(o)=circuit.funcvalue(circuit.quiz.question{q}.options{o});
+        elseif strcmp(circuit.quiz.question{q}.vartype{o},'string')
+            circuit.quiz.question{q}.values(o)=0;
         else
             optind=find(contains(labels,circuit.quiz.question{q}.options{o},'IgnoreCase',true));
             if ~isempty(optind) % Label found
                 circuit.quiz.question{q}.labelsind(o) = optind(1);
-                switch circuit.quiz.question{q}.vartype{o} % max, min, rms, mean, delta , meanround
+                switch circuit.quiz.question{q}.vartype{o} % max, min, rms, mean, delta , meanround , math
                     case 'max'
                         circuit.quiz.question{q}.values(o)=[circuit.PSIMCMD.data.signals(circuit.quiz.question{q}.labelsind(o)).max];
                     case 'min'
@@ -117,8 +148,8 @@ for q=1:length(circuit.quiz.question)
             end
         end
     end
-    
-    
+
+
     if isnumerical % NUMERICAL
         for o=1:lopts % get option value
             [~,~, expstr, mantissa] = real2eng(circuit.quiz.question{q}.values(o),circuit.quiz.question{q}.units{o});
@@ -139,56 +170,84 @@ for q=1:length(circuit.quiz.question)
             else
                 multicell = strcat(multicell,['~' tempstr]);
             end
-            
+
         end
         multicell = strcat(multicell,['}' expstr]);
-        
+
     elseif ispsimchoice % PSIM CHOICE
-%         disp('IS PSIM CHOICE!!!!')       
-        
+        %         disp('IS PSIM CHOICE!!!!')
+
         % quiz.question{q}.units={'opt1','opt2','opt3'};
         % quiz.question{q}.options={'optx'}; % Var for correct answer
         % quiz.question{q}.vartype={'meanround'}; %
         % quiz.question{q}.optscore=[100]; % Score per option
         % quiz.question{q}.opttol=[10]; % tolerance in percentage %
         % quiz.question{q}.type='PSIMCHOICE';
-        
+
         o=1; % This shold be for just 1 option
         correctopt= circuit.quiz.question{q}.values(o); % correct option
-        
-        
+
+
         for opts=1:length(circuit.quiz.question{q}.units)
             if(correctopt==opts)
                 multicell = strcat(multicell,['~%100%' circuit.quiz.question{q}.units{opts} ]);
             else
                 multicell = strcat(multicell,['~' circuit.quiz.question{q}.units{opts}]);
-            end            
-        end       
-        
-        multicell = strcat(multicell,'}');        
-        
-%         disp(multicell)        
-        
+            end
+        end
+
+        multicell = strcat(multicell,'}');
+
+        %         disp(multicell)
+
+    elseif isstringchoice % STRING CHOICE
+        %
+        % circuit.quiz.question{1}.options={'Expr01','Expr02','Expr03','Expr04','Expr05'};
+        % circuit.quiz.question{1}.vartype={'string'}; % Expression
+        % circuit.quiz.question{1}.optscore=[100 0 0 0 0]; % Score per option
+        % circuit.quiz.question{1}.opttol=[10 10 10 10 10]; % tolerance in percentage %
+        % circuit.quiz.question{1}.type='STRINGCHOICE';
+
+        [optscoresort,optscoreind] = sort(circuit.quiz.question{q}.optscore,'descend');
+        circuit.quiz.question{q}.optscore = optscoresort;
+        circuit.quiz.question{q}.options = circuit.quiz.question{q}.options(optscoreind);
+
+        %         disp(circuit.quiz.question{q}.options)
+        for o=1:lopts
+            optstr = circuit.quiz.question{q}.options(o);
+            if(circuit.quiz.question{q}.optscore(o))
+                multicell = strcat(multicell,['~%' num2str(circuit.quiz.question{q}.optscore(o)) '%' optstr{:} ]);
+                %                 disp(multicell)
+            else
+                multicell = strcat(multicell,['~' optstr{:}]);
+                %                 disp(multicell)
+            end
+        end
+
+        multicell = strcat(multicell,'}');
+        %         multicell = strrep(multicell,'u','&mu;'); % Substitui u por micro;
+
+
     else  %   MULTICHOICE
         [optscoresort,optscoreind] = sort(circuit.quiz.question{q}.optscore,'descend');
         circuit.quiz.question{q}.optscore = optscoresort;
         circuit.quiz.question{q}.values = circuit.quiz.question{q}.values(optscoreind);
         circuit.quiz.question{q}.units = circuit.quiz.question{q}.units(optscoreind);
-        
+
         %  circuit.quiz.question{q}.values % Are unique?? % Changes all
         tempres1=round(circuit.quiz.question{q}.values*1000,3,'significant');
         if ~isequal(length(unique(tempres1)),length(tempres1)) % Options are not unique
             for o=1:lopts
                 if(circuit.quiz.question{q}.optscore(o))% Scored option - dont change it!
-                    
+
                 else % Option can be changed - no score
                     tempopts= unique([circuit.quiz.question{q}.values(o) circuit.quiz.question{q}.values(o).*[(rand(1,lopts)) (1+rand(1,lopts))]]);
                     circuit.quiz.question{q}.values(o)= tempopts(randperm(length(tempopts),1));
                 end
             end % Loop
         end
-        
-        
+
+
         for o=1:lopts
             optstr = real2eng(circuit.quiz.question{q}.values(o),circuit.quiz.question{q}.units{o}); % Gets option value with unit in eng format
             if(circuit.quiz.question{q}.optscore(o))
@@ -197,10 +256,10 @@ for q=1:length(circuit.quiz.question)
                 multicell = strcat(multicell,['~' optstr]);
             end
         end
-        
+
         multicell = strcat(multicell,'}');
         %         multicell = strrep(multicell,'u','&mu;'); % Substitui u por micro;
-        
+
     end
     circuit.quiz.question{q}.choicestr=multicell;
 end
