@@ -76,6 +76,17 @@ for co=1:length(quizstruct.comb)
     questiontext.appendChild(questiontexttext);
     questiontexttext.appendChild(docNode.createTextNode(quizstruct.question.text{q})); % Coloca pergunta
     
+    % Add file to question
+    
+    if isfield(quizstruct.question,'filename') % Add model file with link to it        
+        questiontextfile = docNode.createElement('file');
+        questiontextfile.setAttribute('name',quizstruct.question.filename{q});
+        questiontextfile.setAttribute('path','/');
+        questiontextfile.setAttribute('encoding','base64');
+        questiontext.appendChild(questiontextfile);
+        questiontextfile.appendChild(docNode.createTextNode(quizstruct.question.filebase64code{q})); % Coloca pergunta
+    end
+    
     
     % Question generalfeedback
     generalfeedback = docNode.createElement('generalfeedback');
