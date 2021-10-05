@@ -32,9 +32,9 @@ function [dcode]=directive2code(circuit)
 % parname=circuit.parname;
 
 % [str, numstr, expstr, mantissa, exponent] = real2eng(valor(4),parunit{4})
+% circuit.quiz.modelfile
 
-
-if isfield(circuit,'model')
+if isfield(circuit,'model') && ~(circuit.quiz.modelfile)
     dcode=['<code>' circuit.paramstr '<br>'];
     for m=1:length(circuit.model)
         if m==length(circuit.model)
