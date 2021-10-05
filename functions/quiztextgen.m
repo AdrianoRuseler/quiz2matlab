@@ -13,8 +13,7 @@ else
 end
 
 
-if isfield(circuit.quiz,'extratext') % Add extra text
-    
+if isfield(circuit.quiz,'extratext') % Add extra text    
     if isfield(circuit.quiz,'printparfile') && circuit.quiz.printparfile
         fe =  length(circuit.quiz.extratext);
         
@@ -30,8 +29,15 @@ if isfield(circuit.quiz,'extratext') % Add extra text
     end
 end
 
+% quiz.modelfile=1; % Add link to model file
+
+if circuit.quiz.modelfile % Add model file with link to it
+%     disp('Add model file')
+    circuit.quiz.text=[circuit.quiz.text '<p>Arquivo: <a href="@@PLUGINFILE@@/' circuit.model(1).modelfile '">' circuit.model(1).modelfile '</a><br></p>'];
+    circuit.quiz.nomearquivo=circuit.model(1).modelfile;
+end
+
 for q=1:length(circuit.quiz.question)
     circuit.quiz.text=[circuit.quiz.text '<p>' circuit.quiz.question{q}.str ' '  circuit.quiz.question{q}.choicestr '<br></p>'];
 end
-
 
