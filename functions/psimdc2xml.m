@@ -57,6 +57,10 @@ if ~isfield(quiz,'nquiz')
     quiz.nquiz=length(circuits);
 end
 
+if ~isfield(quiz,'modelfile') % Create file with model
+   quiz.modelfile=0;    
+end
+
 pngfile=[circuit.dir circuit.name '.png']; % Fig png file
 if isfield(circuit,'theme')
     imgout=[circuit.dir circuit.name circuit.theme '.png']; % Fig png file
