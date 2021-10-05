@@ -36,10 +36,13 @@ for q=1:quizopts.nquiz
     else
         quizstruct.question.name{q}=[tmpcircuits{q}.quiz.name 'q' num2str(q,'%03i')]; % Generates quiz name
     end
-    
-    
-    
+        
     quizstruct.question.text{q}=tmpcircuits{q}.quiz.text;
+
+    if tmpcircuits{q}.quiz.modelfile % Add model file with link to it
+        quizstruct.question.filebase64code{q}=tmpcircuits{q}.model(1).filebase64code;
+        quizstruct.question.filename{q} = tmpcircuits{q}.quiz.nomearquivo;
+    end
     
     disp(quizstruct.question.name{q}) % Display question name
     quizstruct.question.generalfeedback{q}=quizopts.generalfeedback;
