@@ -31,17 +31,28 @@ if isfield(circuit,'parind') && isfield(circuit,'modind')
         tmpcircuits{c}=circuit;
         tmpcircuits{c}.parvalue=X(circuit.parind,c); % Variables values
         tmpcircuits{c}.parstr = param2str(tmpcircuits{c});
-        
+
         for m=1:length(circuit.model)
-            tmpcircuits{c}.model(m).parvalue=X(circuit.modind(m,:),c); % Variables values
+            if iscell(circuit.modind)
+                tmpcircuits{c}.model(m).parvalue=X(circuit.modind{m,:},c); % Variables values
+            else
+                tmpcircuits{c}.model(m).parvalue=X(circuit.modind(m,:),c); % Variables values
+            end
         end
-        
+
         tmpcircuits{c} = model2str(tmpcircuits{c});
+
+        if length(circuit.model)==1 % Implemented for just one model
+            tmpcircuits{c} = model2file(tmpcircuits{c}); % Creates file with model
+        else
+            quiz.modelfile=0; % Add link to model file
+        end
+
         tmpcircuits{c}.funcvalues = X(:,c); % Function Variables values
-        
-%         circuit.model(m).parstr=parstr;
-%         circuit.model(m).modelstr=modelstr;
-    
+
+        %         circuit.model(m).parstr=parstr;
+        %         circuit.model(m).modelstr=modelstr;
+
     end
 elseif isfield(circuit,'parind') && isfield(circuit,'level')
     for c=1:circuit.nsims
@@ -63,10 +74,10 @@ end
 
 % Eval functions
 [~,y]=size(X);
-if isfield(circuit,'funcstr')     
+if isfield(circuit,'funcstr')
     for c=1:y
         parvalues = tmpcircuits{c}.funcvalues; % Its used in function input eval
-        for f=1:length(circuit.funcstr) % Functions loop            
+        for f=1:length(circuit.funcstr) % Functions loop
             tmpcircuits{c}.funcvalue(f)=eval(circuit.funcstr{f}); % Eval functions
         end
     end
@@ -84,29 +95,34 @@ end
 % tmpcircuits=circuits;
 
 if ~isfield(quiz,'feteval')
-   quiz.feteval=0;     
+    quiz.feteval=0;
 end
 
 if ~isfield(quiz,'tbjeval')
-   quiz.tbjeval=0;    
+    quiz.tbjeval=0;
 end
+
+if ~isfield(quiz,'modelfile') % Create file with model
+    quiz.modelfile=0;
+end
+
 
 % Clear empty simulated data
 y=1;
-for c=1:length(tmpcircuits)    
+for c=1:length(tmpcircuits)
     if isfield(tmpcircuits{c}.LTspice,'data') % Simulation OK!
         if(~tmpcircuits{c}.LTspice.data.error)
             if(quiz.feteval)
                 fet=fet2quiz(tmpcircuits{c},quiz.fettype);
-                
+
                 circuits{y}=tmpcircuits{c};
                 y=y+1;
             else
                 circuits{y}=tmpcircuits{c};
-                y=y+1;                
-            end      
-            
-            
+                y=y+1;
+            end
+
+
             if(quiz.tbjeval)
                 tbj=tbj2quiz(tmpcircuits{c},quiz.tbjtype);
                 disp(tbj)
@@ -119,16 +135,16 @@ for c=1:length(tmpcircuits)
             else
                 circuits{y}=tmpcircuits{c};
                 y=y+1;
-            end 
+            end
         else
-            circuits{y}=tmpcircuits{c}; % .ac error 
+            circuits{y}=tmpcircuits{c}; % .ac error
             y=y+1;
         end
     else
         if isfield(tmpcircuits{c},'model')
-           disp(['No data file in simulation ' num2str(c) ' with ' tmpcircuits{c}.parstr ' and ' tmpcircuits{c}.model.parstr '!'])
+            disp(['No data file in simulation ' num2str(c) ' with ' tmpcircuits{c}.parstr ' and ' tmpcircuits{c}.model.parstr '!'])
         else
-           disp(['No data file in simulation ' num2str(c) ' with ' tmpcircuits{c}.parstr '!']) 
+            disp(['No data file in simulation ' num2str(c) ' with ' tmpcircuits{c}.parstr '!'])
         end
     end
 end
@@ -149,7 +165,7 @@ quiz.name = [circuit.name];
 % Auto add item letter: a), b)... 97 - 122; 65 - 90
 if isfield(quiz,'autoitem') && quiz.autoitem
     for q=1:length(quiz.question)
-        quiz.question{q}.str=[ char(96+q) ') ' quiz.question{q}.str]; 
+        quiz.question{q}.str=[ char(96+q) ') ' quiz.question{q}.str];
         disp(quiz.question{q}.str)
     end
 end
@@ -157,20 +173,20 @@ end
 for n=1:length(circuits)
     circuits{n}.quiz=quiz;
     figlegendastr=['Figura 1: Considere ' circuits{n}.parstr ';']; % Legenda da figura modelstr
-    
-    if isfield(circuit,'model')
+
+    if isfield(circuit,'model') && ~(quiz.modelfile)
         for ml=1:length(circuit.model) % number of .model lines
             circuits{n}.quiz.extratext{ml}=['Parâmetros do ' circuit.model(ml).name ': ' circuits{n}.model(ml).parstr];
         end
     end
-    
+
     if isfield(circuit,'level')
         if isfield(circuit.level,'tipo')
             circuits{n}.quiz.extratext{1}=['Parâmetros do ' circuit.level.tipo ': ' circuits{n}.level.parstr];
         end
     end
-    
-    
+
+
     %     circuits{n}.quiz.extratext{2}=tmpcircuits{c}.model.modelstr;
     circuits{n}.quiz.fightml = psimfigstr(imgout,'left',figlegendastr); % html code for fig
     circuits{n} = ltspiceXmultichoice(circuits{n}); % Generate multichoice
