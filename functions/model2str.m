@@ -35,6 +35,7 @@ for m=1:length(circuit.model) % Number of models
     valor=circuit.model(m).parvalue;
     parname=circuit.model(m).parname;
     parunit=circuit.model(m).parunit;
+    
     if length(circuit.modind)==1 % Number of parameters in each model
         modelstr=['.model ' circuit.model(m).name ' ' circuit.model(m).tipo '('];
         modelstr=[modelstr parname{1} '=' num2str(valor(1),'%1.3e') ')'];
