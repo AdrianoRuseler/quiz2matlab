@@ -19,6 +19,10 @@ if ~isfield(circuit.LTspice.net,'run')
     circuit.LTspice.net.run =0;
 end
 
+if ~isfield(quiz,'modelfile') % Create file with model
+    quiz.modelfile=0;
+end
+
 % circuit.nsims=600; % Number of simulations
 [~,y]=size(circuit.Xi);
 nq=randperm(y,circuit.nsims); % escolha as questoes
@@ -42,10 +46,8 @@ if isfield(circuit,'parind') && isfield(circuit,'modind')
 
         tmpcircuits{c} = model2str(tmpcircuits{c});
 
-        if length(circuit.model)==1 % Implemented for just one model
+        if quiz.modelfile
             tmpcircuits{c} = model2file(tmpcircuits{c}); % Creates file with model
-        else
-            quiz.modelfile=0; % Add link to model file
         end
 
         tmpcircuits{c}.funcvalues = X(:,c); % Function Variables values
@@ -100,10 +102,6 @@ end
 
 if ~isfield(quiz,'tbjeval')
     quiz.tbjeval=0;
-end
-
-if ~isfield(quiz,'modelfile') % Create file with model
-    quiz.modelfile=0;
 end
 
 
