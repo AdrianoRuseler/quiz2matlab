@@ -222,9 +222,11 @@ disp('Deleting files...')
 if(circuit.PSIMCMD.tmpfiledel)
     delete(circuit.PSIMCMD.infile) % Deleta arquivo de simulação
     delete(circuit.PSIMCMD.outfile) % Deleta arquivo de dados
-    delete(circuit.PSIMCMD.msgfile)
+
     if circuit.PSIMCMD.script.run
         delete(circuit.PSIMCMD.script.file)
+    else
+        delete(circuit.PSIMCMD.msgfile)
     end
 end
 disp('Done!!!!')
