@@ -48,6 +48,10 @@ end
 outstring=strrep(char(java.util.UUID.randomUUID),'-','');
 modelfilename=['MF' upper(outstring(1:6)) '.MOD'];
 fileID = fopen([modelpath modelfilename],'w');
+if fileID==-1
+    disp('File error!!')
+    return
+end
 
 for m=1:length(circuit.model) % Number of models - writes all models in a single file
     if ~isfield(circuit.model(m),'comments') || isempty(circuit.model(m).comments)
@@ -60,6 +64,10 @@ end
 fclose(fileID);
 
 fileID = fopen([modelpath modelfilename],'r');
+if fileID==-1
+    disp('File error!!')
+    return
+end
 A = fread(fileID);
 fclose(fileID);
 
