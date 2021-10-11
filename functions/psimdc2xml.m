@@ -10,6 +10,7 @@ circuit.PSIMCMD.simsdir=circuit.dir; % PSIM file dir
 circuit.PSIMCMD.tmpfile=1; % Create tmp file?
 circuit.PSIMCMD.tmpdir=1; % Use system temp dir?
 circuit.PSIMCMD.tmpfiledel=1; % Delete tmp files?
+
 circuit.PSIMCMD.totaltime=10E-005; % Total simulation time, in sec.
 circuit.PSIMCMD.steptime=1E-005; % Simulation time step, in sec.  
 circuit.PSIMCMD.printtime=5E-005; %Time from which simulation results are saved to the output file (default = 0). No output is saved before this time. 
@@ -17,6 +18,10 @@ circuit.PSIMCMD.printstep=1; %Print step (default = 1). If the print step is set
 % If it is 10, only one out of 10 data points will be saved. This helps to reduce the size of the output file. 
 
 circuit.PSIMCMD.net.run = 0; % Generate netlist and run from it?
+if ~isfield(circuit.PSIMCMD,'script')
+    circuit.PSIMCMD.script.run=0;  % Flag to use script file in simulation
+    quiz.scriptfile=0; % Add link to script file
+end
 
 if circuit.PSIMCMD.net.run
     circuit = getpsimnet(circuit); % Reads or generates net file from psim
@@ -59,6 +64,10 @@ end
 
 if ~isfield(quiz,'modelfile') % Create file with model
    quiz.modelfile=0;    
+end
+
+if ~isfield(quiz,'scriptfile') % Create file with model
+    quiz.scriptfile=0;
 end
 
 pngfile=[circuit.dir circuit.name '.png']; % Fig png file
