@@ -33,8 +33,8 @@ end
 
 if circuit.quiz.modelfile % Add model file with link to it
 %     disp('Add model file')
-    circuit.quiz.text=[circuit.quiz.text '<p>Arquivo: <a href="@@PLUGINFILE@@/' circuit.model(1).modelfile '">' circuit.model(1).modelfile '</a><br></p>'];
-    circuit.quiz.nomearquivo=circuit.model(1).modelfile;
+    circuit.quiz.text=[circuit.quiz.text '<p>Arquivo: <a href="@@PLUGINFILE@@/' circuit.modelfilename '">' circuit.modelfilename '</a><br></p>'];
+    circuit.quiz.nomearquivo=circuit.modelfilename;
 end
 
 for q=1:length(circuit.quiz.question)
