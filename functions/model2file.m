@@ -45,35 +45,36 @@ if ~exist(modelpath,'dir')
     mkdir(modelpath) % Sem verificação de erro
 end
 
-% for m=1:length(circuit.model) % Number of models - writes all models in a single file
-m=1;
-if isfield(circuit.model(m),'modelstr')
-    outstring = char(mlreportgen.utils.hash(circuit.model(m).modelstr));
-    circuit.model(m).modelnane=[circuit.model(m).tipo upper(outstring(1:5))];
-    circuit.model(m).modelfile=[circuit.model(m).modelnane '.MOD'];
-    modeldata = replace(circuit.model(m).modelstr,circuit.model(m).name,circuit.model(m).modelnane);
-    
-    fileID = fopen([modelpath circuit.model(m).modelfile],'w');
-    fprintf(fileID,'* Standard Berkeley SPICE semiconductor diode\n');
-    fprintf(fileID,'%s\n',modeldata);
-    fclose(fileID);
-    
-    %         disp(Yc)
-else
-    disp('Field modelstr not found!!!')
+outstring=strrep(char(java.util.UUID.randomUUID),'-','');
+modelfilename=['MF' upper(outstring(1:6)) '.MOD'];
+fileID = fopen([modelpath modelfilename],'w');
+
+for m=1:length(circuit.model) % Number of models - writes all models in a single file
+    if ~isfield(circuit.model(m),'comments') || isempty(circuit.model(m).comments)
+        circuit.model(m).comments = '* SPICE Model';
+    end
+    fprintf(fileID,'%s\n',circuit.model(m).comments);
+    fprintf(fileID,'%s\n\n',circuit.model(m).modelstr);
 end
-% end
 
+fclose(fileID);
 
-fileID = fopen([modelpath circuit.model(m).modelfile],'r');
+fileID = fopen([modelpath modelfilename],'r');
 A = fread(fileID);
 fclose(fileID);
 
 Yc = char(org.apache.commons.codec.binary.Base64.encodeBase64(uint8(A)))'; % Encode
-circuit.model(m).filebase64code=Yc;
+circuit.modelfilebase64code=Yc;
+circuit.modelfilename=modelfilename;
+
+for m=1:length(circuit.model) % Number of models - writes all models in a single file
+    circuit.model(m).filebase64code=Yc;
+end
+
+
 %         disp(Yc)
 
-delete([modelpath circuit.model(m).modelfile])
+delete([modelpath modelfilename])
 
 
 
