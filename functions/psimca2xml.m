@@ -36,7 +36,12 @@ circuit.PSIMCMD.tmpdir=1; % Use system temp dir?
 circuit.PSIMCMD.tmpfiledel=1; % Delete tmp files?
 
 % circuit.PSIMCMD.totaltime=10E-005; % Total simulation time, in sec.
-circuit.PSIMCMD.steptime=5E-007; % Simulation time step, in sec.
+% circuit.PSIMCMD.steptime=5E-007; % Simulation time step, in sec.
+% circuit.PSIMCMD.steptime=1/(circuit.cyclenpts*circuit.parvalue(circuit.fundfreqind));
+if ~isfield(circuit,'cyclenpts')
+    circuit.cyclenpts = 1000; % Total number of simulated points per cycles
+end
+
 % circuit.PSIMCMD.printtime=0; %Time from which simulation results are saved to the output file (default = 0). No output is saved before this time.
 circuit.PSIMCMD.printstep=1; %Print step (default = 1). If the print step is set to 1, every data point will be saved to the output file.
 % If it is 10, only one out of 10 data points will be saved. This helps to reduce the size of the output file.
@@ -72,7 +77,8 @@ for c=1:y
     tmpcircuits{c}.parvalue=circuit.X(:,c); % Variables values
     tmpcircuits{c}.parstr = param2str(tmpcircuits{c});
     tmpcircuits{c}.PSIMCMD.totaltime=circuit.cycles/tmpcircuits{c}.parvalue(circuit.fundfreqind); % Total simulation time, in sec.
-    tmpcircuits{c}.PSIMCMD.printtime=(circuit.printcycle-1)/tmpcircuits{c}.parvalue(circuit.fundfreqind);
+    tmpcircuits{c}.PSIMCMD.printtime=(circuit.printcycle)/tmpcircuits{c}.parvalue(circuit.fundfreqind);
+    tmpcircuits{c}.PSIMCMD.steptime=1/(circuit.cyclenpts*tmpcircuits{c}.parvalue(circuit.fundfreqind));
 end
 
 % Eval functions
