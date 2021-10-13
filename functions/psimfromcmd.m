@@ -114,9 +114,8 @@ circuit.PSIMCMD.msgfile = [circuit.PSIMCMD.simsdir tmpname 'msg.txt'];
 if circuit.PSIMCMD.script.run
     circuit.PSIMCMD.script.file = [circuit.PSIMCMD.simsdir tmpname '.script'];
     circuit.PSIMCMD.script.tmpname = tmpname;
-    circuit.PSIMCMD.script.name=['PS' upper(randname(1:6)) '.script'];
-    % Creates PSIM script
-    circuit = generatepsimscript(circuit);
+    circuit.PSIMCMD.script.name=['PS' upper(randname(1:6)) '.script'];    
+    circuit = generatepsimscript(circuit); % Creates PSIM script
     PsimCmdsrt = circuit.PSIMCMD.script.file;
 else
 
