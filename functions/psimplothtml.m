@@ -24,12 +24,31 @@
 % ***
 % =========================================================================
 
+% quiz.plot{p}.legend='Figura 2: Formas de onda provenientes da simulação do circuito apresentado na Figura 1.';
+% quiz.plot{p}.curves={'ia','ib','ic'};
+% quiz.plot{p}.curleg={'opt1','opt2','opt3','opt4'};
+% quiz.plot{p}.yyaxis={'right','left','left','left'};
+% quiz.plot{p}.scale=0.6; % Plot scale
+% quiz.plot{p}.FontSize=7; % Plot FontSize
+% quiz.plot{p}.LineStyle={'-','--',':','-.'};
+% quiz.plot{p}.LineWidth=1.5;
+% quiz.plot{p}.title='title';
+% quiz.plot{p}.xlabel='xlabel';
+% quiz.plot{p}.ylabel='Amplitude';
+% quiz.plot{p}.yunit='A';
 
 function circuit=psimplothtml(circuit)
 
 % create plot
 labels={circuit.PSIMCMD.data.signals.label}; % Data variables
-time = circuit.PSIMCMD.data.time*1000;
+% time = circuit.PSIMCMD.data.time*1000;
+
+% vector2eng()
+% [number,expstr,mult] = vector2eng(vector,unitstr)
+[time,texpstr] = vector2eng(circuit.PSIMCMD.data.time,'s');
+
+timemax=max(time);
+timemin=min(time);
 
 % Number of plots
 for p=1:length(circuit.quiz.plot)
@@ -58,6 +77,10 @@ for p=1:length(circuit.quiz.plot)
         circuit.quiz.plot{p}.LineWidth=1.5;
     end
 
+
+    if ~isfield(circuit.quiz.plot{p},'yunit')
+        circuit.quiz.plot{p}.yunit='';
+    end
     % yyaxis left
     % yyaxis right
     nc=length(circuit.quiz.plot{p}.curves); % Number of curves per plot
@@ -69,25 +92,36 @@ for p=1:length(circuit.quiz.plot)
         end
     end
 
-    
-    for c=1:nc
-        optind=find(contains(labels,circuit.quiz.plot{p}.curves{c},'IgnoreCase',true));
+    if nc==1
+        optind=find(contains(labels,circuit.quiz.plot{p}.curves{1},'IgnoreCase',true));
         if ~isempty(optind) % Label found
-            curvedata=[circuit.PSIMCMD.data.signals(optind(1)).values];
-            if isfield(circuit.quiz.plot{p},'yyaxis')
-                yyaxis(circuit.quiz.plot{p}.yyaxis{c})
-            end
-
-            if isfield(circuit.quiz.plot{p},'LineStyle')
-                plot(haxes{p},time,curvedata,circuit.quiz.plot{p}.LineStyle{c},'LineWidth',circuit.quiz.plot{p}.LineWidth)
-            end
-
-            plot(haxes{p},time,curvedata,'LineWidth',circuit.quiz.plot{p}.LineWidth)
-            %     axis tight
-        else
-
+            [number,yprefixstr{p}] = vector2eng(circuit.PSIMCMD.data.signals(optind).values,circuit.quiz.plot{p}.yunit);
         end
+    else
+        mx=[];
+        for c=1:nc
+            optind=find(contains(labels,circuit.quiz.plot{p}.curves{c},'IgnoreCase',true));
+            if ~isempty(optind) % Label found
+                mx = [mx circuit.PSIMCMD.data.signals(optind).values];
+            end
+        end
+        [number,yprefixstr{p}] = matrix2eng(mx,circuit.quiz.plot{p}.yunit);
     end
+
+
+
+    if isfield(circuit.quiz.plot{p},'yyaxis')
+        yyaxis(circuit.quiz.plot{p}.yyaxis{c})
+    end
+
+    if isfield(circuit.quiz.plot{p},'LineStyle')
+        plot(haxes{p},time,number,circuit.quiz.plot{p}.LineStyle{c},'LineWidth',circuit.quiz.plot{p}.LineWidth)
+    else
+        plot(haxes{p},time,number,'LineWidth',circuit.quiz.plot{p}.LineWidth)
+    end
+
+    %     xlim([timemin timemax])
+    set(haxes{p},'XLim',[timemin timemax])
 
     legend(haxes{p},circuit.quiz.plot{p}.curleg,'Interpreter','latex')
 
@@ -95,19 +129,15 @@ for p=1:length(circuit.quiz.plot)
         title(haxes{p},circuit.quiz.plot{p}.title,'Interpreter','latex')
     end
 
-
     if isfield(circuit.quiz.plot{p},'ylabel')
-        ylabel(haxes{p},circuit.quiz.plot{p}.ylabel,'Interpreter','latex')
+        ylabel(haxes{p},[circuit.quiz.plot{p}.ylabel yprefixstr{p}],'Interpreter','latex')
     end
 
     if isfield(circuit.quiz.plot{p},'xlabel')
         xlabel(haxes{p},circuit.quiz.plot{p}.xlabel,'Interpreter','latex')
     else
-        xlabel('Tempo (ms)','Interpreter','latex')
+        xlabel(['Tempo' texpstr],'Interpreter','latex')
     end
-
-
-
 
     % save as png
     pngfile=[circuit.PSIMCMD.simsdir circuit.PSIMCMD.data.blockName '.png'];
