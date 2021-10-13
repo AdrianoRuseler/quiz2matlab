@@ -23,16 +23,17 @@
 % *** SOFTWARE.
 % ***
 % =========================================================================
-function pngfigstr=png2base64(pngfile)
+function pngimgscr=png2base64(pngfile) % create html code to store img
 
 fileID = fopen(pngfile);
 if fileID == -1
     disp(['Failed to open file: ' pngfile])
-    pngfigstr='';
+    pngimgscr='';
     return
 else
     A = fread(fileID);
     fclose(fileID);
 end
 Yc = char(org.apache.commons.codec.binary.Base64.encodeBase64(uint8(A)))'; % Encode
-pngfigstr=['<img src="data:image/png;base64,' Yc '" alt="">'];
+
+pngimgscr=['<img src="data:image/png;base64,' Yc '" alt="">'];
