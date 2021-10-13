@@ -113,14 +113,7 @@ if ~isfield(quiz,'nquiz')
 end
 
 pngfile=[circuit.dir circuit.name '.png']; % Fig png file
-
-if isfield(circuit,'theme')
-    imgout=[circuit.dir circuit.name circuit.theme '.png']; % Fig png file
-    pngchangewhite(pngfile,imgout,circuit.theme)
-else
-    imgout=[circuit.dir circuit.name 'boost.png']; % Fig png file
-    pngchangewhite(pngfile,imgout,'boost')
-end
+imgout=png2mdl(pngfile,'classic');
 
 quiz.name = [circuit.name];
 % Auto add item letter: a), b)... 97 - 122; 65 - 90
@@ -135,6 +128,7 @@ for n=1:length(circuits)
     circuits{n}.quiz=quiz;
     figlegendastr=['Figura 1: Considere ' circuits{n}.parstr ';']; % Legenda da figura
     circuits{n}.quiz.fightml = psimfigstr(imgout,'left',figlegendastr); % html code for fig
+    circuits{n} = psimplothtml(circuits{n});
     circuits{n} = psimXmultichoice(circuits{n}); % Generate multichoice
     circuits{n} = quiztextgen(circuits{n}); % Generates quiz text field
 end
