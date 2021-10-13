@@ -195,8 +195,6 @@ data.paramstr=paramstr;
 % data.log.file=circuit.LTspice.log.file;
 
 circuit.LTspice.data = rawltspice(data); % Read data
-
-
 circuit = ltlogread(circuit); % Reads log file
 
 % circuit.LTspice.raw.data.signals.op
