@@ -29,16 +29,18 @@ function quizstruct = psimclozegen(circuits,quizopts)
 quizstruct.question.type = quizopts.type;
 quizstruct.name=quizopts.name;
 
-ntquiz=length(circuits);
+ntcircs=length(circuits);
 
-if quizopts.nquiz>ntquiz
-    quizopts.nquiz=ntquiz;
+if quizopts.nquiz>ntcircs
+    quizopts.nquiz=ntcircs;
 end
 % nquiz=length(circuits); % Number of quiz
 
 if(quizopts.permutquiz)
-    nq=randperm(ntquiz,quizopts.nquiz); % escolha as questoes
+    nq=randperm(ntcircs,quizopts.nquiz); % escolha as questoes
     tmpcircuits={circuits{:,nq}};
+elseif ntcircs==1
+    tmpcircuits{1}=circuits;
 else
     tmpcircuits=circuits;
 end
