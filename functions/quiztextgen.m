@@ -66,6 +66,12 @@ if circuit.quiz.scriptfile % Add PSIM script file with link to it
     circuit.quiz.nomearquivo=circuit.PSIMCMD.script.name;
 end
 
+% Add plot here
+if isfield(circuit.quiz,'plot') % Add extra text   
+    for p=1:length(circuit.quiz.plot)
+        circuit.quiz.text=[circuit.quiz.text circuit.quiz.plot{p}.html];
+    end
+end
 
 for q=1:length(circuit.quiz.question)
     circuit.quiz.text=[circuit.quiz.text '<p>' circuit.quiz.question{q}.str ' '  circuit.quiz.question{q}.choicestr '<br></p>'];
