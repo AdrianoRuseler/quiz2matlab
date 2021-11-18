@@ -118,7 +118,6 @@ if circuit.PSIMCMD.script.run
     circuit = generatepsimscript(circuit); % Creates PSIM script
     PsimCmdsrt = circuit.PSIMCMD.script.file;
 else
-
     % Cria string de comando
     infile = ['"' circuit.PSIMCMD.infile '"'];
     outfile = ['"' circuit.PSIMCMD.outfile '"'];
