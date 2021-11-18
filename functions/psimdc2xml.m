@@ -90,6 +90,8 @@ if isfield(quiz,'autoitem') && quiz.autoitem
     end
 end
 
+
+
 for n=1:length(circuits)
     circuits{n}.quiz=quiz;
     figlegendastr=['Figura 1: Considere ' circuits{n}.parstr ';']; % Legenda da figura
@@ -109,6 +111,13 @@ quizopts.xmlpath = [ pwd '\xmlfiles']; % Folder for xml files
 quizopts.generalfeedback='';
 quizopts.penalty='0.25';
 quizopts.hidden='0';
+
+quizopts.permutquiz =1; % Permut quiz?
+if ~isfield(quiz,'incfrom') % Increment question from
+    quizopts.incfrom=0;
+else
+    quizopts.incfrom=quiz.incfrom;
+end
 
 quizstruct = psimclozegen(circuits,quizopts); % Generate quizstruct
 cloze2moodle(quizstruct) % Generates xml file
