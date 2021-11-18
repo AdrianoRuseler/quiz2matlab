@@ -32,14 +32,18 @@ function [circuit]=psimXmultichoice(circuit)
 % MULTICHOICE
 % MULTICHOICE_H
 % MULTICHOICE_V
-% MULTICHOICE_S
+% MULTICHOICE_S MULTICHOICE_S
 % MULTICHOICE_HS
 % MULTICHOICE_VS
 
 labels={circuit.PSIMCMD.data.signals.label}; % Data variables
 
-for q=1:length(circuit.quiz.question)
+if ~isfield(circuit.quiz,'exptable') % Add exptable
+    circuit.quiz.exptable=0;
+end
 
+
+for q=1:length(circuit.quiz.question)
     switch circuit.quiz.question{q}.type
         case 'NUMERICAL'
             multicell='{1:NUMERICAL:';
@@ -112,6 +116,20 @@ for q=1:length(circuit.quiz.question)
             isstringchoice=0;
             %   MULTICHOICE
     end
+
+    if circuit.quiz.exptable
+        if isfield(circuit.quiz.question{q},'expopts')
+            expmulticell=['{1:MULTICHOICE_S:~%100%' circuit.quiz.question{q}.expopts{1}];
+            lopts=length(circuit.quiz.question{q}.expopts); % Number of options per question
+            for o=2:lopts % Get option value
+                    expmulticell = strcat(expmulticell,['~' circuit.quiz.question{q}.expopts{o}]);
+            end
+            expmulticell = strcat(expmulticell,'}');
+            % quiz.question{q}.expopts={'IRb','IRc','VR2'}; % {1:MULTICHOICE:~IRc~Vc~%100%IRb}
+%             disp(expmulticell)
+        end
+    end
+
 
     % Gets option value from simulated data
     lopts=length(circuit.quiz.question{q}.options); % Number of options per question
@@ -262,5 +280,14 @@ for q=1:length(circuit.quiz.question)
 
     end
     circuit.quiz.question{q}.choicestr=multicell;
+    if circuit.quiz.exptable
+        circuit.quiz.question{q}.expchoicestr=expmulticell;
+    end
 end
+
+
+
+
+
+
 
