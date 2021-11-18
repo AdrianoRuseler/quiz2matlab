@@ -45,6 +45,8 @@ else
     tmpcircuits=circuits;
 end
 
+inc=quizopts.incfrom; % Increment question name from this number
+
 for q=1:quizopts.nquiz
     if isfield(tmpcircuits{q},'parstr')
         if isfield(tmpcircuits{q},'model')
@@ -52,15 +54,15 @@ for q=1:quizopts.nquiz
             for ml=1:length(tmpcircuits{q}.model) % number of .model lines
                 tmpstr=[tmpstr '(' strrep(tmpcircuits{q}.model(ml).parstr,' ','') ')'];
             end
-            quizstruct.question.name{q}=[tmpcircuits{q}.quiz.name 'q' num2str(q,'%03i') '(' strrep(tmpcircuits{q}.parstr,' ','') ')'  tmpstr ]; % Generates quiz name
+            quizstruct.question.name{q}=[tmpcircuits{q}.quiz.name 'q' num2str(q+inc,'%03i') '(' strrep(tmpcircuits{q}.parstr,' ','') ')'  tmpstr ]; % Generates quiz name
 
         else
-            quizstruct.question.name{q}=[tmpcircuits{q}.quiz.name 'q' num2str(q,'%03i') '(' strrep(tmpcircuits{q}.parstr,' ','') ')']; % Generates quiz name
+            quizstruct.question.name{q}=[tmpcircuits{q}.quiz.name 'q' num2str(q+inc,'%03i') '(' strrep(tmpcircuits{q}.parstr,' ','') ')']; % Generates quiz name
         end
     elseif isfield(tmpcircuits{q},'nostepparstr')
-        quizstruct.question.name{q}=[tmpcircuits{q}.quiz.name 'q' num2str(q,'%03i') '(' strrep(tmpcircuits{q}.nostepparstr,' ','') ')']; % Generates quiz name
+        quizstruct.question.name{q}=[tmpcircuits{q}.quiz.name 'q' num2str(q+inc,'%03i') '(' strrep(tmpcircuits{q}.nostepparstr,' ','') ')']; % Generates quiz name
     else
-        quizstruct.question.name{q}=[tmpcircuits{q}.quiz.name 'q' num2str(q,'%03i')]; % Generates quiz name
+        quizstruct.question.name{q}=[tmpcircuits{q}.quiz.name 'q' num2str(q+inc,'%03i')]; % Generates quiz name
     end
 
     quizstruct.question.text{q}=tmpcircuits{q}.quiz.text;
