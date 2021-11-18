@@ -53,8 +53,13 @@ end
 
 % circuit.nsims=600; % Number of simulations
 [~,y]=size(circuit.Xi);
-nq=randperm(y,circuit.nsims); % escolha as questoes
-X=circuit.Xi(:,nq);
+if y>circuit.nsims
+    nq=randperm(y,circuit.nsims); % escolha as questoes
+    X=circuit.Xi(:,nq);
+else
+    X=circuit.Xi;
+    circuit.nsims=y;
+end
 
 circuit.Xi=[]; % Clear
 
@@ -229,6 +234,12 @@ quizopts.xmlpath = [ pwd '\xmlfiles']; % Folder for xml files
 quizopts.generalfeedback='';
 quizopts.penalty='0.25';
 quizopts.hidden='0';
+
+if ~isfield(quiz,'incfrom') % Increment question from
+    quizopts.incfrom=0;
+else
+    quizopts.incfrom=quiz.incfrom;
+end
 
 quizstruct = psimclozegen(circuits,quizopts); % Generate quizstruct
 cloze2moodle(quizstruct) % Generates xml file
