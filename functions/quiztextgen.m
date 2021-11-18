@@ -37,17 +37,17 @@ else
 end
 
 
-if isfield(circuit.quiz,'extratext') % Add extra text    
+if isfield(circuit.quiz,'extratext') % Add extra text
     if isfield(circuit.quiz,'printparfile') && circuit.quiz.printparfile
         fe =  length(circuit.quiz.extratext);
-        
+
         %https://getbootstrap.com/docs/4.0/content/code/
         % <code> Sample text here... ; <br> And another line of sample text here... ; </code>
-        
+
         circuit.quiz.extratext{fe+1}=param2code(circuit);
         %     disp('Imprima o arquivo de parâmetros no enuciado da questão!!!')
     end
-    
+
     for e=1:length(circuit.quiz.extratext)
         circuit.quiz.text=[circuit.quiz.text '<p>' circuit.quiz.extratext{e} '<br></p>'];
     end
@@ -56,7 +56,7 @@ end
 % quiz.modelfile=1; % Add link to model file
 
 if circuit.quiz.modelfile % Add model file with link to it
-%     disp('Add model file')
+    %     disp('Add model file')
     circuit.quiz.text=[circuit.quiz.text '<p>Arquivo: <a href="@@PLUGINFILE@@/' circuit.modelfilename '">' circuit.modelfilename '</a><br></p>'];
     circuit.quiz.nomearquivo=circuit.modelfilename;
 end
@@ -67,13 +67,48 @@ if circuit.quiz.scriptfile % Add PSIM script file with link to it
 end
 
 % Add plot here
-if isfield(circuit.quiz,'plot') % Add extra text   
+if isfield(circuit.quiz,'plot') % Add extra text
     for p=1:length(circuit.quiz.plot)
         circuit.quiz.text=[circuit.quiz.text circuit.quiz.plot{p}.html];
     end
 end
 
-for q=1:length(circuit.quiz.question)
-    circuit.quiz.text=[circuit.quiz.text '<p>' circuit.quiz.question{q}.str ' '  circuit.quiz.question{q}.choicestr '<br></p>'];
+if ~isfield(circuit.quiz,'exptable') % Add exptable
+    circuit.quiz.exptable=0;
 end
+
+
+if circuit.quiz.exptable
+    thead='<div class="col-md-6"> <table class="table table-hover table-bordered"> <thead class="table-secondary"><tr><th>Item</th> <th>Expressão</th><th>Cálculo</th><th>Valor</th></tr></thead>';
+    circuit.quiz.text=[circuit.quiz.text thead]; % Add header   char(96+q) ') '
+    u=1;
+    for q=1:length(circuit.quiz.question)
+        if isfield(circuit.quiz.question{q},'expmath')
+            tablerow=['<tbody><tr><td>' char(96+u) ') </td><td>' circuit.quiz.question{q}.expmath '</td><td>' circuit.quiz.question{q}.expchoicestr  '</td><td>' circuit.quiz.question{q}.choicestr '</td></tr>'];
+
+        else
+            tablerow=['<tbody><tr><td>' char(96+u) ') </td><td colspan="2">' circuit.quiz.question{q}.str  '</td><td>' circuit.quiz.question{q}.choicestr '</td></tr>'];
+        end
+        circuit.quiz.text=[circuit.quiz.text tablerow]; % Add row
+        u=u+1;
+    end
+
+    circuit.quiz.text=[circuit.quiz.text '</tbody> </table> </div>']; % close table
+
+%     for q=1:length(circuit.quiz.question)
+%         if ~isfield(circuit.quiz.question{q},'expmath')
+%             circuit.quiz.text=[circuit.quiz.text '<p>' circuit.quiz.question{q}.str ' '  circuit.quiz.question{q}.choicestr '<br></p>'];
+%         end
+%     end
+
+
+else
+    for q=1:length(circuit.quiz.question)
+        circuit.quiz.text=[circuit.quiz.text '<p>' circuit.quiz.question{q}.str ' '  circuit.quiz.question{q}.choicestr '<br></p>'];
+    end
+end
+
+
+
+
 
