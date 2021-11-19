@@ -33,13 +33,13 @@ parname=circuit.parnamesim;
 % [str, numstr, expstr, mantissa, exponent] = real2eng(valor(4),parunit{4})
 
 
-parcode=['<code>' parname{1} '=' num2str(valor(1),'%4.3e') '<br>'];
+parcode=['<code>' parname{1} '=' num2str(valor(1)) '<br>'];
 
 for a=2:length(valor)
     if a==length(valor)
-        parcode= strcat(parcode, [parname{a} '=' num2str(valor(a),'%4.3e') '</code>'] );
+        parcode= strcat(parcode, [parname{a} '=' num2str(valor(a)) '</code>'] );
     else
-        parcode= strcat(parcode, [parname{a} '=' num2str(valor(a),'%4.3e') '<br>'] );
+        parcode= strcat(parcode, [parname{a} '=' num2str(valor(a)) '<br>'] ); % num2str(valor(a),'%4.3e')
     end
 end
 
