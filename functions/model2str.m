@@ -38,7 +38,7 @@ for m=1:length(circuit.model) % Number of models
     
     if length(circuit.modind)==1 % Number of parameters in each model
         modelstr=['.model ' circuit.model(m).name ' ' circuit.model(m).tipo '('];
-        modelstr=[modelstr parname{1} '=' num2str(valor(1)) ')']; % num2str(valor(1),'%1.3e')
+        modelstr=[modelstr parname{1} '=' value2srt(valor(1)) ')']; % num2str(valor(1),'%1.3e')
         
         parstr=[ parname{1} '=' real2eng(valor(1),parunit{1},0) ';'];
         
@@ -60,21 +60,21 @@ for m=1:length(circuit.model) % Number of models
         end
         
         
-        modelstr=[modelstr parname{1} '=' num2str(valor(1))];  % num2str(valor(1),'%1.3e')
+        modelstr=[modelstr parname{1} '=' value2srt(valor(1))];  % num2str(valor(1),'%1.3e')
         % nostepparstr = '';
         for a=2:length(valor)
             if a==length(valor)
                 parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a},0) ';'] );
                 %         nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ] );
-                modelstr=strcat(modelstr,[ ' ' parname{a} '=' num2str(valor(a)) ')']);  % num2str(valor(1),'%1.3e')
+                modelstr=strcat(modelstr,[ ' ' parname{a} '=' value2srt(valor(a)) ')']);  % num2str(valor(1),'%1.3e')
             elseif a==length(valor)-1
                 parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a},0) ' e'] );
                 %         nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ' e'] );
-                modelstr=strcat(modelstr,[' ' parname{a} '=' num2str(valor(a)) ]);  % num2str(valor(1),'%1.3e')
+                modelstr=strcat(modelstr,[' ' parname{a} '=' value2srt(valor(a)) ]);  % num2str(valor(1),'%1.3e')
             else
                 parstr= strcat(parstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a},0) ','] );
                 %         nostepparstr= strcat(nostepparstr, [' ' parname{a} '=' real2eng(valor(a),parunit{a}) ','] );
-                modelstr=strcat(modelstr,[ ' ' parname{a} '=' num2str(valor(a)) ]);  % num2str(valor(1),'%1.3e')
+                modelstr=strcat(modelstr,[ ' ' parname{a} '=' value2srt(valor(a)) ]);  % num2str(valor(1),'%1.3e')
             end
         end
         
