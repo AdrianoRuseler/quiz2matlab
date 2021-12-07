@@ -23,7 +23,7 @@ end
 
 if nargin < 3
     minabsval = 1e-12;
-end
+end 
 
 if abs(number) < minabsval
     number =0;
