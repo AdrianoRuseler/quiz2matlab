@@ -31,12 +31,13 @@ if isfield(circuit,'parname') && isfield(circuit,'parvalue')
     paramfuncstr=''; % Generates the param string
     
     for ind=1:length(circuit.parname)
-        paramstr=[paramstr ' ' circuit.parname{ind} '=' num2str(circuit.parvalue(ind))]; % num2str(circuit.parvalue(ind),'%1.3e')
+%         disp(value2srt(circuit.parvalue(ind)))
+        paramstr=[paramstr ' ' circuit.parname{ind} '=' value2srt(circuit.parvalue(ind))]; % num2str(circuit.parvalue(ind),'%1.3e')
     end
     
     if isfield(circuit,'funcvalue')          
         for ind=1:length(circuit.funcvalue)
-            paramfuncstr=[paramfuncstr ' func' num2str(ind) '=' num2str(circuit.funcvalue(ind))];  % num2str(circuit.funcvalue(ind),'%1.3e')
+            paramfuncstr=[paramfuncstr ' func' num2str(ind) '=' value2srt(circuit.funcvalue(ind))];  % num2str(circuit.funcvalue(ind),'%1.3e')
         end       
     end
     
