@@ -141,15 +141,15 @@ switch fet.type
         end
         
      case 'pmos'          
-        fet.Vgst=-fet.Vgs+fet.Vto;
+        fet.Vgst=fet.Vgs-fet.Vto;
         fet.rd=fet.Vds/fet.Id;
 %         fet.Idss=-fet.Beta*fet.Vto^2;
-        if fet.Vgst <=0 % Corte
+        if fet.Vgst >=0 % Corte
             fet.mop='{1:MULTICHOICE:~%100%Região de Corte~Região de Saturação~Região Ôhmica~Região de Ruptura}'; % OP mode
             fet.ohm=0;
             fet.corte=1;
             fet.sat=0;
-        elseif fet.Vgst >= -fet.Vds % OHM
+        elseif fet.Vgst <= fet.Vds % OHM
             fet.mop='{1:MULTICHOICE:~Região de Corte~Região de Saturação~%100%Região Ôhmica~Região de Ruptura}'; % OP mode
             fet.ohm=1;
             fet.corte=0;
