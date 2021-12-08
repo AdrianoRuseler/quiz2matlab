@@ -30,7 +30,7 @@ while ~feof(fileID)
                 end
             end
         end
-    elseif contains(tline{ln},'level.')
+    elseif contains(tline{ln},'level')
         circuit.LTspice.net.levelline=ln; % Find Opamp Model   
         circuit.level.linestr=tline{ln};
         lvlstr = strsplit(circuit.level.linestr,' ');
