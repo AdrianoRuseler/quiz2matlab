@@ -31,11 +31,12 @@
 function circuit=level2str(circuit)
 
 circuit.level.parstr='';
-
+% circuit.level.name ?????
 for v=1:length(circuit.level.varname) % update values
     k = strfind(circuit.level.name,circuit.level.varname{v});
     idx = find(not(cellfun('isempty',k)));
-    circuit.level.value{idx}=num2str(circuit.level.varvalue(v),'%10.8e');
+%     circuit.level.value{idx}=num2str(circuit.level.varvalue(v),'%10.8e');
+    circuit.level.value{idx}=value2srt(circuit.level.varvalue(v));
     if v==length(circuit.level.varname)
         circuit.level.parstr = strcat(circuit.level.parstr, [' ' circuit.level.varname{v} '=' real2eng(circuit.level.varvalue(v),circuit.level.varunit{v},0) ';'] );
     elseif v==length(circuit.level.varname)-1
