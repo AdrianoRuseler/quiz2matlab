@@ -1,4 +1,6 @@
 import xml.etree.cElementTree as ET
+import base64
+
 
 worksheet = ET.Element("worksheet", xmlns="http://smath.info/schemas/worksheet/1.0")
 worksheet.append(ET.Comment('This is a comment'))
@@ -57,15 +59,14 @@ ET.SubElement(mathinput, "e",type="operator",args="2").text = '*' #
 ET.SubElement(mathinput, "e",type="operator",args="2").text = ':' # 
 
 
+region=ET.SubElement(regions, "region", left="423", top="9", width="229", height="120", color="#000000")
+picture=ET.SubElement(region, "picture")
+# https://stackoverflow.com/questions/6375942/how-do-you-base-64-encode-a-png-image-for-use-in-a-data-uri-in-a-css-file
+encoded = base64.b64encode(open("diode00.png", "rb").read()).decode('ascii')
+ET.SubElement(picture, "raw",format="png",encoding="base64").text = format(encoded)
+
 tree = ET.ElementTree(worksheet)
 ET.indent(tree)
 tree.write("teste.sm",xml_declaration=True, encoding="utf-8",short_empty_elements=True) # Enabled self-closed tag
 
-
-#SMathXML='teste.sm'
-#out = open(SMathXML, 'wb')
-#out.write(b'<?xml version="1.0" encoding="UTF-8" standalone = "yes"?>\n')
-#out.write(b'<?application progid="SMath Studio Desktop" version="0.99.7822.147"?>')
-#tree.write(out, xml_declaration=True, encoding="utf-8",short_empty_elements=True)
-#out.close()
 
