@@ -1,7 +1,7 @@
 
 %% Adicione a pasta com as funções na busca do MATLAB
 pathtool % Adidione a pasta com as funções
-% addpath('C:\Users\adria\Dropbox\GitHub\quiz2matlab\functions') % Folder with functions
+% addpath('..\quiz2matlab\functions') % Folder with functions
 
 
 
@@ -87,6 +87,6 @@ disp(cmdout)
 
 %%
 
-addpath('E:\Dropbox\GitHub\quiz2matlab\functions') %
-addpath('E:\Dropbox\GitHub\quiz2matlab\questions') % 
+addpath('..\GitHub\quiz2matlab\functions') %
+% addpath('..\GitHub\quiz2matlab\questions') % 
 savepath % Save search path
