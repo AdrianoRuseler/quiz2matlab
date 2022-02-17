@@ -6,6 +6,7 @@ pathtool % Adidione a pasta com as funções
 
 
 %%  Test simulation with ngspice
+% http://ngspice.sourceforge.net/download.html
 
 [status,cmdout] = system('ngspice_con -v'); % Não abre Janela
 disp(cmdout)
