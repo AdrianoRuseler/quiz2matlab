@@ -1,12 +1,6 @@
 clear all
 clc
 
-% Sets simulation dir
-% quiz2matlabdir='F:\Dropbox\GitHub\quiz2matlab'; % Home
-% circuit.dir='F:\Dropbox\GitHub\quiz2matlab\sims\PSIM\'; % Home
-% circuit.dir='C:\Users\adria\Dropbox\GitHub\quiz2matlab\sims\PSIM\'; % Note
-% circuit.dir='A:\Dropbox\GitHub\quiz2matlab\sims\PSIM\'; % UTFPR
-
 % Config simulation
 circuit.parname={'Vi','fi','alpha','L0','R0','a'}; % Variables names
 circuit.parunit={' V',' Hz','deg','H','&Omega;','V/V'}; % Variables unit
@@ -14,7 +8,7 @@ circuit.parnamesim={'Vi','fi','alpha','L0','R0','a'}; % Variables names utilizad
 
 % Simulation setup 
 circuit.name = 'retrifull03'; % File name
-circuit.dir = getsimdir([circuit.name '.m']); % Sets simulation dir
+circuit.dir = [pwd '\']; % Sets simulation dir
 circuit.theme  = 'boost'; % clean or boost
 
 % eval(circuit.func1str) % Must return a escalar
