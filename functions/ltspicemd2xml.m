@@ -143,41 +143,46 @@ if ~isfield(quiz,'tbjeval')
     quiz.tbjeval=0;
 end
 
+if ~isfield(quiz,'requiremeas')
+    quiz.requiremeas=0;
+end
 
 % Clear empty simulated data
 y=1;
 for c=1:length(tmpcircuits)
     if isfield(tmpcircuits{c}.LTspice,'data') % Simulation OK!
         if(~tmpcircuits{c}.LTspice.data.error)
-            if(quiz.feteval)
-                fet=fet2quiz(tmpcircuits{c},quiz.fettype);
 
-                circuits{y}=tmpcircuits{c};
-                y=y+1;
-            else
-                circuits{y}=tmpcircuits{c};
-                y=y+1;
+            if(quiz.feteval) % Eval FET!
+                fet=fet2quiz(tmpcircuits{c},quiz.fettype);
             end
 
-
-            if(quiz.tbjeval)
+            if(quiz.tbjeval) % Eval BJT!
                 tbj=tbj2quiz(tmpcircuits{c},quiz.tbjtype);
                 disp(tbj)
-                %          if(tbj.ampmode)
                 if(tbj.BetaDC>=tmpcircuits{c}.model.parvalue(2))
                     disp([num2str(tbj.BetaDC) '>=' num2str(tmpcircuits{c}.model.parvalue(2)) ' ==> Modo Ativo Direto!'])
+                end
+            end
+
+            if(quiz.requiremeas)
+                if isfield(tmpcircuits{c}.LTspice.log,'meas') % Simulation OK!
                     circuits{y}=tmpcircuits{c};
                     y=y+1;
+                else
+
+                    if isfield(tmpcircuits{c},'model')
+                        disp(['No meas field in simulation ' num2str(c) ' with ' tmpcircuits{c}.parstr ' and ' tmpcircuits{c}.model.parstr '!'])
+                    else
+                        disp(['No meas field in simulation ' num2str(c) ' with ' tmpcircuits{c}.parstr '!'])
+                    end
                 end
             else
                 circuits{y}=tmpcircuits{c};
                 y=y+1;
             end
-        else
-            circuits{y}=tmpcircuits{c}; % .ac error
-            y=y+1;
         end
-    else
+    else % Simulation FAILED!
         if isfield(tmpcircuits{c},'model')
             disp(['No data file in simulation ' num2str(c) ' with ' tmpcircuits{c}.parstr ' and ' tmpcircuits{c}.model.parstr '!'])
         else
@@ -185,9 +190,6 @@ for c=1:length(tmpcircuits)
         end
     end
 end
-
-
-
 
 
 pngfile=[circuit.dir circuit.name '.png']; % Fig png file
