@@ -41,10 +41,10 @@ if isfield(circuit.LTspice.data,'signals')
 end
 
 for q=1:length(circuit.quiz.question)
-    
+
     lopts=length(circuit.quiz.question{q}.options); % Number of options per question
     for o=1:lopts % Get option value
-        
+
         tmpvartype=strsplit(circuit.quiz.question{q}.vartype{o},':'); %
         switch tmpvartype{1}
             case 'func'
@@ -78,11 +78,14 @@ for q=1:length(circuit.quiz.question)
                         eval(['circuit.quiz.question{q}.values(o)=circuit.LTspice.log.meas.' circuit.quiz.question{q}.options{o} ';'])
                     else
                         disp([ circuit.quiz.question{q}.options{o} ' -> meas not FOUND!!'])
+                        disp(circuit.LTspice.log)
                         circuit.quiz.question{q}.values(o)=[];
                     end
                 else
                     disp([ circuit.quiz.question{q}.options{o} ' -> meas not FOUND!!'])
+                    disp(circuit.LTspice.log)
                     circuit.quiz.question{q}.values(o)=[];
+
                 end
             case 'log'
                 tmpstr=strsplit(circuit.quiz.question{q}.options{o},':'); %
@@ -99,7 +102,17 @@ for q=1:length(circuit.quiz.question)
                         end
                     end
                 end
-                
+
+            case 'oplog'
+                tmpstr=strsplit(circuit.quiz.question{q}.options{o},':'); %
+                oplogfields = fieldnames(circuit.LTspice.log.op); %
+                %                 disp(oplogfields)
+                if find(contains(oplogfields,tmpstr{2}))
+                    eval(['circuit.quiz.question{q}.values(o)=circuit.LTspice.log.op.' tmpstr{2} ';'])
+                else
+                    disp([ tmpstr{2} ' -> Log not FOUND!!']) % O que fazer?
+                end
+
             case 'pbc'
                 tbj=tbj2quiz(circuit,circuit.quiz.question{q}.options{o});
                 tbjmchoice = tbj.pbc;
@@ -120,7 +133,7 @@ for q=1:length(circuit.quiz.question)
             case 'ro'
                 tbj=tbj2quiz(circuit,circuit.quiz.question{q}.options{o});
                 circuit.quiz.question{q}.values(o)=tbj.Ro;
-                
+
             case 'feteval'
                 switch tmpvartype{2}
                     case 'mop'
@@ -130,12 +143,12 @@ for q=1:length(circuit.quiz.question)
                         fet=fet2quiz(circuit,circuit.quiz.question{q}.options{o});
                         circuit.quiz.question{q}.values(o)=fet.(tmpvartype{2});
                 end
-                
+
             otherwise
                 disp('circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).mean];')
         end
     end
-    
+
     ismultichoice=0;
     switch circuit.quiz.question{q}.type
         case 'STRING'
@@ -156,7 +169,7 @@ for q=1:length(circuit.quiz.question)
                 end
             end
             multicell = strcat(multicell,['}' expstr]);
-            
+
         case 'TBJ'
             multicell = tbjmchoice;
         case 'FET'
@@ -183,27 +196,27 @@ for q=1:length(circuit.quiz.question)
             multicell='{1:MULTICHOICE_S:';
             ismultichoice=1;
     end
-    
-    
+
+
     if ismultichoice   %   MULTICHOICE
         [optscoresort,optscoreind] = sort(circuit.quiz.question{q}.optscore,'descend');
         circuit.quiz.question{q}.optscore = optscoresort;
         circuit.quiz.question{q}.values = circuit.quiz.question{q}.values(optscoreind);
         circuit.quiz.question{q}.units = circuit.quiz.question{q}.units(optscoreind);
-        
+
         %  circuit.quiz.question{q}.values % Are unique?? % Changes all
         tempres1=round(circuit.quiz.question{q}.values*1000,3,'significant');
         if ~isequal(length(unique(tempres1)),length(tempres1)) % Options are not unique
             for o=1:lopts
                 if(circuit.quiz.question{q}.optscore(o))% Scored option - dont change it!
-                    
+
                 else % Option can be changed - no score
                     tempopts= unique([circuit.quiz.question{q}.values(o) circuit.quiz.question{q}.values(o).*[(rand(1,lopts)) (1+rand(1,lopts))]]);
                     circuit.quiz.question{q}.values(o)= tempopts(randperm(length(tempopts),1));
                 end
             end % Loop
         end
-        
+
         for o=1:lopts
             optstr = real2eng(circuit.quiz.question{q}.values(o),circuit.quiz.question{q}.units{o}); % Gets option value with unit in eng format
             if(circuit.quiz.question{q}.optscore(o))
@@ -212,10 +225,10 @@ for q=1:length(circuit.quiz.question)
                 multicell = strcat(multicell,['~' optstr]);
             end
         end
-        
+
         multicell = strcat(multicell,'}');
         %         multicell = strrep(multicell,'u','&mu;'); % Substitui u por micro;
-        
+
     end
     circuit.quiz.question{q}.choicestr=multicell;
 end
