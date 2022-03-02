@@ -73,19 +73,19 @@ for q=1:length(circuit.quiz.question)
                 %                     circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).meas];
                 if isfield(circuit.LTspice.log,'meas')
                     fields = fieldnames(circuit.LTspice.log.meas);
+                    %                     disp(circuit.LTspice.log)
                     optind=find(contains(fields,circuit.quiz.question{q}.options{o}));
                     if optind
                         eval(['circuit.quiz.question{q}.values(o)=circuit.LTspice.log.meas.' circuit.quiz.question{q}.options{o} ';'])
                     else
                         disp([ circuit.quiz.question{q}.options{o} ' -> meas not FOUND!!'])
-                        disp(circuit.LTspice.log)
-                        circuit.quiz.question{q}.values(o)=[];
+%                         disp(circuit.LTspice.log)
+                        circuit.quiz.question{q}.values(o)=[]; % Use quiz.requiremeas=1;
                     end
                 else
                     disp([ circuit.quiz.question{q}.options{o} ' -> meas not FOUND!!'])
-                    disp(circuit.LTspice.log)
-                    circuit.quiz.question{q}.values(o)=[];
-
+                    circuit.quiz.question{q}.values(o)=[]; % Use quiz.requiremeas=1;
+%                     disp(circuit.LTspice.log)
                 end
             case 'log'
                 tmpstr=strsplit(circuit.quiz.question{q}.options{o},':'); %
