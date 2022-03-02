@@ -124,6 +124,12 @@ parfor n=1:circuit.nsims
     tmpcircuits{n} = ltspicefromcmd(tmpcircuits{n}); % Simula via CMD
 end
 
+if isfield(circuit,'logdata')
+    for n=1:circuit.nsims
+        tmpcircuits{n}.LTspice.log.op = circuit.logdata{n}{1};
+    end
+end
+
 % for n=1:y
 %     tmpcircuits{n} = ltspicefromcmd(tmpcircuits{n}); % Simula via CMD
 % end
@@ -179,6 +185,8 @@ for c=1:length(tmpcircuits)
         end
     end
 end
+
+
 
 
 
