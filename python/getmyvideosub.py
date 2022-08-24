@@ -2,15 +2,16 @@ from pytube import YouTube
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.formatters import JSONFormatter
 
-video_id =  "PGp1dzQKt5U"
+video_id =  "RQRVmeVcYnE"
 
 video_url = 'https://youtu.be/' + video_id
 yt = YouTube(video_url)
 # this method will download the highest resolution that video is available
-yt_video = yt.streams.get_highest_resolution()
+#yt_video = yt.streams.get_highest_resolution()
 
 print('Downloading ...')
-yt_video.download()
+#yt_video.download()
+yt.streams.filter(res="1080p").first().download()
 print('Your video is downloaded successfully')
 
 transcript = YouTubeTranscriptApi.get_transcript(video_id,languages=['pt'])
