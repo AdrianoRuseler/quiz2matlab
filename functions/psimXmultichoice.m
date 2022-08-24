@@ -2,7 +2,7 @@
 % ***
 % *** The MIT License (MIT)
 % ***
-% *** Copyright (c) 2021 AdrianoRuseler
+% *** Copyright (c) 2022 AdrianoRuseler
 % ***
 % *** Permission is hereby granted, free of charge, to any person obtaining a copy
 % *** of this software and associated documentation files (the "Software"), to deal
@@ -44,7 +44,14 @@ end
 
 
 for q=1:length(circuit.quiz.question)
+    multicellstr='';
     switch circuit.quiz.question{q}.type
+        case 'STRING'
+            multicell=['{1:MULTICHOICE:' multicellstr ];
+%             multicell=['{1:MULTICHOICE:' multicellstr '}'];
+            isnumerical=0;
+            ispsimchoice=0;
+            isstringchoice=1;
         case 'NUMERICAL'
             multicell='{1:NUMERICAL:';
             isnumerical=1;
@@ -122,11 +129,11 @@ for q=1:length(circuit.quiz.question)
             expmulticell=['{1:MULTICHOICE_S:~%100%' circuit.quiz.question{q}.expopts{1}];
             lopts=length(circuit.quiz.question{q}.expopts); % Number of options per question
             for o=2:lopts % Get option value
-                    expmulticell = strcat(expmulticell,['~' circuit.quiz.question{q}.expopts{o}]);
+                expmulticell = strcat(expmulticell,['~' circuit.quiz.question{q}.expopts{o}]);
             end
             expmulticell = strcat(expmulticell,'}');
             % quiz.question{q}.expopts={'IRb','IRc','VR2'}; % {1:MULTICHOICE:~IRc~Vc~%100%IRb}
-%             disp(expmulticell)
+            %             disp(expmulticell)
         end
     end
 
@@ -138,6 +145,17 @@ for q=1:length(circuit.quiz.question)
             circuit.quiz.question{q}.values(o)=circuit.funcvalue(circuit.quiz.question{q}.options{o});
         elseif strcmp(circuit.quiz.question{q}.vartype{o},'string')
             circuit.quiz.question{q}.values(o)=0;
+        elseif strcmp(circuit.quiz.question{q}.vartype{o},'str') % equations options
+            %                 quiz.question{q}.options={'EQ01','B','C','D','E'}; % Only lowcase
+            % quiz.question{q}.vartype={'str'}; % meas
+            % quiz.question{q}.optscore=[100 0 0 0 0]; % Score per option
+
+            if(circuit.quiz.question{q}.optscore(o))
+                multicellstr = strcat(multicellstr,['~%' num2str(circuit.quiz.question{q}.optscore(o)) '%' circuit.quiz.question{q}.options{o} ]);
+            else
+                multicellstr = strcat(multicellstr,['~' circuit.quiz.question{q}.options{o}]);
+            end
+
         else
             optind=find(contains(labels,circuit.quiz.question{q}.options{o},'IgnoreCase',true));
             if ~isempty(optind) % Label found
