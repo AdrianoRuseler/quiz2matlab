@@ -40,7 +40,10 @@ if isfield(circuit.LTspice.data,'signals')
     labels={circuit.LTspice.data.signals.label}; % Data variables
 end
 
+
+
 for q=1:length(circuit.quiz.question)
+multicellstr='';
 
     lopts=length(circuit.quiz.question{q}.options); % Number of options per question
     for o=1:lopts % Get option value
@@ -144,6 +147,17 @@ for q=1:length(circuit.quiz.question)
                         circuit.quiz.question{q}.values(o)=fet.(tmpvartype{2});
                 end
 
+            case 'str'
+%                 quiz.question{q}.options={'EQ01','B','C','D','E'}; % Only lowcase
+% quiz.question{q}.vartype={'str'}; % meas 
+% quiz.question{q}.optscore=[100 0 0 0 0]; % Score per option
+
+                    if(circuit.quiz.question{q}.optscore(o))
+                        multicellstr = strcat(multicellstr,['~%' num2str(circuit.quiz.question{q}.optscore(o)) '%' circuit.quiz.question{q}.options{o} ]);
+                    else
+                        multicellstr = strcat(multicellstr,['~' circuit.quiz.question{q}.options{o}]);
+                    end
+
             otherwise
                 disp('circuit.quiz.question{q}.values(o)=[circuit.LTspice.data.signals(circuit.quiz.question{q}.labelsind(o)).mean];')
         end
@@ -152,7 +166,7 @@ for q=1:length(circuit.quiz.question)
     ismultichoice=0;
     switch circuit.quiz.question{q}.type
         case 'STRING'
-            multicell='';
+            multicell=['{1:MULTICHOICE:' multicellstr '}'];
         case 'NUMERICAL'
             multicell='{1:NUMERICAL:'; %  {1:NUMERICAL:~%100%704.000:70.400} mV
             for o=1:lopts % get option value

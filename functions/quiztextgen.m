@@ -53,6 +53,35 @@ if isfield(circuit.quiz,'extratext') % Add extra text
     end
 end
 
+% quiz.eqlist={'eq01','eq02','eq03','eq04','eq05'}; circuit.quiz.eqlist
+% quiz.eqnum={'eq01','eq02','eq03','eq04','eq05'}; circuit.quiz.eqnum
+
+% if isfield(circuit.quiz,'eqlist') && isfield(circuit.quiz,'eqnum') % Add equations table
+%     thead='<br><div class="col-md-4"> <table class="table table-hover table-bordered"> <thead class="thead-light"><tr><th>Equação</th> <th>Expressão</th></tr></thead>';
+%     circuit.quiz.text=[circuit.quiz.text thead]; % Add header   char(96+q) ') '
+%     for e=1:length(circuit.quiz.eqlist)
+%         tablerow=['<tbody><tr><td>' circuit.quiz.eqnum{e} '</td><td>' circuit.quiz.eqlist{e} '</td></tr>'];
+%         circuit.quiz.text=[circuit.quiz.text tablerow]; % Add row
+%     end
+%     circuit.quiz.text=[circuit.quiz.text '</tbody> </table> <p style="text-align: left;">Tabela 1: Equações e suas expressões.</p> <br></div>']; % close table
+% end
+
+
+if isfield(circuit.quiz,'eqlist') && isfield(circuit.quiz,'eqnum') % Add equations table
+    thead='<br><div class="col-md-4 text-centered"> <table class="table table-hover table-bordered"> <thead class="thead-light"><tr>';
+    for e=1:length(circuit.quiz.eqnum)
+        thead=[thead '<th>' circuit.quiz.eqnum{e} '</th>'];
+    end
+    circuit.quiz.text=[circuit.quiz.text thead '</tr></thead>']; % Add header   char(96+q) ') '
+    tablerow='<tbody><tr>';
+    for e=1:length(circuit.quiz.eqlist)
+        tablerow=[tablerow '<td>' circuit.quiz.eqlist{e} '</td>'];        
+    end
+    circuit.quiz.text=[circuit.quiz.text tablerow '</tr>']; % Add row
+    circuit.quiz.text=[circuit.quiz.text '</tbody> </table> <p style="text-align: left;">Tabela 1: Equações e suas expressões.</p> <br></div>']; % close table
+end
+
+
 % quiz.modelfile=1; % Add link to model file
 
 if circuit.quiz.modelfile % Add model file with link to it
@@ -93,13 +122,15 @@ if circuit.quiz.exptable
         u=u+1;
     end
 
+    %     <p style="text-align: left;">Tabela 1: Equações e suas expressões.<br></p>
+
     circuit.quiz.text=[circuit.quiz.text '</tbody> </table> </div>']; % close table
 
-%     for q=1:length(circuit.quiz.question)
-%         if ~isfield(circuit.quiz.question{q},'expmath')
-%             circuit.quiz.text=[circuit.quiz.text '<p>' circuit.quiz.question{q}.str ' '  circuit.quiz.question{q}.choicestr '<br></p>'];
-%         end
-%     end
+    %     for q=1:length(circuit.quiz.question)
+    %         if ~isfield(circuit.quiz.question{q},'expmath')
+    %             circuit.quiz.text=[circuit.quiz.text '<p>' circuit.quiz.question{q}.str ' '  circuit.quiz.question{q}.choicestr '<br></p>'];
+    %         end
+    %     end
 
 
 else
