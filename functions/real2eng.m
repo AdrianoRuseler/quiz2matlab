@@ -34,6 +34,8 @@ exponent = 3*floor(log10(abs(number))/3); % find exponent
 mantissa = number/(10^exponent); % find mantissa
 
 % disp(number)
+% disp(exponent)
+% disp(mantissa)
 
 expHTML = {' y',' z', ' a', ' f', ' p', ' n', ' &micro;', ' m', ' ', ' k', ' M', ' G', ' T', ' P', ' E', ' Z',' Y'};
 % expName = {' y',' z', ' a', ' f', ' p', ' n', ' u', ' m', '', ' k', ' M', ' G', ' T', ' P', ' E', ' Z',' Y'};
