@@ -27,45 +27,56 @@
 
 function  circuit = psimfromcmd(circuit)
 
-% Copyright ® 2006-2020 Powersim Inc.  All Rights Reserved.
-%
-% Usage: PsimCmd.exe -i "[input file]" -o "[output file]" -v "VarName1=VarValue"  -v "VarName2=VarValue"  -g -K1 -L1 -t "TotalTime" -s "TimeStep" -pt "PrintTime" -ps "PrintStep" -Net "Netlist file name" -m "file name for errors"
-%
-%
+% Copyright ® 2006-2021 Powersim Inc.  All Rights Reserved.
+% 
+% Usage: PsimCmd.exe -i "[input file]" -o "[output file]" -v "VarName1=VarValue"  -v "VarName2=VarValue"  -g -K1 -L1 -t "TotalTime" -s "TimeStep" -tv "SecondaryTimestepRatio" -pt "PrintTime" -ps "PrintStep" -Net "Netlist file name" -m "file name for errors" 
+% 
+% 
 % Except input file, all other parameters are optional.
 % All file names should be enclosed by " or ' characters.
 % Command-line parameters:
-% -i :  Followed by input schematic file.
-% -o :  Followed by output text (.txt) or binary (.smv) file.
-% -g :  Run Simview after the simulation is complete.
-% -t :  Followed by total time of the simulation.
-% -s :  Followed by time step of the simulation.
-% -pt : Followed by print time of the simulation.
-% -ps : Followed by print step of the simulation.
-% -v :  Followed by variable name and value. This parameter can be used multiple times.
-% example:  -v "R1=1.5"  -v "R2=5"
-% -m :  Followed by Text file for Error messages
-% -K  or -K1 :  Set 'Save flag' in Simulation control.
-% -K0 :  Remove 'Save flag' in Simulation control.
-% -L or -L1 :  Set 'Load flag' in Simulation control. Continue from previous simulation result.
-% -L0 :  Remove 'Load flag' in Simulation control. Starts simulation from beginning.
-% -Net : Generate netlist file. Simulation will not run. Followed by optional Netlist file name.
-% -NetXml : Generate XML netlist file. Simulation will not run. Followed by optional XML file name.
-% -NetXmlU : Generate XML netlist file in UTF16 format. Simulation will not run. Followed by optional XML file name.
-% -c :  Followed by input netlist file.
-% -LT : Run LTspice simulation. (Requires Spice module)
-% Run Script: Input file must be a .script file.
+%   -i :  Followed by input schematic file or Script file(.script).
+%   -o :  Followed by output text (.txt) or binary (.smv) file. 
+%   -g :  Run Simview after the simulation is complete.
+%   -t :  Followed by total time of the simulation.
+%   -s :  Followed by time step of the simulation.
+%   -DSED :  DSED (non-stiff) Solver. (DSIM only) 
+%   -BDSED:  BDSED (stiff) Solver. (DSIM only) 
+%   -rr :  Relative error. (DSIM only)
+%   -ar :  Absolute error. (DSIM only)
+%   -zr :  Absolute error for zero crossing detection. (DSIM only)
+%   -kt :  Enable Switching Transients Out. (DSIM only)
+%   -tv : Use variable time step. Followed by Ratio. SecondaryTimeStep = TimeStep / Ratio.
+%   -tc : Do not use variable time step.
+%   -pt : Followed by print time of the simulation.
+%   -ps : Followed by print step of the simulation.
+%   -v :  Followed by variable name and value. This parameter can be used multiple times.
+%        example:  -v "R1=1.5"  -v "R2=5" 
+%   -m :  Followed by Text file for Error messages
+%   -K  or -K1 :  Set 'Save flag' in Simulation control.
+%   -K0 :  Remove 'Save flag' in Simulation control.
+%   -L or -L1 :  Set 'Load flag' in Simulation control. Continue from previous simulation result.
+%   -L0 :  Remove 'Load flag' in Simulation control. Starts simulation from beginning.
+%   -Net : Generate netlist file. Simulation will not run. Followed by optional Netlist file name.
+%   -NetXml : Generate XML netlist file. Simulation will not run. Followed by optional XML file name.
+%   -NetXmlU : Generate XML netlist file in UTF16 format. Simulation will not run. Followed by optional XML file name.
+%   -c :  Followed by input netlist file.
+%   -LT : Run LTspice simulation. (Requires Spice module)
+%   -SP  or -SPICE : Same as -LT. Run LTspice simulation. (Requires Spice module)
+%   -DSIM : Run DSIM simulation. (Requires DSIM module)
+%   -hw : Generate hardware code. (Requires SimCoder modules)
+% To run Script file, input file following -i switch must be a .script file. In case of script file, variables (-v switch) are passed to the script. 
 % ///////////////////////////////////////////////
-% //		psimcmd return values:
-% /////////////////////////////
-% //		0: Success
-% //
-% //		Errors:
-% //		2:  Failed to run simulation or execute script or generate an XML file.
-% //		3:  Can not open input schematic file
-% //		4:  Input file is missing
-% //		10: unable to retrieve valid license.
-% //
+% //		psimcmd return values:				   
+% /////////////////////////////				   
+% //		0: Success							   
+% //											   
+% //		Errors: 							   
+% //		2:  Failed to run simulation or generate an XML file or generate Simcoder C code. 
+% //		3:  Can not open input schematic file  
+% //		4:  Input file is missing			   
+% //		10: unable to retrieve valid license.  
+% //		-1: Failed to run script otherwise it returns the script return value or 0  
 % ///////////////////////////////////////////////
 
 %  varstrcmd -v "VarName1=VarValue"  -v "VarName2=VarValue"
@@ -132,9 +143,17 @@ else
 end
 
 tic
-disp(PsimCmdsrt)
-disp(['Simulating ' circuit.PSIMCMD.infile ' file....     Wait!'])
-[status,cmdout] = system(['PsimCmd ' PsimCmdsrt]); % Executa simulação
+% disp(PsimCmdsrt)
+% disp(['Simulating ' circuit.PSIMCMD.infile ' file....     Wait!'])
+
+if strcmp(circuit.engine,'psim')
+    disp(['PSIM simulation with ' circuit.PSIMCMD.extracmd])
+    [status,cmdout] = system(['PsimCmd ' PsimCmdsrt]); % Executa simulação
+else
+    disp(['LTspice simulation with ' circuit.PSIMCMD.extracmd])
+    [status,cmdout] = system(['PsimCmd -LT' PsimCmdsrt]); % Executa simulação
+end
+
 
 circuit.PSIMCMD.status=status; % If 0, is OK! else, some problem
 circuit.PSIMCMD.simtime=toc; % Tempo total de simulação

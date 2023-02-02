@@ -27,6 +27,11 @@ if circuit.PSIMCMD.net.run
     circuit = getpsimnet(circuit); % Reads or generates net file from psim
 end
 
+
+if ~isfield(circuit,'engine')
+    circuit.engine ='psim'; % PSIM ou LTspice simulation
+end
+
 % sortnquestions=250; % Number of simulations
 [~,y]=size(circuit.Xi);
 nq=randperm(y,circuit.nsims); % escolha as questoes
@@ -62,6 +67,7 @@ if ~isfield(quiz,'nquiz')
     quiz.nquiz=length(circuits);
 end
 
+
 if ~isfield(quiz,'modelfile') % Create file with model
    quiz.modelfile=0;    
 end
@@ -89,8 +95,6 @@ if isfield(quiz,'autoitem') && quiz.autoitem
         disp(quiz.question{q}.str)
     end
 end
-
-
 
 for n=1:length(circuits)
     circuits{n}.quiz=quiz;
