@@ -169,9 +169,9 @@ end
 
 
 if circuit.LTspice.net.run
-    circuit.cmdstr = ['XVIIx64.exe -Run -b -ascii ' circuit.LTspice.net.file];
+    circuit.cmdstr = ['LTspice -Run -b -ascii ' circuit.LTspice.net.file];
 else
-    circuit.cmdstr = ['XVIIx64.exe -Run -b -ascii ' circuit.LTspice.asc.file];
+    circuit.cmdstr = ['LTspice -Run -b -ascii ' circuit.LTspice.asc.file];
 end
 
 
