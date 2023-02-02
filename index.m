@@ -27,7 +27,7 @@ disp(cmdout)
 [status,cmdout] = system('PsimCmd');
 disp(cmdout)
 % 
-% Copyright ® 2006-2020 Powersim Inc.  All Rights Reserved.
+% Copyright ® 2006-2021 Powersim Inc.  All Rights Reserved.
 % 
 % Usage: PsimCmd.exe -i "[input file]" -o "[output file]" -v "VarName1=VarValue"  -v "VarName2=VarValue"  -g -K1 -L1 -t "TotalTime" -s "TimeStep" -tv "SecondaryTimestepRatio" -pt "PrintTime" -ps "PrintStep" -Net "Netlist file name" -m "file name for errors" 
 % 
@@ -36,17 +36,16 @@ disp(cmdout)
 % All file names should be enclosed by " or ' characters.
 % Command-line parameters:
 %   -i :  Followed by input schematic file or Script file(.script).
-%   -o :  Followed by output text (.txt) or binary (.smv) file.
+%   -o :  Followed by output text (.txt) or binary (.smv) file. 
 %   -g :  Run Simview after the simulation is complete.
 %   -t :  Followed by total time of the simulation.
 %   -s :  Followed by time step of the simulation.
 %   -DSED :  DSED (non-stiff) Solver. (DSIM only) 
 %   -BDSED:  BDSED (stiff) Solver. (DSIM only) 
-%   -mt :  Maximum time step. (DSIM only)
-%   -nt :  Minimum time step. (DSIM only)
 %   -rr :  Relative error. (DSIM only)
 %   -ar :  Absolute error. (DSIM only)
 %   -zr :  Absolute error for zero crossing detection. (DSIM only)
+%   -kt :  Enable Switching Transients Out. (DSIM only)
 %   -tv : Use variable time step. Followed by Ratio. SecondaryTimeStep = TimeStep / Ratio.
 %   -tc : Do not use variable time step.
 %   -pt : Followed by print time of the simulation.
@@ -65,23 +64,24 @@ disp(cmdout)
 %   -LT : Run LTspice simulation. (Requires Spice module)
 %   -SP  or -SPICE : Same as -LT. Run LTspice simulation. (Requires Spice module)
 %   -DSIM : Run DSIM simulation. (Requires DSIM module)
-% To run Script file, input file following -i switch must be a .script file. In case of script file, all other switches are ignored.
+%   -hw : Generate hardware code. (Requires SimCoder modules)
+% To run Script file, input file following -i switch must be a .script file. In case of script file, variables (-v switch) are passed to the script. 
 % ///////////////////////////////////////////////
 % //		psimcmd return values:				   
 % /////////////////////////////				   
 % //		0: Success							   
 % //											   
 % //		Errors: 							   
-% //		2:  Failed to run simulation or execute script or generate an XML file.	   
+% //		2:  Failed to run simulation or generate an XML file or generate Simcoder C code. 
 % //		3:  Can not open input schematic file  
 % //		4:  Input file is missing			   
 % //		10: unable to retrieve valid license.  
-% //											   
+% //		-1: Failed to run script otherwise it returns the script return value or 0  
 % ///////////////////////////////////////////////
 
 %% LTspice
-
-[status,cmdout] = system('XVIIx64'); % abre Janela
+% [status,cmdout] = system('XVIIx64'); % abre Janela
+[status,cmdout] = system('LTspice'); % abre Janela
 disp(cmdout)
 
 
