@@ -45,6 +45,21 @@ for c=1:length(circuit.X)
     tmpcircuits{c}.parstr = param2str(tmpcircuits{c});
 end
 
+% Run simulation test
+tmptest = psimfromcmdtest(tmpcircuits{1}); % Simula via CMD
+% //		0: Success							   							   
+% //		Errors: 							   
+% //		2:  Failed to run simulation or generate an XML file or generate Simcoder C code. 
+% //		3:  Can not open input schematic file  
+% //		4:  Input file is missing		
+% //        5:  Key word in cmdout file: ERROR ou Failed
+% //        6:  Key word in msg file: ERROR ou Failed
+% //		10: unable to retrieve valid license.  
+% //		-1: Failed to run script otherwise it returns the script return value or 0
+if tmptest
+    return
+end
+
 %   Runs simulation OK!
 [~,y]=size(circuit.X);
 parfor n=1:y
