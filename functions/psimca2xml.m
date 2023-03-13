@@ -42,6 +42,10 @@ if ~isfield(circuit,'cyclenpts')
     circuit.cyclenpts = 1000; % Total number of simulated points per cycles
 end
 
+if ~isfield(circuit,'engine')
+    circuit.engine ='psim'; % PSIM ou LTspice simulation
+end
+
 % circuit.PSIMCMD.printtime=0; %Time from which simulation results are saved to the output file (default = 0). No output is saved before this time.
 circuit.PSIMCMD.printstep=1; %Print step (default = 1). If the print step is set to 1, every data point will be saved to the output file.
 % If it is 10, only one out of 10 data points will be saved. This helps to reduce the size of the output file.
@@ -89,6 +93,21 @@ if isfield(circuit,'funcstr')
             tmpcircuits{c}.funcvalue(f)=eval(circuit.funcstr{f}); % Eval functions
         end
     end
+end
+
+% Run simulation test
+tmptest = psimfromcmdtest(tmpcircuits{1}); % Simula via CMD
+% //		0: Success							   							   
+% //		Errors: 							   
+% //		2:  Failed to run simulation or generate an XML file or generate Simcoder C code. 
+% //		3:  Can not open input schematic file  
+% //		4:  Input file is missing		
+% //        5:  Key word in cmdout file: ERROR ou Failed
+% //        6:  Key word in msg file: ERROR ou Failed
+% //		10: unable to retrieve valid license.  
+% //		-1: Failed to run script otherwise it returns the script return value or 0
+if tmptest
+    return
 end
 
 
