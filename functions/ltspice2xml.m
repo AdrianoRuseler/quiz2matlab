@@ -8,6 +8,8 @@ circuit.LTspice.simsdir= circuit.dir; % sim file dir
 circuit.LTspice.tmpfile = 1; % Create tmp file?
 circuit.LTspice.tmpdir = 1; % Use system temp dir?
 circuit.LTspice.tmpfiledel = 1; % Delete tmp files?
+circuit.LTspice.ascfile = [circuit.LTspice.simsdir circuit.LTspice.name '.asc']; % Sim base file
+
 circuit = ltasc2net(circuit); % Generates the .net file
 circuit = ltgetnet(circuit); % Reads net file
 
