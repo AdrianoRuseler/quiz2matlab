@@ -11,7 +11,7 @@ end
 
 disp(' -netlist Batch conversion of a schematic to a netlist.')
 %         tic
-[status,cmdout] = system(['XVIIx64.exe -Run -b -ascii -netlist ' circuit.LTspice.ascfile ]); % Cria o arquivo .net
+[status,cmdout] = system(['LTspice -Run -b -ascii -netlist ' circuit.LTspice.ascfile ]); % Cria o arquivo .net
 disp(cmdout)
 
 if ~status % Se simulação foi bem sucedida
