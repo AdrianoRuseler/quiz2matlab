@@ -16,9 +16,10 @@ circuit = ltasc2net(circuit); % Generates the .net file
 circuit = ltgetnet(circuit); % Reads net file
 
 if ~isfield(circuit.LTspice.net,'run')
-    circuit.LTspice.net.run =0;
+    circuit.LTspice.net.run =0; % run net file?
 end
 
+% Create data struct
 steps=length(circuit.stepvalues);
 for c=1:length(circuit.X)
     for s=1:steps
@@ -72,7 +73,8 @@ end
 % quiz.name = [circuit.name 'quiz'];
 quiz.name = circuit.name;
 
-%% 
+
+%%  
 [x,~]=size(circuits); % x-> configs; y->steps
 for n=1:x
     stepcircuits{n}.quiz=quiz;
