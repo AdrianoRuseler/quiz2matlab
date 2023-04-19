@@ -53,12 +53,12 @@ tablecircuit.nostepparstr=circs{1}.nostepparstr;
 for t=1:x % n tabels loop
     for s=1:steps    % n steps or n row in table
         circuit=circs{s}; % Pick the circuit from steps
-        
+
         for c=1:y % y-> n colunas por tabela
             if isempty(tablecircuit.quiz.table{t,c})
                 continue
             end
-            
+
             switch tablecircuit.quiz.table{t,c}.vartype
                 case 'opstep' % Not sure
                     labels={circuit.LTspice.data.signals.label}; % Data variables
@@ -87,7 +87,7 @@ for t=1:x % n tabels loop
                         tablecircuit.quiz.table{t,c}.values=0;
                     end
                 case 'log'
-                    
+
                     tmpstr=strsplit(tablecircuit.quiz.table{t,c}.options,':'); %
                     ndevgroups=length(circuit.LTspice.log.sdop); % Number os groups, TBJ, Fet...
                     for g=1:ndevgroups
@@ -117,22 +117,27 @@ for t=1:x % n tabels loop
                 case 'mop'
                     tbj=tbj2quiz(circuit,tablecircuit.quiz.table{t,c}.options);
                     tbjmchoice = tbj.mop;
-                    
+
                 otherwise
                     disp([ tablecircuit.quiz.table{t,c}.vartype ' -> vartype not FOUND!!'])
             end
-            
+
+            if ~isfield(tablecircuit.quiz.table{t,c},'minabsval')
+                tablecircuit.quiz.table{t,c}.minabsval=1e-12;
+            end
+
+
             switch tablecircuit.quiz.table{t,c}.type
                 case 'STRING' % For step tables
-                    tablecell{s,c} = real2eng(tablecircuit.quiz.table{t,c}.values,tablecircuit.quiz.table{t,c}.units);
+                    tablecell{s,c} = real2eng(tablecircuit.quiz.table{t,c}.values,tablecircuit.quiz.table{t,c}.units, tablecircuit.quiz.table{t,c}.minabsval);
                 case 'NUMERICAL' % '{1:NUMERICAL:~%100%' num2str(varcalc*mult,'%03.3f') ':' num2str(Xres,'%03.3f') '}'
                     tablecell{s,c}=['{' tablecircuit.quiz.table{t,c}.weight ':NUMERICAL:'];
-                    [~,~, expstr, mantissa] = real2eng(tablecircuit.quiz.table{t,c}.values,tablecircuit.quiz.table{t,c}.units);
+                    [~,~, expstr, mantissa] = real2eng(tablecircuit.quiz.table{t,c}.values,tablecircuit.quiz.table{t,c}.units, tablecircuit.quiz.table{t,c}.minabsval);
                     tempstr=[sprintf('%3.3f',mantissa) ':' sprintf('%3.3f',(mantissa*tablecircuit.quiz.table{t,c}.opttol/100))];  %  sprintf('%3.3f',mantissa)
                     tablecell{s,c} = strcat(tablecell{s,c},['~%' num2str(tablecircuit.quiz.table{t,c}.optscore) '%' tempstr '} ' expstr]);
                 case 'SCALE'
                     tablecell{s,c} = num2scale(tablecircuit.quiz.table{t,c}.values,tablecircuit.quiz.table{t,c}.units);
-                    
+
                 case 'TBJ'
                     %                     disp('TBJ case!!')
                     %                     disp(tbjmchoice)
@@ -140,12 +145,12 @@ for t=1:x % n tabels loop
                 otherwise
                     disp([ tablecircuit.quiz.table{t,c}.type ' -> type not FOUND!!'])
             end
-            
-            
+
+
         end % y-> n colunas por tabela
     end % n steps or n row in table
     %     disp(tablecell)
-    
+
     for c=1:y % y-> n colunas por tabela
         if isempty(tablecircuit.quiz.table{t,c})
             continue
@@ -153,7 +158,7 @@ for t=1:x % n tabels loop
             tableheader{1,c}= tablecircuit.quiz.table{t,c}.header;
         end
     end
-    
+
     tablecircuit.quiz.tables{t}.cells=tablecell;
     tablecircuit.quiz.tabletext{t}=clozetabgen(tablecell,tableheader); % Parece funcionar
     tablecell={}; % Reset
