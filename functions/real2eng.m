@@ -22,7 +22,7 @@ if isnan(number)
 end
 
 if nargin < 3
-    minabsval = 1e-12;
+    minabsval = 1e-12; % Se não informado o campo 3
 end 
 
 if abs(number) < minabsval
