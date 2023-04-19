@@ -65,6 +65,10 @@ if ~isfield(quiz,'scriptfile') % Create file with model
     quiz.scriptfile=0;
 end
 
+if isempty(circuit.Xi)
+    disp('Xi is empty!')
+    return
+end
 
 % sortnquestions=300; % Number of simulations
 [~,y]=size(circuit.Xi);
