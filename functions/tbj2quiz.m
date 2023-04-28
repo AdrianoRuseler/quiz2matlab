@@ -83,10 +83,11 @@ switch tbj.type
         if (tbj.beon&&tbj.bcon) %||(tbj.Vce<tbj.vcesat)||(tbj.BetaDC<tbj.betasat) % Saturado
             tbj.mop='{1:MULTICHOICE:~Corte~%100%Saturação~Ativo Direto~Ativo Reverso}';
             tbj.sat=1;
-            disp('Modo Saturado!')
+            disp(['Modo Saturado -> ' strrep(circuit.parstr,' ','')])
         elseif tbj.beon
             tbj.mop='{1:MULTICHOICE:~Corte~Saturação~%100%Ativo Direto~Ativo Reverso}';
             tbj.ampmode=1;
+            disp(['Modo Ativo Direto -> ' strrep(circuit.parstr,' ','')])
         elseif tbj.bcon
             tbj.mop='{1:MULTICHOICE:~Corte~Saturação~Ativo Direto~%100%Ativo Reverso}';
         else
@@ -119,10 +120,11 @@ switch tbj.type
         if (tbj.ebon&&tbj.cbon) %||(tbj.Vce<tbj.vcesat)||(tbj.BetaDC<tbj.betasat) % Saturado
             tbj.mop='{1:MULTICHOICE:~Corte~%100%Saturação~Ativo Direto~Ativo Reverso}';
             tbj.sat=1;
-            disp('Modo Saturado!')
+            disp(['Modo Saturado -> ' strrep(circuit.parstr,' ','')])
         elseif tbj.ebon
             tbj.mop='{1:MULTICHOICE:~Corte~Saturação~%100%Ativo Direto~Ativo Reverso}';
             tbj.ampmode=1;
+            disp(['Modo Ativo Direto -> ' strrep(circuit.parstr,' ','')])
         elseif tbj.cbon
             tbj.mop='{1:MULTICHOICE:~Corte~Saturação~Ativo Direto~%100%Ativo Reverso}';
         else
