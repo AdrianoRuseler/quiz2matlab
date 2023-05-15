@@ -12,3 +12,6 @@ for f=3:length(fields)
     % disp(vars)
     strout= [ strout  ' ' vars '=' num2str(logdatastruct.(fields{f}))];
 end
+
+
+% disp(strout) 
