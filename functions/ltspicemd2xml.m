@@ -51,15 +51,19 @@ if ~isfield(quiz,'scriptfile') % Create file with PSIM script
     quiz.scriptfile=0;
 end
 
+
 % circuit.nsims=600; % Number of simulations
 [~,y]=size(circuit.Xi);
 if y>circuit.nsims
-    nq=randperm(y,circuit.nsims); % escolha as questoes
+    % nq=randperm(y,circuit.nsims); % causa problemas 
+    nq=1:circuit.nsims; % pega os n primeiros
     X=circuit.Xi(:,nq);
 else
     X=circuit.Xi;
     circuit.nsims=y;
 end
+
+
 
 circuit.Xi=[]; % Clear
 
