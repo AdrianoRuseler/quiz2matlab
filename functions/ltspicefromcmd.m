@@ -28,7 +28,8 @@ function  circuit = ltspicefromcmd(circuit)
 
 if isfield(circuit,'parname') && isfield(circuit,'parvalue')
     paramstr='.param'; % Generates the param string
-    paramfuncstr=''; % Generates the param string
+    paramfuncstr=''; % Generates the func param string
+    logsparam='';
     
     for ind=1:length(circuit.parname)
 %         disp(value2srt(circuit.parvalue(ind)))
@@ -41,10 +42,14 @@ if isfield(circuit,'parname') && isfield(circuit,'parvalue')
         end       
     end
     
+    if isfield(circuit,'logdata2param')
+        logsparam=circuit.logdata2param;
+    end
+
     circuit.paramstr = paramstr;
-    circuit.LTspice.net.lines{circuit.LTspice.net.paramline}=[paramstr paramfuncstr]; % Updates param line from net file
+    circuit.LTspice.net.lines{circuit.LTspice.net.paramline}=[paramstr paramfuncstr logsparam]; % Updates param line from net file
     newStr = split(circuit.LTspice.asc.lines{circuit.LTspice.asc.paramline},'!');
-    circuit.LTspice.asc.lines{circuit.LTspice.asc.paramline}=[newStr{1} '!' paramstr paramfuncstr];
+    circuit.LTspice.asc.lines{circuit.LTspice.asc.paramline}=[newStr{1} '!' paramstr paramfuncstr logsparam];
 end
 
 if isfield(circuit,'model')
