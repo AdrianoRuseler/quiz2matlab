@@ -118,16 +118,18 @@ if isfield(circuit,'funcstr')
     end
 end
 
-%   Runs simulation OK!
-% [~,y]=size(X);
-parfor n=1:circuit.nsims
-    tmpcircuits{n} = ltspicefromcmd(tmpcircuits{n}); % Simula via CMD
-end
 
 if isfield(circuit,'logdata')
     for n=1:circuit.nsims
         tmpcircuits{n}.LTspice.log.op = circuit.logdata{n}{1};
+        tmpcircuits{n}.log2param = logdata2param(circuit.logdata{n}{1});
     end
+end
+
+% Runs simulation OK!
+% [~,y]=size(X);
+parfor n=1:circuit.nsims
+    tmpcircuits{n} = ltspicefromcmd(tmpcircuits{n}); % Simula via CMD
 end
 
 % for n=1:y
