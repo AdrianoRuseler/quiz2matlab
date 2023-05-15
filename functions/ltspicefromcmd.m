@@ -42,8 +42,8 @@ if isfield(circuit,'parname') && isfield(circuit,'parvalue')
         end       
     end
     
-    if isfield(circuit,'logdata2param')
-        logsparam=circuit.logdata2param;
+    if isfield(circuit,'log2param') % tmpcircuits{n}.log2param
+        logsparam=circuit.log2param;
     end
 
     circuit.paramstr = paramstr;
@@ -204,6 +204,7 @@ circuit.LTspice.data = rawltspice(data); % Read data
 circuit = ltlogread(circuit); % Reads log file
 
 % circuit.LTspice.raw.data.signals.op
+% circuit.LTspice.tmpfiledel=0;
 
 if circuit.LTspice.tmpfiledel
     delete(circuit.LTspice.raw.file)
