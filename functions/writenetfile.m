@@ -1,6 +1,11 @@
-function [netfile,logfile,rawfile] = writenetfile(netlines)
+function [netfile,logfile,rawfile] = writenetfile(netlines,tmpname)
 
-tmpname=[strrep(char(java.util.UUID.randomUUID),'-','')];
+% tmpname=mlreportgen.utils.hash('This is a test string to hash.')
+
+if nargin < 2
+    tmpname=[strrep(char(java.util.UUID.randomUUID),'-','')];
+end
+
 netfile=[tempdir  tmpname '.net'];
 % disp(netfile)
 [fileID] = fopen(netfile,'w'); % Abre arquivo para escrita
