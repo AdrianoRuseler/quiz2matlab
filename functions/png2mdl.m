@@ -67,13 +67,13 @@ Gin = A(:,:,2);
 Bin = A(:,:,3); 
 
 
-RB=find(Rin==255);
+RB=Rin>=254;
 Rin(RB)=R;
 
-GB=find(Gin==255);
+GB=Gin>=254;
 Gin(GB)=G;
 
-BB=find(Bin==255);
+BB=Bin>=254;
 Bin(BB)=B;
 
 A2(:,:,1) =Rin;
