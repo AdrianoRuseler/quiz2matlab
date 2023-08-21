@@ -98,6 +98,10 @@ else
 end
 
 
+if ~isfield(circuit.LTspice.log,'dateline')
+    disp('dateline NOT FOUMD!!')
+    disp(tline)
+end
 
 
 %  Semiconductor Device Operating Points:
