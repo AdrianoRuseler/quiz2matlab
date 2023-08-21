@@ -142,7 +142,7 @@ if ~isfield(quiz,'nquiz')
 end
 
 pngfile=[circuit.dir circuit.name '.png']; % Fig png file
-imgout=png2mdl(pngfile,'classic');
+imgout=png2mdl(pngfile,circuit.theme);
 
 quiz.name = [circuit.name];
 % Auto add item letter: a), b)... 97 - 122; 65 - 90
