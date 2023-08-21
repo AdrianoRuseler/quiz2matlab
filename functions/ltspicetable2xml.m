@@ -32,6 +32,19 @@ for c=1:length(circuit.X)
 end
 
 
+if ~isfield(quiz,'feteval')
+    quiz.feteval=0;
+end
+
+if ~isfield(quiz,'tbjeval')
+    quiz.tbjeval=0;
+end
+
+if ~isfield(quiz,'requiremeas')
+    quiz.requiremeas=0;
+end
+
+
 %   Runs simulation OK!
 [~,y]=size(circuit.X);
 parfor n=1:y
@@ -48,10 +61,13 @@ b=1;
 for c=1:x
     for s=1:y
         if isfield(tmpcircuits{c,s}.LTspice,'data')
+
             if isfield(tmpcircuits{c,s}.LTspice.data,'signals')
                 circuits{a,b}=tmpcircuits{c,s};
                 b=b+1;
             end
+
+
         else
             disp(['No data file in simulation with ' tmpcircuits{c,s}.parstr '!'])
         end
@@ -59,6 +75,7 @@ for c=1:x
     b=1; % reset indice
     a=a+1;
 end
+
 
 % Quiz fig
 pngfile=[circuit.dir circuit.name '.png']; % Fig png file
@@ -74,16 +91,16 @@ end
 quiz.name = circuit.name;
 
 
-%%  
+%%
 [x,~]=size(circuits); % x-> configs; y->steps
 for n=1:x
     stepcircuits{n}.quiz=quiz;
     figlegendastr=['Figura 1: Considere' circuits{n,1}.nostepparstr ';']; % Legenda da figura
-    stepcircuits{n}.quiz.fightml = psimfigstr(imgout,'left',figlegendastr); % html code for fig      
+    stepcircuits{n}.quiz.fightml = psimfigstr(imgout,'left',figlegendastr); % html code for fig
     stepcircuits{n}=ltspiceXtable(stepcircuits{n},{circuits{n,:}});    % Generates moodle question string
 end
 
- %% Generate quizstruct moodle question
+%% Generate quizstruct moodle question
 quizopts.name=circuit.name;
 quizopts.nquiz=quiz.nquiz; % Number of quizes
 quizopts.permutquiz =1; % Permut quiz?
@@ -96,4 +113,4 @@ quizopts.hidden='0';
 
 quizstruct = ltspiceclozegen(stepcircuits,quizopts); % Generate quizstruct
 cloze2moodle(quizstruct) % Generates xml file
-% 
+%
