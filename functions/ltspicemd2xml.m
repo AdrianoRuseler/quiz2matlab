@@ -159,11 +159,11 @@ for c=1:length(tmpcircuits)
     if isfield(tmpcircuits{c}.LTspice,'data') % Simulation OK!
         if(~tmpcircuits{c}.LTspice.data.error)
 
-            if(quiz.feteval) % Eval FET!
+            if(quiz.feteval) % Eval FET! To remove?
                 fet=fet2quiz(tmpcircuits{c},quiz.fettype);
             end
 
-            if(quiz.tbjeval) % Eval BJT!
+            if(quiz.tbjeval) % Eval BJT! To remove?
                 tbj=tbj2quiz(tmpcircuits{c},quiz.tbjtype);
                 disp(tbj)
                 if(tbj.BetaDC>=tmpcircuits{c}.model.parvalue(2))
@@ -232,7 +232,6 @@ for n=1:length(circuits)
             circuits{n}.quiz.extratext{1}=['Parâmetros do ' circuit.level.tipo ': ' circuits{n}.level.parstr];
         end
     end
-
 
     %     circuits{n}.quiz.extratext{2}=tmpcircuits{c}.model.modelstr;
     circuits{n}.quiz.fightml = psimfigstr(imgout,'left',figlegendastr); % html code for fig
