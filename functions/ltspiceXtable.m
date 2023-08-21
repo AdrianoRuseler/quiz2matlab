@@ -114,9 +114,12 @@ for t=1:x % n tabels loop
                 case 'peb'
                     tbj=tbj2quiz(circuit,tablecircuit.quiz.table{t,c}.options);
                     tbjmchoice = tbj.peb;
-                case 'mop'
+                case 'mop' % tbjmop
                     tbj=tbj2quiz(circuit,tablecircuit.quiz.table{t,c}.options);
                     tbjmchoice = tbj.mop;
+                case 'fetmop' % fetmop
+                    fet=fet2quiz(circuit,circuit.quiz.question{q}.options{o});
+                    tbjmchoice = fet.mop;                    
 
                 otherwise
                     disp([ tablecircuit.quiz.table{t,c}.vartype ' -> vartype not FOUND!!'])
