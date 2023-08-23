@@ -100,6 +100,7 @@ if(circuit.PSIMCMD.tmpdir)  % Use system temp dir?
     circuit.PSIMCMD.simsdir = tempdir;
 end
 
+% Generate random name for parallel simulation
 randname = strrep(char(java.util.UUID.randomUUID),'-','');
 tmpname=[circuit.PSIMCMD.name randname];
 circuit.PSIMCMD.randname=randname;
@@ -128,6 +129,7 @@ if circuit.PSIMCMD.script.run
     circuit.PSIMCMD.script.name=['PS' upper(randname(1:6)) '.script'];    
     circuit = generatepsimscript(circuit); % Creates PSIM script
     PsimCmdsrt = circuit.PSIMCMD.script.file;
+    % circuit.PSIMCMD.simctrl=''; % TODO
 else
     % Cria string de comando
     infile = ['"' circuit.PSIMCMD.infile '"'];
@@ -138,9 +140,12 @@ else
     printtime = ['"' num2str(circuit.PSIMCMD.printtime,'%10.8e') '"']; %   -pt : Followed by print time of the simulation.
     printstep = ['"' num2str(circuit.PSIMCMD.printstep,'%10.8e') '"']; %   -ps : Followed by print step of the simulation.
 
-    PsimCmdsrt= ['-i ' infile ' -o ' outfile ' -m ' msgfile ' -t ' totaltime ' -s ' steptime ' -pt ' printtime ' -ps ' printstep ' ' circuit.PSIMCMD.extracmd];
-
+    PsimCmdsrt= ['-i ' infile ' -o ' outfile ' -m ' msgfile ' -t ' totaltime ' -s ' steptime ' -pt ' printtime ' -ps ' printstep ' ' circuit.PSIMCMD.extracmd];    
+    % circuit.PSIMCMD.simctrl=['steptime: ' real2eng(circuit.PSIMCMD.steptime,'s') '  totaltime: ' real2eng(circuit.PSIMCMD.totaltime,'s')  '  printtime: ' real2eng(circuit.PSIMCMD.printtime,'s') '  printstep: ' real2eng(circuit.PSIMCMD.printstep,'') ];
 end
+
+
+
 
 tic
 % disp(PsimCmdsrt)
