@@ -4,7 +4,7 @@
 % ***
 % *** The MIT License (MIT)
 % ***
-% *** Copyright (c) 2018 AdrianoRuseler
+% *** Copyright (c) 2023 AdrianoRuseler
 % ***
 % *** Permission is hereby granted, free of charge, to any person obtaining a copy
 % *** of this software and associated documentation files (the "Software"), to deal
@@ -122,7 +122,9 @@ for co=1:length(quizstruct.comb)
     n=n+1;
 end
 
-dt = datestr(now,'yyyymmddTHHMMSS');
+dt = char(datetime('now','Format','yyyMMddHHmmss'));
+
+% dt = datestr(now,'yyyymmddTHHMMSS');
 xmlwrite([quizstruct.xmlpath '\' quizstruct.name 'F' num2str(file,'%02i') 'D' dt 'NQ' num2str(quizstruct.questionnumbers,'%03i') '.xml'],docNode);
 
 winopen(quizstruct.xmlpath)
