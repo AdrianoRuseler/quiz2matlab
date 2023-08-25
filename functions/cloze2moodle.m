@@ -125,6 +125,10 @@ end
 dt = char(datetime('now','Format','yyyMMddHHmmss'));
 
 % dt = datestr(now,'yyyymmddTHHMMSS');
-xmlwrite([quizstruct.xmlpath '\' quizstruct.name 'F' num2str(file,'%02i') 'D' dt 'NQ' num2str(quizstruct.questionnumbers,'%03i') '.xml'],docNode);
+XMLfile=[quizstruct.xmlpath '\' quizstruct.name 'F' num2str(file,'%02i') 'D' dt 'NQ' num2str(quizstruct.questionnumbers,'%03i') '.xml'];
+
+xmlwrite(XMLfile,docNode);
+
+xml2html(XMLfile); % Generate html report
 
 winopen(quizstruct.xmlpath)
