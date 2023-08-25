@@ -87,18 +87,19 @@ end
 
 fclose(fileID);
 
+circuit.PSIMCMD.script.base64code=file2base64(circuit.PSIMCMD.script.file);
 
 % Reads script file and convert to Base64
-fileID = fopen(circuit.PSIMCMD.script.file,'r');
-if fileID==-1
-    disp('File error!!')
-    return
-end
-A = fread(fileID);
-fclose(fileID);
-
-Yc = char(org.apache.commons.codec.binary.Base64.encodeBase64(uint8(A)))'; % Encode
-circuit.PSIMCMD.script.base64code=Yc;
+% fileID = fopen(circuit.PSIMCMD.script.file,'r');
+% if fileID==-1
+%     disp('File error!!')
+%     return
+% end
+% A = fread(fileID);
+% fclose(fileID);
+% 
+% Yc = char(org.apache.commons.codec.binary.Base64.encodeBase64(uint8(A)))'; % Encode
+% circuit.PSIMCMD.script.base64code=Yc;
 
 % disp(circuit.PSIMCMD.script.base64code)
 
