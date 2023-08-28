@@ -129,7 +129,7 @@ if circuit.PSIMCMD.script.run
     circuit.PSIMCMD.script.name=['PS' upper(randname(1:6)) '.script'];    
     circuit = generatepsimscript(circuit); % Creates PSIM script
     PsimCmdsrt = circuit.PSIMCMD.script.file;
-    % circuit.PSIMCMD.simctrl=''; % TODO
+    circuit.PSIMCMD.simctrl=''; % TODO
 else
     % Cria string de comando
     infile = ['"' circuit.PSIMCMD.infile '"'];
@@ -141,11 +141,8 @@ else
     printstep = ['"' num2str(circuit.PSIMCMD.printstep,'%10.8e') '"']; %   -ps : Followed by print step of the simulation.
 
     PsimCmdsrt= ['-i ' infile ' -o ' outfile ' -m ' msgfile ' -t ' totaltime ' -s ' steptime ' -pt ' printtime ' -ps ' printstep ' ' circuit.PSIMCMD.extracmd];    
-    % circuit.PSIMCMD.simctrl=['steptime: ' real2eng(circuit.PSIMCMD.steptime,'s') '  totaltime: ' real2eng(circuit.PSIMCMD.totaltime,'s')  '  printtime: ' real2eng(circuit.PSIMCMD.printtime,'s') '  printstep: ' real2eng(circuit.PSIMCMD.printstep,'') ];
+    circuit.PSIMCMD.simctrl=['steptime: ' real2eng(circuit.PSIMCMD.steptime,'s') '  totaltime: ' real2eng(circuit.PSIMCMD.totaltime,'s')  '  printtime: ' real2eng(circuit.PSIMCMD.printtime,'s') '  printstep: ' real2eng(circuit.PSIMCMD.printstep,'') ];
 end
-
-
-
 
 tic
 % disp(PsimCmdsrt)
