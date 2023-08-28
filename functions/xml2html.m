@@ -71,6 +71,10 @@ body{b}=' ';
 
 % Create html file
 fileID = fopen([fpath '\' fname '.html'],'w','n','UTF-8');
+if fileID==-1
+    disp('File error!!')
+    return
+end
 
 for h=1:length(header)
     fprintf(fileID,'%s\n',header{h}); % Write header
