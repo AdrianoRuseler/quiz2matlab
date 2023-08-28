@@ -24,9 +24,9 @@
 % ***
 % =========================================================================
 
-function psimca2xml(circuit,quiz)
+function circuits=psimca2xml(circuit,quiz)
 
-diary([ pwd '\xmlfiles\' circuit.name 'diaryD' char(datetime('now','Format','yyyMMddHHmmss')) '.txt'])
+% diary([ pwd '\xmlfiles\' circuit.name 'diaryD' char(datetime('now','Format','yyyMMddHHmmss')) '.txt'])
 
 circuit.PSIMCMD.name = circuit.name; % File name
 circuit.PSIMCMD.simsdir=circuit.dir; % PSIM file dir
@@ -68,7 +68,6 @@ end
 
 if isempty(circuit.Xi)
     disp('Xi is empty!')
-    diary off
     return
 end
 
@@ -113,7 +112,6 @@ tmptest = psimfromcmdtest(tmpcircuits{1}); % Simula via CMD
 % //		10: unable to retrieve valid license.  
 % //		-1: Failed to run script otherwise it returns the script return value or 0
 if tmptest
-    diary off
     return
 end
 
@@ -137,7 +135,6 @@ for c=1:length(tmpcircuits)
 end
 
 if ~exist('circuits','var')
-    diary off
     return
 end
 
@@ -185,5 +182,3 @@ end
 
 quizstruct = psimclozegen(circuits,quizopts); % Generate quizstruct
 cloze2moodle(quizstruct) % Generates xml file
-
-diary off
