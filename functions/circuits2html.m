@@ -30,8 +30,11 @@
 
 function circuits2html(circuits) % Generate html report from circuits struct
 
-printtable=0; % Print data table
+printtable=1; % Print data table
 rfields = {'values','dimensions','title','plotStyle'}; % Remove Fields from table
+
+printchart=1; % Print chart
+printploty=1;
 
 [~,y]=size(circuits);
 
@@ -48,8 +51,10 @@ header{5}='  <meta charset="utf-8">';
 header{6}='  <meta name="viewport" content="width=device-width, initial-scale=1">';
 header{7}='  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">';
 header{8}='  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>';
-header{9}='</head>';
-header{10}='<body>';
+header{9}='  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>';
+header{10}='  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>';
+header{11}='</head>';
+header{12}='<body>';
 b=1;
 
 for c=1:y % circuit loop
@@ -62,6 +67,22 @@ for c=1:y % circuit loop
         intable=rmfield(circuits{c}.PSIMCMD.data.signals,rfields); % Remove Fields
         table=signal2htmltable(intable);
         body{b}=['      <div class="card-footer"><p><code>' circuits{c}.PSIMCMD.simctrl '</code></p>' table '</div>']; b=b+1;
+    else
+        body{b}=['      <div class="card-footer"><p><code>' circuits{c}.PSIMCMD.simctrl '</code></p></div>']; b=b+1;
+    end
+
+    if printchart
+        % intable=rmfield(circuits{c}.PSIMCMD.data.signals,rfields); % Remove Fields
+        chart=signal2htmlchart(circuits{c}.PSIMCMD.data);
+        body{b}=['      <div class="card-footer"><p><code>' circuits{c}.PSIMCMD.simctrl '</code></p>' chart '</div>']; b=b+1;
+    else
+        body{b}=['      <div class="card-footer"><p><code>' circuits{c}.PSIMCMD.simctrl '</code></p></div>']; b=b+1;
+    end
+
+    if printploty
+        % intable=rmfield(circuits{c}.PSIMCMD.data.signals,rfields); % Remove Fields
+        ploty=signal2htmlploty(circuits{c}.PSIMCMD.data);
+        body{b}=['      <div class="card-footer"><p><code>' circuits{c}.PSIMCMD.simctrl '</code></p>' ploty '</div>']; b=b+1;
     else
         body{b}=['      <div class="card-footer"><p><code>' circuits{c}.PSIMCMD.simctrl '</code></p></div>']; b=b+1;
     end
