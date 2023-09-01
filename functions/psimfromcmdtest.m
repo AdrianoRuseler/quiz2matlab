@@ -63,6 +63,18 @@ function  [teststatus, circuit]= psimfromcmdtest(circuit)
 % //		-1: Failed to run script otherwise it returns the script return value or 0  
 % ///////////////////////////////////////////////
 
+% Verify for PsimCmd
+[status,cmdout] = system('PsimCmd');
+circuit.PSIMCMD.status=status; % If 0, is OK! else, some problem
+circuit.PSIMCMD.cmdout=cmdout;
+if circuit.PSIMCMD.status
+   disp("CMD status is a nonzero integer.")
+   disp(cmdout)
+   teststatus = circuit.PSIMCMD.status;
+   return
+end
+
+
 %  varstrcmd -v "VarName1=VarValue"  -v "VarName2=VarValue"
 varstrcmd='';
 for ind=1:length(circuit.parname)
