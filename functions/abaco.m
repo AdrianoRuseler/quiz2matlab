@@ -23,7 +23,7 @@ end
 
 
 %% Print table
-filename='teste01.tbl'
+filename='teste01.tbl';
 fid = fopen(filename,'w');
 if fid==-1
     disp('Erro ao abrir o arquivo para escrita!')
