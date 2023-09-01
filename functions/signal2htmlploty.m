@@ -2,14 +2,31 @@ function ploty=signal2htmlploty(plotytdata,visible,rmtrace)
 
 % plotytdata=circuits{1}.PSIMCMD.data;
 
+ploty='';
+vars={plotytdata.signals.label}; % Get variables
+nvars=length(vars); % number of variables
+
+if nargin < 3
+    dip('Less than 3! Return!')
+    return
+end
+
+if isempty(visible)
+    legendonly=false(1,nvars);
+else
+    legendonly=~contains(vars,visible);
+end
+
+if isempty(rmtrace)
+    rmdata=false(1,nvars);
+else
+    rmdata=contains(vars,rmtrace);
+end
+
+
 t=1;
 htmlploty{t}=['<div id="plotly-' plotytdata.blockName '"></div>']; t=t+1;
 htmlploty{t}='<script>'; t=t+1;
-
-vars={plotytdata.signals.label}; % Get variables
-nvars=length(vars); % number of variables
-legendonly=~contains(vars,visible);
-rmdata=contains(vars,rmtrace);
 
 tracex = ['x: ['  regexprep(num2str(plotytdata.time'),'\s+',', ') '],'];
 
@@ -17,7 +34,7 @@ for v=1:nvars
     if rmdata(v)
         continue
     end
-    htmlploty{t}=['const trace' num2str(v,'%02i') ' = {']; t=t+1;
+    htmlploty{t}=['var trace' num2str(v,'%02i') ' = {']; t=t+1;
     htmlploty{t}=tracex; t=t+1;
     tracey = ['y: ['  regexprep(num2str(plotytdata.signals(v).values'),'\s+',', ') '],'];
     htmlploty{t}=tracey; t=t+1;
@@ -31,22 +48,25 @@ for v=1:nvars
 end
 
 % Define Data
-htmlploty{t}='const data = [';
-for v=2:nvars
+htmlploty{t}=[' var data' plotytdata.blockName ' = ['];
+for v=1:nvars
     if rmdata(v)
         continue
     end
-    htmlploty{t}=[htmlploty{t} 'trace' num2str(v,'%02i') ' ,'];
+    if v==nvars
+        htmlploty{t}=[htmlploty{t} 'trace' num2str(v,'%02i') ];
+    else
+        htmlploty{t}=[htmlploty{t} 'trace' num2str(v,'%02i') ' ,'];
+    end
 end
-htmlploty{t}=[htmlploty{t} '];'];
-t=t+1;
+htmlploty{t}=[htmlploty{t} '];']; t=t+1;
+
 % Define Layout
-htmlploty{t}=['const layout = { title:''' plotytdata.blockName ''' };']; t=t+1;
+htmlploty{t}=[' var layout = { title:''' plotytdata.blockName ''' };']; t=t+1;
 % Display using Plotly
-htmlploty{t}=['Plotly.newPlot(''plotly-' plotytdata.blockName ''' , data)']; t=t+1;
+htmlploty{t}=[' Plotly.newPlot(''plotly-' plotytdata.blockName ''' , data' plotytdata.blockName  ')']; t=t+1;
 htmlploty{t}='</script>'; % t=t+1;
 
-ploty='';
 for t=1:length(htmlploty)
     ploty=[ploty htmlploty{t}];
 end
