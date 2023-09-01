@@ -1,4 +1,4 @@
-function ploty=signal2htmlploty(plotytdata,visible)
+function ploty=signal2htmlploty(plotytdata,visible,rmtrace)
 
 % plotytdata=circuits{1}.PSIMCMD.data;
 
@@ -9,11 +9,15 @@ htmlploty{t}='<script>'; t=t+1;
 vars={plotytdata.signals.label}; % Get variables
 nvars=length(vars); % number of variables
 legendonly=~contains(vars,visible);
+rmdata=contains(vars,rmtrace);
 
 tracex = ['x: ['  regexprep(num2str(plotytdata.time'),'\s+',', ') '],'];
 
 for v=1:nvars
-    htmlploty{t}=['var trace' num2str(v,'%02i') ' = {']; t=t+1;
+    if rmdata(v)
+        continue
+    end
+    htmlploty{t}=['const trace' num2str(v,'%02i') ' = {']; t=t+1;
     htmlploty{t}=tracex; t=t+1;
     tracey = ['y: ['  regexprep(num2str(plotytdata.signals(v).values'),'\s+',', ') '],'];
     htmlploty{t}=tracey; t=t+1;
@@ -23,18 +27,22 @@ for v=1:nvars
     end
     htmlploty{t}=['name: ''' vars{v} '''' ]; t=t+1;
     htmlploty{t}='};'; t=t+1;
+
 end
 
-
-
-htmlploty{t}='var data = [trace01';
+% Define Data
+htmlploty{t}='const data = [';
 for v=2:nvars
-    htmlploty{t}=[htmlploty{t} ', trace' num2str(v,'%02i')];
+    if rmdata(v)
+        continue
+    end
+    htmlploty{t}=[htmlploty{t} 'trace' num2str(v,'%02i') ' ,'];
 end
 htmlploty{t}=[htmlploty{t} '];'];
 t=t+1;
-
-htmlploty{t}=['var layout = { title:''' plotytdata.blockName ''' };']; t=t+1;
+% Define Layout
+htmlploty{t}=['const layout = { title:''' plotytdata.blockName ''' };']; t=t+1;
+% Display using Plotly
 htmlploty{t}=['Plotly.newPlot(''plotly-' plotytdata.blockName ''' , data)']; t=t+1;
 htmlploty{t}='</script>'; % t=t+1;
 

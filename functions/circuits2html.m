@@ -59,7 +59,7 @@ for c=1:y % circuit loop
     body{b}=['      <div class="card-body">' circuits{c}.quiz.text '</div>']; b=b+1;
 
     if opts.printploty
-        ploty=signal2htmlploty(circuits{c}.PSIMCMD.data,opts.visible);
+        ploty=signal2htmlploty(circuits{c}.PSIMCMD.data,opts.visible,opts.rmtrace);
         body{b}=['      <div class="card-footer"><p><code>' circuits{c}.PSIMCMD.simctrl '</code></p>' ploty '</div>']; b=b+1;
     end
 
