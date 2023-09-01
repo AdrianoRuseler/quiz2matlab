@@ -28,13 +28,7 @@
 % xml2html(XMLfile); % Generate html report from circuits
 
 
-function circuits2html(circuits) % Generate html report from circuits struct
-
-printtable=1; % Print data table
-rfields = {'values','dimensions','title','plotStyle'}; % Remove Fields from table
-
-printchart=0; % Print chart
-printploty=1;
+function circuits2html(circuits,opts) % Generate html report from circuits struct
 
 [~,y]=size(circuits);
 
@@ -64,17 +58,13 @@ for c=1:y % circuit loop
     body{b}=['      <div class="card-header"><h4>' circuits{c}.name 'q' num2str(c,'%03i') '(' circuits{c}.parstr ')</h4></div>']; b=b+1;
     body{b}=['      <div class="card-body">' circuits{c}.quiz.text '</div>']; b=b+1;
 
-    if printploty
-        % intable=rmfield(circuits{c}.PSIMCMD.data.signals,rfields); % Remove Fields
-        ploty=signal2htmlploty(circuits{c}.PSIMCMD.data);
+    if opts.printploty
+        ploty=signal2htmlploty(circuits{c}.PSIMCMD.data,opts.visible);
         body{b}=['      <div class="card-footer"><p><code>' circuits{c}.PSIMCMD.simctrl '</code></p>' ploty '</div>']; b=b+1;
-    elseif printchart
-        chart=signal2htmlchart(circuits{c}.PSIMCMD.data);
-        body{b}=['      <div class="card-footer"><p><code>' circuits{c}.PSIMCMD.simctrl '</code></p>' chart '</div>']; b=b+1;
     end
 
-    if printtable
-        intable=rmfield(circuits{c}.PSIMCMD.data.signals,rfields); % Remove Fields
+    if opts.printtable
+        intable=rmfield(circuits{c}.PSIMCMD.data.signals,opts.rfields); % Remove Fields
         table=signal2htmltable(intable);
         body{b}=['      <div class="card-footer"><p><code>' circuits{c}.PSIMCMD.simctrl '</code></p>' table '</div>']; b=b+1;
     end

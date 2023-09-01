@@ -1,4 +1,4 @@
-function ploty=signal2htmlploty(plotytdata)
+function ploty=signal2htmlploty(plotytdata,visible)
 
 % plotytdata=circuits{1}.PSIMCMD.data;
 
@@ -8,6 +8,7 @@ htmlploty{t}='<script>'; t=t+1;
 
 vars={plotytdata.signals.label}; % Get variables
 nvars=length(vars); % number of variables
+legendonly=~contains(vars,visible);
 
 tracex = ['x: ['  regexprep(num2str(plotytdata.time'),'\s+',', ') '],'];
 
@@ -17,9 +18,14 @@ for v=1:nvars
     tracey = ['y: ['  regexprep(num2str(plotytdata.signals(v).values'),'\s+',', ') '],'];
     htmlploty{t}=tracey; t=t+1;
     htmlploty{t}='mode: ''lines'','; t=t+1;
+    if legendonly(v) % visible: 'legendonly'
+        htmlploty{t}='visible: ''legendonly'','; t=t+1;
+    end
     htmlploty{t}=['name: ''' vars{v} '''' ]; t=t+1;
     htmlploty{t}='};'; t=t+1;
 end
+
+
 
 htmlploty{t}='var data = [trace01';
 for v=2:nvars
