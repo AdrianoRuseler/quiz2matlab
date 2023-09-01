@@ -30,6 +30,23 @@
 
 function circuits2html(circuits,opts) % Generate html report from circuits struct
 
+if nargin == 1
+    opts.printtable=1; % Print data table
+    opts.rfields = {'values','dimensions','title','plotStyle'}; % Remove Fields from table
+    opts.printploty=1; % Print Ploty
+    opts.visible={}; % Visible traces - Set to all
+    opts.rmtrace={};
+else
+    % isfield(opts,'printtable')
+    if ~isfield(opts,'visible')
+        opts.visible={};
+    end
+
+    if ~isfield(opts,'rmtrace')
+        opts.rmtrace={};
+    end
+end
+
 [~,y]=size(circuits);
 
 dt = char(datetime('now','Format','yyyMMddHHmmss'));
@@ -45,10 +62,9 @@ header{5}='  <meta charset="utf-8">';
 header{6}='  <meta name="viewport" content="width=device-width, initial-scale=1">';
 header{7}='  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">';
 header{8}='  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>';
-header{9}='  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>';
-header{10}='  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>';
-header{11}='</head>';
-header{12}='<body>';
+header{9}='  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>';
+header{10}='</head>';
+header{11}='<body>';
 b=1;
 
 for c=1:y % circuit loop
@@ -58,18 +74,19 @@ for c=1:y % circuit loop
     body{b}=['      <div class="card-header"><h4>' circuits{c}.name 'q' num2str(c,'%03i') '(' circuits{c}.parstr ')</h4></div>']; b=b+1;
     body{b}=['      <div class="card-body">' circuits{c}.quiz.text '</div>']; b=b+1;
 
+    tmphtml='';
     if opts.printploty
         ploty=signal2htmlploty(circuits{c}.PSIMCMD.data,opts.visible,opts.rmtrace);
-        body{b}=['      <div class="card-footer"><p><code>' circuits{c}.PSIMCMD.simctrl '</code></p>' ploty '</div>']; b=b+1;
+        tmphtml=[tmphtml ploty];        
     end
 
     if opts.printtable
         intable=rmfield(circuits{c}.PSIMCMD.data.signals,opts.rfields); % Remove Fields
         table=signal2htmltable(intable);
-        body{b}=['      <div class="card-footer"><p><code>' circuits{c}.PSIMCMD.simctrl '</code></p>' table '</div>']; b=b+1;
+        tmphtml=[tmphtml table];
     end
 
-
+    body{b}=['      <div class="card-footer"><p><code>' circuits{c}.PSIMCMD.simctrl '</code></p>' tmphtml '</div>']; b=b+1;
     body{b}='   </div>'; b=b+1;
     body{b}='</div>'; b=b+1;
 end
