@@ -112,6 +112,7 @@ tmptest = psimfromcmdtest(tmpcircuits{1}); % Simula via CMD
 % //		10: unable to retrieve valid license.  
 % //		-1: Failed to run script otherwise it returns the script return value or 0
 if tmptest
+    circuits=[];
     return
 end
 
