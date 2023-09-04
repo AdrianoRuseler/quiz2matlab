@@ -24,10 +24,10 @@ else
     rmdata=contains(vars,opts.rmtrace);
 end
 
-disp(opts.qname)
+% disp(opts.qname)
 
 t=1;
-htmlploty{t}=['<div id="plotly-' plotytdata.blockName '"></div>']; t=t+1;
+htmlploty{t}=['<div id="plotly-' opts.qname '"></div>']; t=t+1;
 htmlploty{t}='<script>'; t=t+1;
 
 tracex = ['x: ['  regexprep(num2str(plotytdata.time'),'\s+',', ') '],'];
@@ -50,7 +50,7 @@ for v=1:nvars
 end
 
 % Define Data
-htmlploty{t}=[' var data' plotytdata.blockName ' = ['];
+htmlploty{t}=[' var data' opts.qname ' = ['];
 for v=1:nvars
     if rmdata(v)
         continue
@@ -64,9 +64,9 @@ end
 htmlploty{t}=[htmlploty{t} '];']; t=t+1;
 
 % Define Layout
-htmlploty{t}=[' var layout = { title:''' plotytdata.blockName ''' };']; t=t+1;
+htmlploty{t}=[' var layout = { title:''' opts.qname ''' };']; t=t+1;
 % Display using Plotly
-htmlploty{t}=[' Plotly.newPlot(''plotly-' plotytdata.blockName ''' , data' plotytdata.blockName  ')']; t=t+1;
+htmlploty{t}=[' Plotly.newPlot(''plotly-' opts.qname ''' , data' opts.qname  ')']; t=t+1;
 htmlploty{t}='</script>'; % t=t+1;
 
 for t=1:length(htmlploty)
