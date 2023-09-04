@@ -64,15 +64,14 @@ end
 htmlploty{t}=[htmlploty{t} '];']; t=t+1;
 
 % Define Layout
-htmlploty{t}=[' var layout = { title:''' opts.qname ''' };']; t=t+1;
+htmlploty{t}=[' var layout = { title:''' opts.qname ''', xaxis: {title: ''Time (s)''}, yaxis: {title: ''Value''}};']; t=t+1;
 % Display using Plotly
-htmlploty{t}=[' Plotly.newPlot(''plotly-' opts.qname ''' , data' opts.qname  ')']; t=t+1;
+htmlploty{t}=[' Plotly.newPlot(''plotly-' opts.qname ''' , data' opts.qname  ', layout)']; t=t+1;
 htmlploty{t}='</script>'; % t=t+1;
 
 for t=1:length(htmlploty)
     ploty=[ploty htmlploty{t}];
 end
-
 
 % for i=1:length(htmlploty)
 %     disp(htmlploty{i})
