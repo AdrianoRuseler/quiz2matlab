@@ -1,6 +1,6 @@
 
 
-function psimdc2xml(circuit,quiz)
+function circuits=psimdc2xml(circuit,quiz)
 
 
 circuit.PSIMCMD.name = circuit.name; % File name
