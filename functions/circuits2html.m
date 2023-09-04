@@ -83,7 +83,7 @@ header{11}='<body>';
 b=1;
 
 for c=1:y % circuit loop
-    opts.qname=[circuits{c}.name 'q' num2str(c,'%03i')]; % Question Name 
+    opts.qname=[circuits{c}.name 'q' num2str(c,'%03i')]; % Question Name
     body{b}=' '; b=b+1;
     body{b}='<div class="container mt-3">'; b=b+1;
     body{b}='   <div class="card">'; b=b+1;
@@ -91,6 +91,10 @@ for c=1:y % circuit loop
     body{b}=['      <div class="card-body">' circuits{c}.quiz.text '</div>']; b=b+1;
 
     tmphtml='';
+    if opts.printsimctrl
+        tmphtml=[tmphtml '<p><code>' circuits{c}.PSIMCMD.simctrl '</code></p>'];
+    end
+
     if opts.printploty
         % ploty=signal2htmlploty(circuits{c}.PSIMCMD.data,opts.visible,opts.rmtrace);
         ploty=signal2htmlploty(circuits{c}.PSIMCMD.data,opts);
@@ -103,9 +107,7 @@ for c=1:y % circuit loop
         tmphtml=[tmphtml table];
     end
 
-    if opts.printsimctrl
-        tmphtml=[tmphtml '<p><code>' circuits{c}.PSIMCMD.simctrl '</code></p>'];
-    end
+
 
     if ~isempty(tmphtml)
         body{b}=['      <div class="card-footer">' tmphtml '</div>']; b=b+1;
