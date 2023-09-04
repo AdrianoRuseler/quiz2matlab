@@ -1,28 +1,30 @@
-function ploty=signal2htmlploty(plotytdata,visible,rmtrace)
+function ploty=signal2htmlploty(plotytdata,opts)
 
 % plotytdata=circuits{1}.PSIMCMD.data;
+% opts.visible,opts.rmtrace
 
 ploty='';
 vars={plotytdata.signals.label}; % Get variables
 nvars=length(vars); % number of variables
 
-if nargin < 3
-    dip('Less than 3! Return!')
+if nargin < 2
+    dip('Less than 2! Return!')
     return
 end
 
-if isempty(visible)
+if isempty(opts.visible)
     legendonly=false(1,nvars);
 else
-    legendonly=~contains(vars,visible);
+    legendonly=~contains(vars,opts.visible);
 end
 
-if isempty(rmtrace)
+if isempty(opts.rmtrace)
     rmdata=false(1,nvars);
 else
-    rmdata=contains(vars,rmtrace);
+    rmdata=contains(vars,opts.rmtrace);
 end
 
+disp(opts.qname)
 
 t=1;
 htmlploty{t}=['<div id="plotly-' plotytdata.blockName '"></div>']; t=t+1;

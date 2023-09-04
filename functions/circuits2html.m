@@ -83,15 +83,17 @@ header{11}='<body>';
 b=1;
 
 for c=1:y % circuit loop
+    opts.qname=[circuits{c}.name 'q' num2str(c,'%03i')]; % Question Name 
     body{b}=' '; b=b+1;
     body{b}='<div class="container mt-3">'; b=b+1;
     body{b}='   <div class="card">'; b=b+1;
-    body{b}=['      <div class="card-header"><h4>' circuits{c}.name 'q' num2str(c,'%03i') '(' circuits{c}.parstr ')</h4></div>']; b=b+1;
+    body{b}=['      <div class="card-header"><h4>' opts.qname '(' circuits{c}.parstr ')</h4></div>']; b=b+1;
     body{b}=['      <div class="card-body">' circuits{c}.quiz.text '</div>']; b=b+1;
 
     tmphtml='';
     if opts.printploty
-        ploty=signal2htmlploty(circuits{c}.PSIMCMD.data,opts.visible,opts.rmtrace);
+        % ploty=signal2htmlploty(circuits{c}.PSIMCMD.data,opts.visible,opts.rmtrace);
+        ploty=signal2htmlploty(circuits{c}.PSIMCMD.data,opts);
         tmphtml=[tmphtml ploty];
     end
 
