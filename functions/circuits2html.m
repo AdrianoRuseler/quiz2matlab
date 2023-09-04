@@ -37,13 +37,28 @@ if nargin == 1
     opts.visible={}; % Visible traces - Set to all
     opts.rmtrace={};
 else
-    % isfield(opts,'printtable')
+    if ~isfield(opts,'printtable')
+        opts.printtable=0;
+    end
+
+    if ~isfield(opts,'rfields')
+        opts.rfields={};
+    end
+
+    if ~isfield(opts,'printploty')
+        opts.printploty=0;
+    end
+
     if ~isfield(opts,'visible')
         opts.visible={};
     end
 
     if ~isfield(opts,'rmtrace')
         opts.rmtrace={};
+    end
+
+    if ~isfield(opts,'printsimctrl')
+        opts.printsimctrl=0;
     end
 end
 
@@ -77,7 +92,7 @@ for c=1:y % circuit loop
     tmphtml='';
     if opts.printploty
         ploty=signal2htmlploty(circuits{c}.PSIMCMD.data,opts.visible,opts.rmtrace);
-        tmphtml=[tmphtml ploty];        
+        tmphtml=[tmphtml ploty];
     end
 
     if opts.printtable
@@ -86,7 +101,14 @@ for c=1:y % circuit loop
         tmphtml=[tmphtml table];
     end
 
-    body{b}=['      <div class="card-footer"><p><code>' circuits{c}.PSIMCMD.simctrl '</code></p>' tmphtml '</div>']; b=b+1;
+    if opts.printsimctrl
+        tmphtml=[tmphtml '<p><code>' circuits{c}.PSIMCMD.simctrl '</code></p>'];
+    end
+
+    if ~isempty(tmphtml)
+        body{b}=['      <div class="card-footer">' tmphtml '</div>']; b=b+1;
+    end
+
     body{b}='   </div>'; b=b+1;
     body{b}='</div>'; b=b+1;
 end
