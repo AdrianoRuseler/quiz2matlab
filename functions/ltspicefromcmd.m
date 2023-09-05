@@ -2,7 +2,7 @@
 % ***
 % *** The MIT License (MIT)
 % ***
-% *** Copyright (c) 2021 AdrianoRuseler
+% *** Copyright (c) 2023 AdrianoRuseler
 % ***
 % *** Permission is hereby granted, free of charge, to any person obtaining a copy
 % *** of this software and associated documentation files (the "Software"), to deal
@@ -135,7 +135,8 @@ if circuit.LTspice.net.run
     end
     
     fclose(fileID); % Close
-    
+
+    circuit.LTspice.net.base64=file2base64(circuit.LTspice.net.file);
 else
     
     [fileID,errmsg] = fopen(circuit.LTspice.asc.file,'w'); % Abre arquivo para escrita
@@ -156,7 +157,7 @@ else
     end
     
     fclose(fileID); % Close
-    
+    circuit.LTspice.asc.base64=file2base64(circuit.LTspice.asc.file);
 end
 
 % [status,cmdout]=
