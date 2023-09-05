@@ -1,6 +1,7 @@
 function ploty=signal2htmlploty(plotytdata,opts)
 
 % plotytdata=circuits{1}.PSIMCMD.data;
+% plotytdata=circuits{1}.LTspice.data;
 % opts.visible,opts.rmtrace
 
 ploty='';
@@ -9,6 +10,11 @@ nvars=length(vars); % number of variables
 
 if nargin < 2
     dip('Less than 2! Return!')
+    return
+end
+
+if ~isfield(plotytdata,'time')
+    % disp('No time field in data!')
     return
 end
 
