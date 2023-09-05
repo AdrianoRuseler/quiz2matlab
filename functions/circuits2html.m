@@ -32,7 +32,7 @@ function circuits2html(circuits,opts) % Generate html report from circuits struc
 
 if nargin == 1
     opts.printtable=1; % Print data table
-    opts.rfields = {'values','dimensions','title','plotStyle'}; % Remove Fields from table
+    opts.rfields = {}; % Remove Fields from table
     opts.printploty=1; % Print Ploty
     opts.visible={}; % Visible traces - Set to all
     opts.rmtrace={};
@@ -55,6 +55,18 @@ else
 
     if ~isfield(opts,'rmtrace')
         opts.rmtrace={};
+    else
+        if isfield(circuits{1},'PSIMCMD')
+            fields = fieldnames(circuits{1}.PSIMCMD.data.signals);
+        elseif isfield(circuits{1},'LTspice')
+            fields = fieldnames(circuits{1}.LTspice.data.signals);
+        end
+        rmdata=contains(fields,opts.rmtrace);
+        if ~sum(rmdata)
+            opts.rmtrace={};
+        else
+            opts.rmtrace={fields{rmdata}};
+        end
     end
 
     if ~isfield(opts,'printsimctrl')
@@ -92,22 +104,31 @@ for c=1:y % circuit loop
 
     tmphtml='';
     if opts.printsimctrl
-        tmphtml=[tmphtml '<p><code>' circuits{c}.PSIMCMD.simctrl '</code></p>'];
+        if isfield(circuits{c},'PSIMCMD')
+            tmphtml=[tmphtml '<p><code>' circuits{c}.PSIMCMD.simctrl '</code></p>'];
+        elseif isfield(circuits{c},'LTspice')
+            % disp('LTspice simctrl') TODO
+        end
     end
 
     if opts.printploty
-        % ploty=signal2htmlploty(circuits{c}.PSIMCMD.data,opts.visible,opts.rmtrace);
-        ploty=signal2htmlploty(circuits{c}.PSIMCMD.data,opts);
+        if isfield(circuits{c},'PSIMCMD')
+            ploty=signal2htmlploty(circuits{c}.PSIMCMD.data,opts);
+        elseif isfield(circuits{c},'LTspice')
+            ploty=signal2htmlploty(circuits{c}.LTspice.data,opts);
+        end
         tmphtml=[tmphtml ploty];
     end
 
     if opts.printtable
-        intable=rmfield(circuits{c}.PSIMCMD.data.signals,opts.rfields); % Remove Fields
+        if isfield(circuits{c},'PSIMCMD')
+            intable=rmfield(circuits{c}.PSIMCMD.data.signals,opts.rmtrace); % Remove Fields
+        elseif isfield(circuits{c},'LTspice')
+            intable=rmfield(circuits{c}.LTspice.data.signals,opts.rmtrace); % Remove Fields
+        end
         table=signal2htmltable(intable);
         tmphtml=[tmphtml table];
     end
-
-
 
     if ~isempty(tmphtml)
         body{b}=['      <div class="card-footer">' tmphtml '</div>']; b=b+1;
