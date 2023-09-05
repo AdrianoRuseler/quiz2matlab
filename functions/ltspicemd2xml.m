@@ -24,7 +24,7 @@
 % ***
 % =========================================================================
 
-function ltspicemd2xml(circuit,quiz) % Added device model
+function circuits=ltspicemd2xml(circuit,quiz) % Added device model
 
 circuit.LTspice.name = circuit.name; % File name
 circuit.LTspice.simsdir= circuit.dir; % sim file dir
