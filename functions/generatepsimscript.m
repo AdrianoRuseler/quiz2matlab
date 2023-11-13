@@ -2,7 +2,7 @@
 % ***
 % *** The MIT License (MIT)
 % ***
-% *** Copyright (c) 2021 AdrianoRuseler
+% *** Copyright (c) 2023 AdrianoRuseler
 % ***
 % *** Permission is hereby granted, free of charge, to any person obtaining a copy
 % *** of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 % *** SOFTWARE.
 % ***
 % =========================================================================
-% https://psim.powersimtech.com/hubfs/PDF%20Tutorials/Tutorial%20-%20How%20to%20Use%20Script%20Functions.pdf
+% https://help.altair.com/2022.3/psim/pdfs/PSIM%20Tutorials/Tutorial%20-%20How%20to%20Use%20Script%20Functions.pdf
 
 % The Script functions that used in PSIM%s Script Tool can perform calculations, run simulation, and
 % plot graphs.
@@ -88,21 +88,6 @@ end
 fclose(fileID);
 
 circuit.PSIMCMD.script.base64code=file2base64(circuit.PSIMCMD.script.file);
-
-% Reads script file and convert to Base64
-% fileID = fopen(circuit.PSIMCMD.script.file,'r');
-% if fileID==-1
-%     disp('File error!!')
-%     return
-% end
-% A = fread(fileID);
-% fclose(fileID);
-% 
-% Yc = char(org.apache.commons.codec.binary.Base64.encodeBase64(uint8(A)))'; % Encode
-% circuit.PSIMCMD.script.base64code=Yc;
-
-% disp(circuit.PSIMCMD.script.base64code)
-
 
 
 % s = length(circuit.PSIMSCRIPT);
