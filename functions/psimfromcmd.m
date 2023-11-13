@@ -2,7 +2,7 @@
 % ***
 % *** The MIT License (MIT)
 % ***
-% *** Copyright (c) 2021 AdrianoRuseler
+% *** Copyright (c) 2023 AdrianoRuseler
 % ***
 % *** Permission is hereby granted, free of charge, to any person obtaining a copy
 % *** of this software and associated documentation files (the "Software"), to deal
@@ -27,31 +27,48 @@
 
 function  circuit = psimfromcmd(circuit)
 
-% Copyright ® 2006-2021 Powersim Inc.  All Rights Reserved.
+% Copyright ® 2006 - 2023 Powersim, LLC.  Copyright ® 2022 Altair Engineering Inc.  All Rights Reserved.
 % 
-% Usage: PsimCmd.exe -i "[input file]" -o "[output file]" -v "VarName1=VarValue"  -v "VarName2=VarValue"  -g -K1 -L1 -t "TotalTime" -s "TimeStep" -tv "SecondaryTimestepRatio" -pt "PrintTime" -ps "PrintStep" -Net "Netlist file name" -m "file name for errors" 
+% Usage: PsimCmd.exe -i "[input file]" -o "[output file]" -v "VarName1=VarValue"  -v "VarName2=VarValue"  -g -K1 -L1 -t "TotalTime" -s "TimeStep" -tv "SecondaryTimestepRatio" -pt "PrintTime" -ps "PrintStep" -Net "Netlist file name" -m "file name for errors"
 % 
 % 
 % Except input file, all other parameters are optional.
 % All file names should be enclosed by " or ' characters.
 % Command-line parameters:
 %   -i :  Followed by input schematic file or Script file(.script).
-%   -o :  Followed by output text (.txt) or binary (.smv) file. 
+%   -o :  Followed by output text (.txt) or binary (.smv) file.
 %   -g :  Run Simview after the simulation is complete.
 %   -t :  Followed by total time of the simulation.
 %   -s :  Followed by time step of the simulation.
-%   -DSED :  DSED (non-stiff) Solver. (DSIM only) 
-%   -BDSED:  BDSED (stiff) Solver. (DSIM only) 
-%   -rr :  Relative error. (DSIM only)
-%   -ar :  Absolute error. (DSIM only)
-%   -zr :  Absolute error for zero crossing detection. (DSIM only)
-%   -kt :  Enable Switching Transients Out. (DSIM only)
 %   -tv : Use variable time step. Followed by Ratio. SecondaryTimeStep = TimeStep / Ratio.
 %   -tc : Do not use variable time step.
 %   -pt : Followed by print time of the simulation.
 %   -ps : Followed by print step of the simulation.
 %   -v :  Followed by variable name and value. This parameter can be used multiple times.
-%        example:  -v "R1=1.5"  -v "R2=5" 
+%        example:  -v "R1=1.5"  -v "R2=5"
+%        special variables:
+%            TIMESTEPTYPE      0,1    0:Standard  1:Variable
+%            TIMESTEPRATIO     2,4,8,...
+%            TOTALTIME
+%            TIMESTEP
+%            PRINTTIME
+%            PRINTSTEP
+%            SAVEFLAG          0,1
+%            LOADFLAG          0,1
+%            HARDWARETARGET    0,1,....20
+%                                 No hardware target  :  0
+%                                 General system          :  1
+%                                 Myway expert3           :  2
+%                                 Ps f2833x system        :  3
+%                                 Pro f28335 system       :  4
+%                                 Ps f2803x system        :  5
+%                                 Ps f2806x system        :  6
+%                                 Ps f2802x system        :  7
+%                                 Ps kv31 system          :  8
+%                                 Myway expert4           :  9
+%                                 Ps f28004x system       :  10
+%                                 Ps f2837x system        :  11
+% 
 %   -m :  Followed by Text file for Error messages
 %   -K  or -K1 :  Set 'Save flag' in Simulation control.
 %   -K0 :  Remove 'Save flag' in Simulation control.
@@ -65,18 +82,18 @@ function  circuit = psimfromcmd(circuit)
 %   -SP  or -SPICE : Same as -LT. Run LTspice simulation. (Requires Spice module)
 %   -DSIM : Run DSIM simulation. (Requires DSIM module)
 %   -hw : Generate hardware code. (Requires SimCoder modules)
-% To run Script file, input file following -i switch must be a .script file. In case of script file, variables (-v switch) are passed to the script. 
+% To run Script file: input file following -i switch must be a .script file. In case of script file, variables (-v switch) are passed to the script.
 % ///////////////////////////////////////////////
-% //		psimcmd return values:				   
-% /////////////////////////////				   
-% //		0: Success							   
-% //											   
-% //		Errors: 							   
-% //		2:  Failed to run simulation or generate an XML file or generate Simcoder C code. 
-% //		3:  Can not open input schematic file  
-% //		4:  Input file is missing			   
-% //		10: unable to retrieve valid license.  
-% //		-1: Failed to run script otherwise it returns the script return value or 0  
+% //              psimcmd return values:
+% /////////////////////////////
+% //              0: Success
+% //
+% //              Errors:
+% //              2:  Failed to run simulation or generate an XML file or generate Simcoder C code.
+% //              3:  Can not open input schematic file
+% //              4:  Input file is missing
+% //              10: unable to retrieve valid license.
+% //              -1: Failed to run script otherwise it returns the script return value or 0
 % ///////////////////////////////////////////////
 
 %  varstrcmd -v "VarName1=VarValue"  -v "VarName2=VarValue"
@@ -118,6 +135,9 @@ else
         circuit.PSIMCMD.infile = [circuit.PSIMCMD.simsdir tmpname '.psimsch'];
     end
 end
+
+
+circuit.PSIMCMD.infilebase64=file2base64(circuit.PSIMCMD.infile);
 
 circuit.PSIMCMD.outfile = [circuit.PSIMCMD.simsdir tmpname '.txt'];
 circuit.PSIMCMD.msgfile = [circuit.PSIMCMD.simsdir tmpname 'msg.txt'];
