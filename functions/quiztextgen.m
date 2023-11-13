@@ -94,6 +94,11 @@ if circuit.quiz.scriptfile % Add PSIM script file with link to it
     circuit.quiz.text=[circuit.quiz.text '<p>PSIM Script: <a href="@@PLUGINFILE@@/' circuit.PSIMCMD.script.name '">' circuit.PSIMCMD.script.name '</a><br></p>'];
     circuit.quiz.nomearquivo=circuit.PSIMCMD.script.name;
 end
+% https://base64.guru/converter/encode/html
+% https://base64.guru/converter/encode/file
+% <a href="data:text/html;base64,V2VsY29tZSB0byA8Yj5iYXNlNjQuZ3VydTwvYj4h"></a>
+% <a href="data:@file/octet-stream;base64,LlRJTUUgMUUtMDA1IDAuMDEgMCAxIDAgMCAwIDAgMCAwIDQNCi5USV9ETUNfVkVSU0lPTiA0MDIgDQpWREMgVkRDMSAxIDAgVmkgMCAwIA0KRElPREUgRDEgMSAyIFZvbjEgMCAwIDEgMCANCkRJT0RFIEQyIDEgMiBWb24yIDAgMCAxIDAgDQpESU9ERV9MRUQgTEVEMSAyIDMgVm9uMyAwIDAgMSAwIA0KUiBSMSAzIDAgUjEgMSAxIA0KVlAgVlIxIDMgDQo="></a>
+% https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
 
 % Add plot here
 if isfield(circuit.quiz,'plot') % Add extra text
