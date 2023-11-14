@@ -28,9 +28,10 @@
 
 function xml2html(XMLfile) % Generate html report from moodle xml file
 
-% XMLfile = 'retry01quizF01D20230823141251NQ016.xml';
+% XMLfile = 'somexmlfile.xml';
 [fpath,fname,~] = fileparts(XMLfile);
-xml = xml2struct(XMLfile);
+% xml = xml2struct(XMLfile);
+xml = readstruct(XMLfile); % Native function
 
 % create the html file
 header{1}='<!DOCTYPE html>';
@@ -39,22 +40,22 @@ header{3}='<head>';
 header{4}= ['<title>' fname '</title>'];
 header{5}='  <meta charset="utf-8">';
 header{6}='  <meta name="viewport" content="width=device-width, initial-scale=1">';
-header{7}='  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">';
-header{8}='  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>';
+header{7}='  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">';
+header{8}='  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>';
 header{9}='</head>';
 header{10}='<body>';
 
 b=1;
-for q=1:length(xml.quiz.question)
+for q=1:length(xml.question)
     body{b}=' '; b=b+1;
     body{b}='<div class="container mt-3">'; b=b+1;
     body{b}='   <div class="card">'; b=b+1;
-    qname=xml.quiz.question{q}.name.text.Text; % Nome da questão
+    qname=xml.question(q).name.text; % Nome da questão
     % 'retry01q001(Vi=175V,fi=80Hz,Von=550mV,alfa=80grauseR0=1,3&Omega;)'
     body{b}=['      <div class="card-header"><h4>' qname '</h4></div>']; b=b+1;  
     % body{b}=['<h3>' qname '</h3>']; b=b+1;    
 
-    qtext=xml.quiz.question{q}.questiontext.text.Text; % Enunciados e questões em html.
+    qtext=xml.question(q).questiontext.text; % Enunciados e questões em html.
     % xml.quiz.question{q}.questiontext.Attributes.format  %  html.
     % body{b}=qtext; b=b+1;
     body{b}=['      <div class="card-body">' qtext '</div>']; b=b+1;
