@@ -87,12 +87,12 @@ for co=1:length(quizstruct.comb)
     appendChild(question,questiontext);
 
 
-    % Add file to question NOT TESTED YET
+    % Add file to question 
     if isfield(quizstruct.question,'filename') % Add model file with link to it
         questiontextfile = createElement(docNode,'file');
-        setAttribute(questiontext,'name',quizstruct.question.filename{q});
-        setAttribute(questiontext,'path','/');
-        setAttribute(questiontext,'encoding','base64');
+        setAttribute(questiontextfile,'name',quizstruct.question.filename{q});
+        setAttribute(questiontextfile,'path','/');
+        setAttribute(questiontextfile,'encoding','base64');
         appendChild(questiontext,questiontextfile);
         appendChild(questiontextfile,createTextNode(docNode,quizstruct.question.filebase64code{q}));
     end
