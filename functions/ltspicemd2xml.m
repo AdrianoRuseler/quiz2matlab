@@ -2,7 +2,7 @@
 % ***
 % *** The MIT License (MIT)
 % ***
-% *** Copyright (c) 2021 AdrianoRuseler
+% *** Copyright (c) 2023 AdrianoRuseler
 % ***
 % *** Permission is hereby granted, free of charge, to any person obtaining a copy
 % *** of this software and associated documentation files (the "Software"), to deal
@@ -257,5 +257,7 @@ else
 end
 
 quizstruct = psimclozegen(circuits,quizopts); % Generate quizstruct
-cloze2moodle(quizstruct) % Generates xml file
+% cloze2moodle(quizstruct) % Generates xml file
+
+cloze2mdl(quizstruct) % Generates xml file
 
