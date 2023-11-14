@@ -77,8 +77,8 @@ for co=1:length(quizstruct.comb)
     questiontext = createElement(docNode,'questiontext');
     setAttribute(questiontext,'format','html');
     questiontexttext = createElement(docNode,'text');
-    appendChild(questiontexttext,createTextNode(docNode,quizstruct.question.text{q}));
-    % appendChild(questiontexttext,createCDATASection(docNode,quizstruct.question.text{q})); % CDATA
+    % appendChild(questiontexttext,createTextNode(docNode,quizstruct.question.text{q}));
+    appendChild(questiontexttext,createCDATASection(docNode,quizstruct.question.text{q})); % CDATA
     appendChild(questiontext,questiontexttext);
     appendChild(question,questiontext);
 
