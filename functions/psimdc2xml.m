@@ -139,5 +139,8 @@ else
 end
 
 quizstruct = psimclozegen(circuits,quizopts); % Generate quizstruct
-cloze2moodle(quizstruct) % Generates xml file
+% cloze2moodle(quizstruct) % Generates xml file
+
+cloze2mdl(quizstruct) % Generates xml file
+
 
