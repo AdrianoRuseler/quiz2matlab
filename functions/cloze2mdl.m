@@ -59,7 +59,11 @@ for co=1:length(quizstruct.comb)
     q=quizstruct.comb(co);
 
     % Add the comment:
-    appendChild(docRootNode,createComment(docNode,quizstruct.question.name{q})); % Add question comment
+    if isfield(quizstruct.question,'comment')
+        appendChild(docRootNode,createComment(docNode,quizstruct.question.comment{q})); % Add question comment
+    else
+        appendChild(docRootNode,createComment(docNode,quizstruct.question.name{q})); % Add question comment
+    end
 
     % Question field
     question = createElement(docNode,'question');
@@ -94,26 +98,38 @@ for co=1:length(quizstruct.comb)
     end
 
     % Question generalfeedback
-    generalfeedback = createElement(docNode,'generalfeedback');
-    setAttribute(generalfeedback,'format','html');
-    generalfeedbacktext = createElement(docNode,'text');
-    appendChild(generalfeedbacktext,createTextNode(docNode,quizstruct.question.generalfeedback{q})); % Coloca feedback geral da pergunta
-    appendChild(generalfeedback,generalfeedbacktext);
-    appendChild(question,generalfeedback);
+    if isfield(quizstruct.question,'generalfeedback')
+        generalfeedback = createElement(docNode,'generalfeedback');
+        setAttribute(generalfeedback,'format','html');
+        generalfeedbacktext = createElement(docNode,'text');
+        appendChild(generalfeedbacktext,createTextNode(docNode,quizstruct.question.generalfeedback{q})); % Coloca feedback geral da pergunta
+        appendChild(generalfeedback,generalfeedbacktext);
+        appendChild(question,generalfeedback);
+    end
 
-    penalty = createElement(docNode,'penalty');
-    appendChild(penalty,createTextNode(docNode,quizstruct.question.penalty{q}));
-    appendChild(question,penalty);
+    if isfield(quizstruct.question,'penalty')
+        penalty = createElement(docNode,'penalty');
+        appendChild(penalty,createTextNode(docNode,quizstruct.question.penalty{q}));
+        appendChild(question,penalty);
+    end
 
-    hidden = createElement(docNode,'hidden');
-    appendChild(hidden,createTextNode(docNode,quizstruct.question.hidden{q}));
-    appendChild(question,hidden);
+    if isfield(quizstruct.question,'hidden')
+        hidden = createElement(docNode,'hidden');
+        appendChild(hidden,createTextNode(docNode,quizstruct.question.hidden{q}));
+        appendChild(question,hidden);
+    end
+
+    if isfield(quizstruct.question,'idnumber')
+        hidden = createElement(docNode,'idnumber');
+        appendChild(hidden,createTextNode(docNode,quizstruct.question.idnumber{q}));
+        appendChild(question,hidden);
+    end
 
     appendChild(docRootNode,question);
 
     % More than one xml file
     if n==quizstruct.questionMAX
-        % 
+        %
         XMLfile=[quizstruct.xmlpath '\' quizstruct.name 'F' num2str(file,'%02i') 'D' dt 'NQ' num2str(quizstruct.questionnumbers,'%03i') '.xml'];
         writeToFile(writer,docNode,XMLfile);
 
