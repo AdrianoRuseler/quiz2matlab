@@ -58,7 +58,14 @@ for q=1:length(xml.question)
     qtext=xml.question(q).questiontext.text; % Enunciados e questões em html.
     % xml.quiz.question{q}.questiontext.Attributes.format  %  html.
     % body{b}=qtext; b=b+1;
-    body{b}=['      <div class="card-body">' qtext '</div>']; b=b+1;
+    % qfiletext=<a download="hello.txt" href="data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==">File name</a>;
+    if isfield(xml.question(q).questiontext,'file') % TODO fix new lines added
+        qfname=xml.question(q).questiontext.file.nameAttribute;
+        qtextfile=['<br>Baixar: <a download="' qfname '" href="data:text/plain;base64,' xml.question(q).questiontext.file.Text '">' qfname '</a>'];
+        body{b}=['      <div class="card-body">' qtext qtextfile '</div>']; b=b+1;
+    else
+        body{b}=['      <div class="card-body">' qtext '</div>']; b=b+1;
+    end  
 
     % xml.quiz.question{q}.Attributes.type  % Tipo da questão
     body{b}='   </div>'; b=b+1;   
