@@ -7,7 +7,7 @@
 % clozes.q(1).name='Q01 name';
 % clozes.q(1).comment='comment for Q01';
 % clozes.q(1).text='Q01: {1:MULTICHOICE:California#Wrong~%100%Arizona#OK}';
-% clozes.q(1).feedback='Q01 feedback';
+% clozes.q(1).generalfeedback='Q01 feedback';
 % clozes.q(1).penalty='0.25';
 % clozes.q(1).hidden='0';
 % clozes.q(1).idnumber='id0';
@@ -72,35 +72,40 @@ for q=1:nq
     appendChild(question,questiontext);
 
     % Question generalfeedback
+    generalfeedback = createElement(docNode,'generalfeedback');
+    setAttribute(generalfeedback,'format','html');
+    generalfeedbacktext = createElement(docNode,'text');
     if isfield(clozes.q(q),'generalfeedback')
-        generalfeedback = createElement(docNode,'generalfeedback');
-        setAttribute(generalfeedback,'format','html');
-        generalfeedbacktext = createElement(docNode,'text');
-        appendChild(generalfeedbacktext,createTextNode(docNode,clozes.q(q).feedback)); % Coloca feedback da pergunta
-        appendChild(generalfeedback,generalfeedbacktext);
-        appendChild(question,generalfeedback);
+        appendChild(generalfeedbacktext,createTextNode(docNode,clozes.q(q).generalfeedback)); % Coloca feedback da pergunta
     end
+    appendChild(generalfeedback,generalfeedbacktext);
+    appendChild(question,generalfeedback);
 
     % Question penalty
+    penalty = createElement(docNode,'penalty');
     if isfield(clozes.q(q),'penalty')
-        penalty = createElement(docNode,'penalty');
         appendChild(penalty,createTextNode(docNode,clozes.q(q).penalty));
-        appendChild(question,penalty);
+    else
+        appendChild(penalty,createTextNode(docNode,'0.3333333'));
     end
+    appendChild(question,penalty);
 
     % Question hidden
+    hidden = createElement(docNode,'hidden');
     if isfield(clozes.q(q),'hidden')
-        hidden = createElement(docNode,'hidden');
         appendChild(hidden,createTextNode(docNode,clozes.q(q).hidden));
-        appendChild(question,hidden);
+    else
+        appendChild(hidden,createTextNode(docNode,'0'));
     end
+    appendChild(question,hidden);
 
     % Question idnumber
+    idnumber = createElement(docNode,'idnumber');
     if isfield(clozes.q(q),'idnumber')
-        idnumber = createElement(docNode,'idnumber');
         appendChild(idnumber,createTextNode(docNode,clozes.q(q).idnumber));
-        appendChild(question,idnumber);
     end
+    appendChild(question,idnumber);
+
 
     appendChild(docRootNode,question);
 end
