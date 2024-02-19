@@ -52,8 +52,8 @@ for q=1:length(xml.question)
     body{b}='   <div class="card">'; b=b+1;
     qname=xml.question(q).name.text; % Nome da questão
     % 'retry01q001(Vi=175V,fi=80Hz,Von=550mV,alfa=80grauseR0=1,3&Omega;)'
-    body{b}=['      <div class="card-header"><h4>' qname '</h4></div>']; b=b+1;  
-    % body{b}=['<h3>' qname '</h3>']; b=b+1;    
+    body{b}=['      <div class="card-header"><h4>' qname '</h4></div>']; b=b+1;
+    % body{b}=['<h3>' qname '</h3>']; b=b+1;
 
     qtext=xml.question(q).questiontext.text; % Enunciados e questões em html.
     % xml.quiz.question{q}.questiontext.Attributes.format  %  html.
@@ -65,17 +65,37 @@ for q=1:length(xml.question)
         body{b}=['      <div class="card-body">' qtext qtextfile '</div>']; b=b+1;
     else
         body{b}=['      <div class="card-body">' qtext '</div>']; b=b+1;
-    end  
+    end
+
+    btext=''; % init
+    if isfield(xml.question(q),'generalfeedback') % TODO
+        btext=[btext 'Generalfeedback: ' xml.question(q).generalfeedback.text '<br>'];
+    end
+
+    if isfield(xml.question(q),'penalty') % TODO
+        btext=[btext 'Penalty: ' num2str(xml.question(q).penalty) '<br>'];
+    end
+
+    if isfield(xml.question(q),'hidden') % TODO
+        btext=[btext 'Hidden: ' num2str(xml.question(q).hidden) '<br>'];
+    end
+
+    if isfield(xml.question(q),'idnumber') % TODO
+        btext=[btext 'idnumber: ' xml.question(q).idnumber ];
+    end
+
+    body{b}=['      <div class="card-footer">' btext '</div>']; b=b+1;
+
 
     % xml.quiz.question{q}.Attributes.type  % Tipo da questão
-    body{b}='   </div>'; b=b+1;   
+    body{b}='   </div>'; b=b+1;
     body{b}='</div>'; b=b+1;
 end
 
 
 body{b}='</body>'; b=b+1;
 body{b}='</html>'; b=b+1;
-body{b}=' '; 
+body{b}=' ';
 
 % Create html file
 fileID = fopen([fpath '\' fname '.html'],'w','n','UTF-8');
