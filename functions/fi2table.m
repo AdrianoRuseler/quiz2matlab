@@ -1,7 +1,8 @@
 function [html,html2]=fi2table(a) % create html code to store file
 
 % init output;
-html='';
+html=''; % Tabela estática com todos os campos preenchidos
+html2=''; % Tabela com multipla escolha no campo data e demais campos preenchidos
 
 if ~isfi(a)  % Determine whether variable is fi object
     disp('Requires fi object!')
@@ -11,8 +12,7 @@ end
 % tf = isfixed(a) % Determine whether input is fixed-point data type
 % y = isfloat(a)
 
-% get numeric type
-T = numerictype(a);
+T = numerictype(a); % get numeric type
 % T.DataTypeMode;
 
 % vals=20;
@@ -20,19 +20,26 @@ sign=issigned(a);
 wlen=T.WordLength;
 flen=T.FractionLength;
 
-if issigned(a)
+m=wlen-flen-sign; % m is the number of bits used for the integer part of the value
+n=flen;% n is the number of fraction bits
+
+if issigned(a) % Com sinal?
     if logical(bitget(a,wlen))
-        bw{wlen}='\(-\)';
+        bw{wlen}=['\(-2^{' num2str(m) '}\)'];
+        bv{wlen}=['\(-' num2str(2^m) '\)'];
     else
         bw{wlen}='\(+\)';
+        bv{wlen}='\(+\)';
     end
 
     for x=2:wlen
         bw{wlen-x+1}=['\(2^{' num2str(wlen-flen-x) '}\)'];
+        bv{wlen-x+1}=['\(' num2str(2^(wlen-flen-x)) '\)'];
     end
 else
     for x=1:wlen
         bw{wlen-x+1}=['\(2^{' num2str(wlen-flen-x) '}\)'];
+        bv{wlen-x+1}=['\(' num2str(2^(wlen-flen-x)) '\)'];
     end
 end
 
@@ -58,6 +65,8 @@ theadstr='<thead><tr><th>Data</th>';
 theadstr2='<thead><tr><th>Data</th>';
 tbodystr='<tbody><tr><td>Bit</td>';
 tbodystr2='<tr><td>Peso</td>';
+tbodystr3='<tr><td>Valor</td>';
+
 for j=1:wlen
     b=wlen-(j-1); % gets bit
     theadstr=[theadstr '<th>' bitget(a,b).bin  '</th>'];
@@ -72,10 +81,13 @@ for j=1:wlen
 
     tbodystr=[tbodystr '<td>' num2str(b) '</td>'];
     tbodystr2=[tbodystr2 '<td>' bw{b} '</td>'];
+    tbodystr3=[tbodystr3 '<td>' bv{b} '</td>'];
 end
 theadstr=[theadstr '</tr></thead>'];
 theadstr2=[theadstr2 '</tr></thead>'];
-tbodystr=[tbodystr  '</tr></tbody>'];
+tbodystr=[tbodystr  '</tr>'];
+tbodystr2=[tbodystr2  '</tr>'];
+tbodystr3=[tbodystr3  '</tr>'];
 
 % %  bitget(a,wlen-(j-1)).bin
 % tbodystr='<tbody><tr>';
@@ -84,10 +96,11 @@ tbodystr=[tbodystr  '</tr></tbody>'];
 % end
 % tbodystr=[tbodystr  '</tr></tbody>'];
 
-%
-html=['<div class="table-responsive-sm"><table class="table table-bordered table-hover" style="width:100px">' theadstr tbodystr tbodystr2 '</table></div>'];
-%
-html2=['<div class="table-responsive-sm"><table class="table table-bordered table-hover" style="width:100px">' theadstr2 tbodystr tbodystr2 '</table></div>'];
+% Tabela estática com todos os campos preenchidos
+html=['<div class="table-responsive-sm"><table class="table table-bordered table-hover" style="width:100px">' theadstr tbodystr tbodystr2 tbodystr3 '</tbody></table></div>'];
+
+% Tabela com multipla escolha no campo data e demais campos preenchidos
+html2=['<div class="table-responsive-sm"><table class="table table-bordered table-hover" style="width:100px">' theadstr2 tbodystr tbodystr2 tbodystr3 '</tbody></table></div>'];
 
 % html=[theadstr tbodystr];
 
