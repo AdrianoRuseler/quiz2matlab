@@ -61,13 +61,10 @@ b=1;
 for c=1:x
     for s=1:y
         if isfield(tmpcircuits{c,s}.LTspice,'data')
-
             if isfield(tmpcircuits{c,s}.LTspice.data,'signals')
                 circuits{a,b}=tmpcircuits{c,s};
                 b=b+1;
             end
-
-
         else
             disp(['No data file in simulation with ' tmpcircuits{c,s}.parstr '!'])
         end
