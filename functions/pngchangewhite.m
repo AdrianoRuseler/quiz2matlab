@@ -2,7 +2,7 @@
 % ***
 % *** The MIT License (MIT)
 % ***
-% *** Copyright (c) 2021 AdrianoRuseler
+% *** Copyright (c) 2023 AdrianoRuseler
 % ***
 % *** Permission is hereby granted, free of charge, to any person obtaining a copy
 % *** of this software and associated documentation files (the "Software"), to deal
@@ -23,49 +23,28 @@
 % *** SOFTWARE.
 % ***
 % =========================================================================
-% pngchangewhite(imgin,imgout,'clean') % UTFPR - clean
-% pngchangewhite(imgin,imgout,'boost') % AWS - boost
+
+% pngchangewhite(imgin,imgout,'boost') % 
 function pngchangewhite(imgin,imgout,theme)
 
 switch theme
-    case 'clean'
-        R=217;
-        G=237;
-        B=247;
     case 'classic'
         R=231;
         G=243;
-        B=243;
+        B=245;
     case 'boost'
         R=231;
         G=243;
         B=245;
-    case 'clean39'
-        R=204;
-        G=230;
-        B=234;
-    case 'boost39'
-        R=204;
-        G=230;
-        B=234;
-    case 'classic310'
-        R=231;
-        G=243;
-        B=243;
-    case 'boost310'
+    case 'union'
         R=231;
         G=243;
         B=245;
-    case 'boost38'
-        R=222;
-        G=242;
-        B=248;
-    otherwise % boost39
-        R=204;
-        G=230;
-        B=234;
+    otherwise % boost
+        R=231;
+        G=243;
+        B=245;
 end
-
 
 A = imread(imgin);
 % figure
@@ -75,16 +54,12 @@ Rin = A(:,:,1);
 Gin = A(:,:,2); 
 Bin = A(:,:,3); 
 
+% Replace white color
+Rin(Rin==255)=R;
+Gin(Gin==255)=G;
+Bin(Bin==255)=B;
 
-RB=find(Rin==255);
-Rin(RB)=R;
-
-GB=find(Gin==255);
-Gin(GB)=G;
-
-BB=find(Bin==255);
-Bin(BB)=B;
-
+% Create new image
 A2(:,:,1) =Rin;
 A2(:,:,2) =Gin;
 A2(:,:,3) =Bin;
