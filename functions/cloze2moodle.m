@@ -1,5 +1,5 @@
 % =========================================================================
-% *** cloze2moodle
+% *** cloze2moodle -->> cloze2mdl 
 % =========================================================================
 % ***
 % *** The MIT License (MIT)
@@ -76,8 +76,7 @@ for co=1:length(quizstruct.comb)
     questiontext.appendChild(questiontexttext);
     questiontexttext.appendChild(docNode.createTextNode(quizstruct.question.text{q})); % Coloca pergunta
     
-    % Add file to question
-    
+    % Add file to question    
     if isfield(quizstruct.question,'filename') % Add model file with link to it        
         questiontextfile = docNode.createElement('file');
         questiontextfile.setAttribute('name',quizstruct.question.filename{q});
