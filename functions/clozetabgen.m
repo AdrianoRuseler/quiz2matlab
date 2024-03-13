@@ -2,7 +2,7 @@
 % ***
 % *** The MIT License (MIT)
 % ***
-% *** Copyright (c) 2018 AdrianoRuseler
+% *** Copyright (c) 2024 AdrianoRuseler
 % ***
 % *** Permission is hereby granted, free of charge, to any person obtaining a copy
 % *** of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +24,13 @@
 % ***
 % =========================================================================
 
+% Generates question table!
 function [tabletext]=clozetabgen(tablebody, tableheader)
 
 % Geração do Header
 theadertext= '<tr>';
 for h=1:length(tableheader)
-    theadertext=strcat(theadertext,['<th scope="col">' tableheader{h} '</th>']);
+    theadertext=strcat(theadertext,['<th>' tableheader{h} '</th>']);
 end
 theadertext=strcat(theadertext,'</tr>');
 
@@ -42,7 +43,8 @@ for ln=1:x % <tr> linhas
     end
 end
 
-tabletext=[ '<table class="text-center" border="1">'...
+% class="text-center" border="1"
+tabletext=[ '<table class="table table-bordered table-hover text-center">'...
     '<thead>'...
     theadertext ...
     '</thead>'...
