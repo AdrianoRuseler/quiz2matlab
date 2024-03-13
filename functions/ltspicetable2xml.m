@@ -83,8 +83,8 @@ if isfield(circuit,'theme')
     imgout=[circuit.dir circuit.name circuit.theme '.png']; % Fig png file
     pngchangewhite(pngfile,imgout,circuit.theme)
 else
-    imgout=[circuit.dir circuit.name 'clean.png']; % Fig png file
-    pngchangewhite(pngfile,imgout,'clean')
+    imgout=[circuit.dir circuit.name 'boost.png']; % Fig png file
+    pngchangewhite(pngfile,imgout,'boost')
 end
 
 % quiz.name = [circuit.name 'quiz'];
@@ -112,5 +112,9 @@ quizopts.penalty='0.25';
 quizopts.hidden='0';
 
 quizstruct = ltspiceclozegen(stepcircuits,quizopts); % Generate quizstruct
-cloze2moodle(quizstruct) % Generates xml file
+% cloze2moodle(quizstruct) % Generates xml file
+
+cloze2mdl(quizstruct) % Generates xml file
+
+% cloze2ioxml(clozes)
 %
