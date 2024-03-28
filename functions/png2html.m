@@ -51,13 +51,22 @@ switch theme
         B=245;
 end
 
+info = imfinfo(imgin);
 A = imread(imgin);
 % figure
 % imshow(A)
-% Extract RGB vectors
-Rin = A(:,:,1); 
-Gin = A(:,:,2); 
-Bin = A(:,:,3); 
+
+if strcmp(info.ColorType,'grayscale')
+    % Extract RGB vectors
+    Rin = A(:,:,1);
+    Gin = A(:,:,1);
+    Bin = A(:,:,1);
+else
+    % Extract RGB vectors
+    Rin = A(:,:,1);
+    Gin = A(:,:,2);
+    Bin = A(:,:,3);
+end
 
 % Replace white color
 Rin(Rin==255)=R;
@@ -88,7 +97,6 @@ Yc = char(org.apache.commons.codec.binary.Base64.encodeBase64(uint8(B)))'; % Enc
 html=['<img src="data:image/png;base64,' Yc '" alt="">'];
 
 % Delete tmp file
-
 delete(tmppng)
 
 
