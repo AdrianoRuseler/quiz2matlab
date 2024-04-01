@@ -24,9 +24,13 @@
 % ***
 % =========================================================================
 
-% html=png2html(imgin,'boost') % 
-% html=png2html(imgin) % 
-function html=png2html(imgin,theme)
+% html=png2html(imgin,'boost') %
+% html=png2html(imgin) %
+function html=png2html(imgin,theme,togray)
+
+if nargin < 3
+    togray=0;
+end
 
 if nargin < 2
     theme='boost';
@@ -54,13 +58,22 @@ end
 info = imfinfo(imgin);
 A = imread(imgin);
 % figure
-% imshow(A)
+% imshow(X)
 
 if strcmp(info.ColorType,'grayscale')
     % Extract RGB vectors
     Rin = A(:,:,1);
     Gin = A(:,:,1);
     Bin = A(:,:,1);
+elseif togray % Convert to gray
+    level = graythresh(A);
+    BW=imbinarize(A,level);
+    I = im2uint8(BW);
+
+    % I = rgb2gray(A);
+    Rin = I(:,:,1);
+    Gin = I(:,:,1);
+    Bin = I(:,:,1);
 else
     % Extract RGB vectors
     Rin = A(:,:,1);
@@ -80,7 +93,7 @@ A2(:,:,3) =Bin;
 % imshow(I)
 
 tmppng = [tempname,'.png'];
-imwrite(A2,tmppng) 
+imwrite(A2,tmppng)
 
 
 fileID = fopen(tmppng);
