@@ -487,38 +487,39 @@ for q=1:nq
         setAttribute(testcasestestcase,'testtype','0');
         setAttribute(testcasestestcase,'useasexample','0');
         setAttribute(testcasestestcase,'hiderestiffail','0');
-        setAttribute(testcasestestcase,'mark','1.0000000');
-        appendChild(testcases,testcasestestcase);
+        setAttribute(testcasestestcase,'mark','1.0000000');        
 
         testcasestestcode = createElement(docNode,'testcode');
         testcasestestcodetext = createElement(docNode,'text');
         appendChild(testcasestestcodetext,createCDATASection(docNode,crs.q(q).testcases(tc).testcode));
         appendChild(testcasestestcode,testcasestestcodetext);
-        appendChild(testcases,testcasestestcode);
+        appendChild(testcasestestcase,testcasestestcode);
 
         testcasesstdin = createElement(docNode,'stdin');
         testcasesstdintext = createElement(docNode,'text');
         appendChild(testcasesstdintext,createTextNode(docNode,crs.q(q).testcases(tc).stdin));
         appendChild(testcasesstdin,testcasesstdintext);
-        appendChild(testcases,testcasesstdin);
+        appendChild(testcasestestcase,testcasesstdin);
 
         testcasesexpected = createElement(docNode,'expected');
         testcasesexpectedtext = createElement(docNode,'text');
         appendChild(testcasesexpectedtext,createTextNode(docNode,crs.q(q).testcases(tc).expected));
         appendChild(testcasesexpected,testcasesexpectedtext);
-        appendChild(testcases,testcasesexpected);
+        appendChild(testcasestestcase,testcasesexpected);
 
         testcasesextra = createElement(docNode,'extra');
         testcasesextratext = createElement(docNode,'text');
         appendChild(testcasesextratext,createTextNode(docNode,crs.q(q).testcases(tc).extra));
         appendChild(testcasesextra,testcasesextratext);
-        appendChild(testcases,testcasesextra);
+        appendChild(testcasestestcase,testcasesextra);
 
         testcasesdisplay = createElement(docNode,'display');
         testcasesdisplaytext = createElement(docNode,'text');
         appendChild(testcasesdisplaytext,createTextNode(docNode,crs.q(q).testcases(tc).display));
         appendChild(testcasesdisplay,testcasesdisplaytext);
-        appendChild(testcases,testcasesdisplay);
+        appendChild(testcasestestcase,testcasesdisplay);
+
+        appendChild(testcases,testcasestestcase);
 
     end
     appendChild(question,testcases);
