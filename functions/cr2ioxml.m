@@ -81,14 +81,105 @@ for q=1:nq
     if ~isfield(crs.q(q),'answerpreload') || isempty(crs.q(q).answerpreload)
         crs.q(q).answerpreload='';
     end
-
     if ~isfield(crs.q(q),'globalextra') || isempty(crs.q(q).globalextra)
         crs.q(q).globalextra='';
     end
     if ~isfield(crs.q(q),'useace') || isempty(crs.q(q).useace)
         crs.q(q).useace='';
     end
+    if ~isfield(crs.q(q),'resultcolumns') || isempty(crs.q(q).resultcolumns)
+        crs.q(q).resultcolumns='';
+    end
+    if ~isfield(crs.q(q),'template') || isempty(crs.q(q).template)
+        crs.q(q).template='';
+    end
+    if ~isfield(crs.q(q),'iscombinatortemplate') || isempty(crs.q(q).iscombinatortemplate)
+        crs.q(q).iscombinatortemplate='';
+    end
+    if ~isfield(crs.q(q),'allowmultiplestdins') || isempty(crs.q(q).allowmultiplestdins)
+        crs.q(q).allowmultiplestdins='';
+    end
+    if ~isfield(crs.q(q),'validateonsave') || isempty(crs.q(q).validateonsave)
+        crs.q(q).validateonsave='1';
+    end
+    if ~isfield(crs.q(q),'testsplitterre') || isempty(crs.q(q).testsplitterre)
+        crs.q(q).testsplitterre='';
+    end
+    if ~isfield(crs.q(q),'language') || isempty(crs.q(q).language)
+        crs.q(q).language='';
+    end
+    if ~isfield(crs.q(q),'acelang') || isempty(crs.q(q).acelang)
+        crs.q(q).acelang='';
+    end
+    if ~isfield(crs.q(q),'sandbox') || isempty(crs.q(q).sandbox)
+        crs.q(q).sandbox='';
+    end
+    if ~isfield(crs.q(q),'grader') || isempty(crs.q(q).grader)
+        crs.q(q).grader='';
+    end
+    if ~isfield(crs.q(q),'cputimelimitsecs') || isempty(crs.q(q).cputimelimitsecs)
+        crs.q(q).cputimelimitsecs='';
+    end
+    if ~isfield(crs.q(q),'memlimitmb') || isempty(crs.q(q).memlimitmb)
+        crs.q(q).memlimitmb='';
+    end
+    if ~isfield(crs.q(q),'sandboxparams') || isempty(crs.q(q).sandboxparams)
+        crs.q(q).sandboxparams='';
+    end
+    if ~isfield(crs.q(q),'templateparams') || isempty(crs.q(q).templateparams)
+        crs.q(q).templateparams='';
+    end
+    if ~isfield(crs.q(q),'hoisttemplateparams') || isempty(crs.q(q).hoisttemplateparams)
+        crs.q(q).hoisttemplateparams='1';
+    end
+    if ~isfield(crs.q(q),'extractcodefromjson') || isempty(crs.q(q).extractcodefromjson)
+        crs.q(q).extractcodefromjson='1';
+    end
+    if ~isfield(crs.q(q),'templateparamslang') || isempty(crs.q(q).templateparamslang)
+        crs.q(q).templateparamslang='None';
+    end
+    if ~isfield(crs.q(q),'templateparamsevalpertry') || isempty(crs.q(q).templateparamsevalpertry)
+        crs.q(q).templateparamsevalpertry='0';
+    end
+    if ~isfield(crs.q(q),'templateparamsevald') || isempty(crs.q(q).templateparamsevald)
+        crs.q(q).templateparamsevald='{}';
+    end
+    if ~isfield(crs.q(q),'twigall') || isempty(crs.q(q).twigall)
+        crs.q(q).twigall='0';
+    end
+    if ~isfield(crs.q(q),'uiplugin') || isempty(crs.q(q).uiplugin)
+        crs.q(q).uiplugin='';
+    end
+    if ~isfield(crs.q(q),'uiparameters') || isempty(crs.q(q).uiparameters)
+        crs.q(q).uiparameters='';
+    end
+    if ~isfield(crs.q(q),'attachments') || isempty(crs.q(q).attachments)
+        crs.q(q).attachments='0';
+    end
+    if ~isfield(crs.q(q),'attachmentsrequired') || isempty(crs.q(q).attachmentsrequired)
+        crs.q(q).attachmentsrequired='0';
+    end
+    if ~isfield(crs.q(q),'maxfilesize') || isempty(crs.q(q).maxfilesize)
+        crs.q(q).maxfilesize='10240';
+    end
+    if ~isfield(crs.q(q),'filenamesregex') || isempty(crs.q(q).filenamesregex)
+        crs.q(q).filenamesregex='';
+    end
+    if ~isfield(crs.q(q),'filenamesexplain') || isempty(crs.q(q).filenamesexplain)
+        crs.q(q).filenamesexplain='';
+    end
+    if ~isfield(crs.q(q),'displayfeedback') || isempty(crs.q(q).displayfeedback)
+        crs.q(q).displayfeedback='';
+    end
+    if ~isfield(crs.q(q),'giveupallowed') || isempty(crs.q(q).giveupallowed)
+        crs.q(q).giveupallowed='';
+    end
+    if ~isfield(crs.q(q),'prototypeextra') || isempty(crs.q(q).prototypeextra)
+        crs.q(q).prototypeextra='';
+    end
 end
+
+
 
 % Create the document node and root element, toc:
 import matlab.io.xml.dom.*
@@ -119,7 +210,6 @@ for q=1:nq
     questiontext = createElement(docNode,'questiontext');
     setAttribute(questiontext,'format','html');
     questiontexttext = createElement(docNode,'text');
-    % appendChild(questiontexttext,createTextNode(docNode,weekdays(i)));
     appendChild(questiontexttext,createCDATASection(docNode,crs.q(q).text));
     appendChild(questiontext,questiontexttext);
     appendChild(question,questiontext);
@@ -204,17 +294,233 @@ for q=1:nq
     appendChild(answerpreload,createTextNode(docNode,crs.q(q).answerpreload));
     appendChild(question,answerpreload);
 
-
     % Question globalextra
     globalextra = createElement(docNode,'globalextra');
     appendChild(globalextra,createTextNode(docNode,crs.q(q).globalextra));
     appendChild(question,globalextra);
 
-
     % Question useace
     useace = createElement(docNode,'useace');
     appendChild(useace,createTextNode(docNode,crs.q(q).useace));
     appendChild(question,useace);
+
+    % Question resultcolumns
+    resultcolumns = createElement(docNode,'resultcolumns');
+    appendChild(resultcolumns,createTextNode(docNode,crs.q(q).resultcolumns));
+    appendChild(question,resultcolumns);
+
+    % Question template
+    template = createElement(docNode,'template');
+    appendChild(template,createTextNode(docNode,crs.q(q).template));
+    appendChild(question,template);
+
+    % Question iscombinatortemplate
+    iscombinatortemplate = createElement(docNode,'iscombinatortemplate');
+    appendChild(iscombinatortemplate,createTextNode(docNode,crs.q(q).iscombinatortemplate));
+    appendChild(question,iscombinatortemplate);
+
+    % Question allowmultiplestdins
+    allowmultiplestdins = createElement(docNode,'allowmultiplestdins');
+    appendChild(allowmultiplestdins,createTextNode(docNode,crs.q(q).allowmultiplestdins));
+    appendChild(question,allowmultiplestdins);
+
+    % Question answer
+    answer = createElement(docNode,'answer');
+    appendChild(answer,createTextNode(docNode,crs.q(q).answer));
+    appendChild(question,answer);
+
+    % Question validateonsave
+    validateonsave = createElement(docNode,'validateonsave');
+    appendChild(validateonsave,createTextNode(docNode,crs.q(q).validateonsave));
+    appendChild(question,validateonsave);
+
+    % Question testsplitterre
+    testsplitterre = createElement(docNode,'testsplitterre');
+    appendChild(testsplitterre,createTextNode(docNode,crs.q(q).testsplitterre));
+    appendChild(question,testsplitterre);
+
+    % Question language
+    language = createElement(docNode,'language');
+    appendChild(language,createTextNode(docNode,crs.q(q).language));
+    appendChild(question,language);
+
+    % Question acelang
+    acelang = createElement(docNode,'acelang');
+    appendChild(acelang,createTextNode(docNode,crs.q(q).acelang));
+    appendChild(question,acelang);
+
+    % Question sandbox
+    sandbox = createElement(docNode,'sandbox');
+    appendChild(sandbox,createTextNode(docNode,crs.q(q).sandbox));
+    appendChild(question,sandbox);
+
+    % Question grader
+    grader = createElement(docNode,'grader');
+    appendChild(grader,createTextNode(docNode,crs.q(q).grader));
+    appendChild(question,grader);
+
+    % Question cputimelimitsecs
+    cputimelimitsecs = createElement(docNode,'cputimelimitsecs');
+    appendChild(cputimelimitsecs,createTextNode(docNode,crs.q(q).cputimelimitsecs));
+    appendChild(question,cputimelimitsecs);
+
+    % Question memlimitmb
+    memlimitmb = createElement(docNode,'memlimitmb');
+    appendChild(memlimitmb,createTextNode(docNode,crs.q(q).memlimitmb));
+    appendChild(question,memlimitmb);
+
+    % Question sandboxparams
+    sandboxparams = createElement(docNode,'sandboxparams');
+    appendChild(sandboxparams,createTextNode(docNode,crs.q(q).sandboxparams));
+    appendChild(question,sandboxparams);
+
+    % Question templateparams
+    templateparams = createElement(docNode,'templateparams');
+    appendChild(templateparams,createTextNode(docNode,crs.q(q).templateparams));
+    appendChild(question,templateparams);
+
+    % Question hoisttemplateparams
+    hoisttemplateparams = createElement(docNode,'hoisttemplateparams');
+    appendChild(hoisttemplateparams,createTextNode(docNode,crs.q(q).hoisttemplateparams));
+    appendChild(question,hoisttemplateparams);
+
+    % Question extractcodefromjson
+    extractcodefromjson = createElement(docNode,'extractcodefromjson');
+    appendChild(extractcodefromjson,createTextNode(docNode,crs.q(q).extractcodefromjson));
+    appendChild(question,extractcodefromjson);
+
+    % Question templateparamslang
+    templateparamslang = createElement(docNode,'templateparamslang');
+    appendChild(templateparamslang,createTextNode(docNode,crs.q(q).templateparamslang));
+    appendChild(question,templateparamslang);
+
+    % Question templateparamsevalpertry
+    templateparamsevalpertry = createElement(docNode,'templateparamsevalpertry');
+    appendChild(templateparamsevalpertry,createTextNode(docNode,crs.q(q).templateparamsevalpertry));
+    appendChild(question,templateparamsevalpertry);
+
+    % Question templateparamsevald
+    templateparamsevald = createElement(docNode,'templateparamsevald');
+    appendChild(templateparamsevald,createTextNode(docNode,crs.q(q).templateparamsevald));
+    appendChild(question,templateparamsevald);
+
+    % Question twigall
+    twigall = createElement(docNode,'twigall');
+    appendChild(twigall,createTextNode(docNode,crs.q(q).twigall));
+    appendChild(question,twigall);
+
+    % Question uiplugin
+    uiplugin = createElement(docNode,'uiplugin');
+    appendChild(uiplugin,createTextNode(docNode,crs.q(q).uiplugin));
+    appendChild(question,uiplugin);
+
+    % Question uiparameters
+    uiparameters = createElement(docNode,'uiparameters');
+    appendChild(uiparameters,createTextNode(docNode,crs.q(q).uiparameters));
+    appendChild(question,uiparameters);
+
+    % Question attachments
+    attachments = createElement(docNode,'attachments');
+    appendChild(attachments,createTextNode(docNode,crs.q(q).attachments));
+    appendChild(question,attachments);
+
+    % Question attachmentsrequired
+    attachmentsrequired = createElement(docNode,'attachmentsrequired');
+    appendChild(attachmentsrequired,createTextNode(docNode,crs.q(q).attachmentsrequired));
+    appendChild(question,attachmentsrequired);
+
+    % Question maxfilesize
+    maxfilesize = createElement(docNode,'maxfilesize');
+    appendChild(maxfilesize,createTextNode(docNode,crs.q(q).maxfilesize));
+    appendChild(question,maxfilesize);
+
+    % Question filenamesregex
+    filenamesregex = createElement(docNode,'filenamesregex');
+    appendChild(filenamesregex,createTextNode(docNode,crs.q(q).filenamesregex));
+    appendChild(question,filenamesregex);
+
+    % Question filenamesexplain
+    filenamesexplain = createElement(docNode,'filenamesexplain');
+    appendChild(filenamesexplain,createTextNode(docNode,crs.q(q).filenamesexplain));
+    appendChild(question,filenamesexplain);
+
+    % Question displayfeedback
+    displayfeedback = createElement(docNode,'displayfeedback');
+    appendChild(displayfeedback,createTextNode(docNode,crs.q(q).displayfeedback));
+    appendChild(question,displayfeedback);
+
+    % Question giveupallowed
+    giveupallowed = createElement(docNode,'giveupallowed');
+    appendChild(giveupallowed,createTextNode(docNode,crs.q(q).giveupallowed));
+    appendChild(question,giveupallowed);
+
+    % Question prototypeextra
+    prototypeextra = createElement(docNode,'prototypeextra');
+    appendChild(prototypeextra,createTextNode(docNode,crs.q(q).prototypeextra));
+    appendChild(question,prototypeextra);
+
+    % <testcases>
+    %   <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000" >
+    testcases = createElement(docNode,'testcases');
+
+    % LOOP
+    for tc=1:length(crs.q(q).testcases)
+        testcasestestcase = createElement(docNode,'testcase');
+        %   <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000" >
+        setAttribute(testcasestestcase,'testtype','0');
+        setAttribute(testcasestestcase,'useasexample','0');
+        setAttribute(testcasestestcase,'hiderestiffail','0');
+        setAttribute(testcasestestcase,'mark','1.0000000');
+        appendChild(testcases,testcasestestcase);
+
+
+        testcasestestcode = createElement(docNode,'testcode');
+        testcasestestcodetext = createElement(docNode,'text');
+        appendChild(testcasestestcodetext,createCDATASection(docNode,crs.q(q).testcases(tc).testcode));
+        appendChild(testcasestestcode,testcasestestcodetext);
+        appendChild(testcases,testcasestestcode);
+
+        %         testcasesstdin = createElement(docNode,'stdin');
+        % testcasesstdintext = createElement(docNode,'text');
+        % appendChild(testcasesstdintext,createCDATASection(docNode,crs.q(q).testcases(tc).stdin));
+        % appendChild(testcasesstdin,testcasesstdintext);
+        % appendChild(testcases,testcasesstdin);
+
+
+    end
+
+    % 
+    % crs.q(q).testcases(tc).stdin
+    % crs.q(q).testcases(tc).expected
+    % crs.q(q).testcases(tc).extra
+    % crs.q(q).testcases(tc).display
+
+      % 
+      %     <stdin>
+      %           <text></text>
+      % </stdin>
+      % <expected>
+      %           <text>0</text>
+      % </expected>
+      % <extra>
+      %           <text></text>
+      % </extra>
+      % <display>
+      %           <text>SHOW</text>
+      % </display>
+
+
+    appendChild(question,testcases);
+
+
+
+    %
+    % <testcases>
+    %   <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000" >
+    %   <testcode>
+    %             <text><![CDATA[printf("%d", myFunction1(true))]]></text>
+    %   </testcode>
+
 
 
     appendChild(docRootNode,question);
