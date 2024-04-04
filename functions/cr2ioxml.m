@@ -73,7 +73,7 @@ for q=1:nq
         crs.q(q).showsource='0';
     end
     if ~isfield(crs.q(q),'answerboxlines') || isempty(crs.q(q).answerboxlines)
-        crs.q(q).answerboxlines='18';
+        crs.q(q).answerboxlines='5';
     end
     if ~isfield(crs.q(q),'answerboxcolumns') || isempty(crs.q(q).answerboxcolumns)
         crs.q(q).answerboxcolumns='100';
