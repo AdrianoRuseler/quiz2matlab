@@ -177,7 +177,24 @@ for q=1:nq
     if ~isfield(crs.q(q),'prototypeextra') || isempty(crs.q(q).prototypeextra)
         crs.q(q).prototypeextra='';
     end
-end
+
+    % LOOP for cases test
+    for tc=1:length(crs.q(q).testcases)
+
+        if ~isfield(crs.q(q).testcases(tc),'stdin') || isempty(crs.q(q).testcases(tc).stdin)
+            crs.q(q).testcases(tc).stdin='';
+        end
+
+        if ~isfield(crs.q(q).testcases(tc),'extra') || isempty(crs.q(q).testcases(tc).extra)
+            crs.q(q).testcases(tc).extra='';
+        end
+
+        if ~isfield(crs.q(q).testcases(tc),'display') || isempty(crs.q(q).testcases(tc).display)
+            crs.q(q).testcases(tc).display='SHOW';
+        end
+
+    end
+end % Question Loop
 
 
 
@@ -463,7 +480,7 @@ for q=1:nq
     %   <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000" >
     testcases = createElement(docNode,'testcases');
 
-    % LOOP
+    % LOOP for cases test
     for tc=1:length(crs.q(q).testcases)
         testcasestestcase = createElement(docNode,'testcase');
         %   <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000" >
@@ -473,55 +490,38 @@ for q=1:nq
         setAttribute(testcasestestcase,'mark','1.0000000');
         appendChild(testcases,testcasestestcase);
 
-
         testcasestestcode = createElement(docNode,'testcode');
         testcasestestcodetext = createElement(docNode,'text');
         appendChild(testcasestestcodetext,createCDATASection(docNode,crs.q(q).testcases(tc).testcode));
         appendChild(testcasestestcode,testcasestestcodetext);
         appendChild(testcases,testcasestestcode);
 
-        %         testcasesstdin = createElement(docNode,'stdin');
-        % testcasesstdintext = createElement(docNode,'text');
-        % appendChild(testcasesstdintext,createCDATASection(docNode,crs.q(q).testcases(tc).stdin));
-        % appendChild(testcasesstdin,testcasesstdintext);
-        % appendChild(testcases,testcasesstdin);
+        testcasesstdin = createElement(docNode,'stdin');
+        testcasesstdintext = createElement(docNode,'text');
+        appendChild(testcasesstdintext,createTextNode(docNode,crs.q(q).testcases(tc).stdin));
+        appendChild(testcasesstdin,testcasesstdintext);
+        appendChild(testcases,testcasesstdin);
 
+        testcasesexpected = createElement(docNode,'expected');
+        testcasesexpectedtext = createElement(docNode,'text');
+        appendChild(testcasesexpectedtext,createTextNode(docNode,crs.q(q).testcases(tc).expected));
+        appendChild(testcasesexpected,testcasesexpectedtext);
+        appendChild(testcases,testcasesexpected);
+
+        testcasesextra = createElement(docNode,'extra');
+        testcasesextratext = createElement(docNode,'text');
+        appendChild(testcasesextratext,createTextNode(docNode,crs.q(q).testcases(tc).extra));
+        appendChild(testcasesextra,testcasesextratext);
+        appendChild(testcases,testcasesextra);
+
+        testcasesdisplay = createElement(docNode,'display');
+        testcasesdisplaytext = createElement(docNode,'text');
+        appendChild(testcasesdisplaytext,createTextNode(docNode,crs.q(q).testcases(tc).display));
+        appendChild(testcasesdisplay,testcasesdisplaytext);
+        appendChild(testcases,testcasesdisplay);
 
     end
-
-    % 
-    % crs.q(q).testcases(tc).stdin
-    % crs.q(q).testcases(tc).expected
-    % crs.q(q).testcases(tc).extra
-    % crs.q(q).testcases(tc).display
-
-      % 
-      %     <stdin>
-      %           <text></text>
-      % </stdin>
-      % <expected>
-      %           <text>0</text>
-      % </expected>
-      % <extra>
-      %           <text></text>
-      % </extra>
-      % <display>
-      %           <text>SHOW</text>
-      % </display>
-
-
     appendChild(question,testcases);
-
-
-
-    %
-    % <testcases>
-    %   <testcase testtype="0" useasexample="0" hiderestiffail="0" mark="1.0000000" >
-    %   <testcode>
-    %             <text><![CDATA[printf("%d", myFunction1(true))]]></text>
-    %   </testcode>
-
-
 
     appendChild(docRootNode,question);
 end
