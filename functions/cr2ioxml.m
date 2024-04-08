@@ -308,7 +308,7 @@ for q=1:nq
 
     % Question answerpreload
     answerpreload = createElement(docNode,'answerpreload');
-    appendChild(answerpreload,createTextNode(docNode,crs.q(q).answerpreload));
+    appendChild(answerpreload,createCDATASection(docNode,crs.q(q).answerpreload));
     appendChild(question,answerpreload);
 
     % Question globalextra
