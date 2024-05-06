@@ -328,7 +328,11 @@ for q=1:nq
 
     % Question template
     template = createElement(docNode,'template');
-    appendChild(template,createTextNode(docNode,crs.q(q).template));
+    if isempty(crs.q(q).template)
+        appendChild(template,createTextNode(docNode,crs.q(q).template));
+    else
+        appendChild(template,createCDATASection(docNode,crs.q(q).template));
+    end
     appendChild(question,template);
 
     % Question iscombinatortemplate
@@ -487,11 +491,16 @@ for q=1:nq
         setAttribute(testcasestestcase,'testtype','0');
         setAttribute(testcasestestcase,'useasexample','0');
         setAttribute(testcasestestcase,'hiderestiffail','0');
-        setAttribute(testcasestestcase,'mark','1.0000000');        
+        setAttribute(testcasestestcase,'mark','1.0000000');
 
         testcasestestcode = createElement(docNode,'testcode');
         testcasestestcodetext = createElement(docNode,'text');
-        appendChild(testcasestestcodetext,createCDATASection(docNode,crs.q(q).testcases(tc).testcode));
+        if isempty(crs.q(q).testcases(tc).testcode)
+            appendChild(testcasestestcodetext,createTextNode(docNode,crs.q(q).testcases(tc).testcode));
+        else
+            appendChild(testcasestestcodetext,createCDATASection(docNode,crs.q(q).testcases(tc).testcode));
+        end
+
         appendChild(testcasestestcode,testcasestestcodetext);
         appendChild(testcasestestcase,testcasestestcode);
 
