@@ -65,6 +65,12 @@ if strcmp(info.ColorType,'grayscale')
     Rin = A(:,:,1);
     Gin = A(:,:,1);
     Bin = A(:,:,1);
+elseif strcmp(info.ColorType,'indexed')
+    [X,cmap] = imread(imgin);
+    A = ind2rgb8(X,cmap);
+    Rin = A(:,:,1);
+    Gin = A(:,:,2);
+    Bin = A(:,:,3);
 elseif togray % Convert to gray
     level = graythresh(A);
     BW=imbinarize(A,level);
