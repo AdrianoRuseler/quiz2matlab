@@ -61,7 +61,7 @@ for q=1:nq
         crs.q(q).allornothing='1';
     end
     if ~isfield(crs.q(q),'penaltyregime') || isempty(crs.q(q).penaltyregime)
-        crs.q(q).penaltyregime='10, 20, ...';
+        crs.q(q).penaltyregime='0, 5, ...';
     end
     if ~isfield(crs.q(q),'precheck') || isempty(crs.q(q).precheck)
         crs.q(q).precheck='0';
