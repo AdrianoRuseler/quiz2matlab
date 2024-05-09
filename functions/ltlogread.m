@@ -108,7 +108,7 @@ end
 for ln=sdopline:circuit.LTspice.log.dateline
     if contains(tline{ln},'=') || contains(tline{ln},'Date') % .meas field or end of Semiconductor info
         circuit.LTspice.log.measline = ln;
-        break
+        break;
     elseif contains(tline{ln},':') %
         tmpstr=strsplit(tline{ln},':'); %
         tmpstr2=strsplit(strtrim(tmpstr{2}),' ');
@@ -117,6 +117,8 @@ for ln=sdopline:circuit.LTspice.log.dateline
             circuit.LTspice.log.sdop{sd}.Name = tmpstr2;
         elseif contains(tmpstr{1},'Model') %
             circuit.LTspice.log.sdop{sd}.Model = tmpstr2;
+        elseif contains(tmpstr{1},'Warning') %
+            disp(tline{ln})
         else
             varname = char(matlab.lang.makeValidName(char(tmpstr{1}),'ReplacementStyle','delete'));
             %             disp(['circuit.LTspice.log.sdop{sd}.' varname '=str2double(strtrim(tmpstr{2}));' ])
