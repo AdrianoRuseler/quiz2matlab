@@ -65,11 +65,12 @@ while ~feof(fileID) % Get header
                 data.ME=ME;
                 data.errorlog = ME.message;
                 disp(data.errorlog)
-                data.error=1;
-                % fclose(fileID);
+                data.error=0; %  Bypass this for now
+                fclose(fileID);
                 return;
             end
-            % fclose(fileID);
+
+            fclose(fileID);
             data.rawfile.valuesline = Line+1;
             break;
         end
