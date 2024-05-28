@@ -25,6 +25,7 @@
 % =========================================================================
 % Run LTspice simulation from cmd
 function  circuit = ltspicefromcmd(circuit)
+% circuit=tmpcircuits{1};
 
 if isfield(circuit,'parname') && isfield(circuit,'parvalue')
     paramstr='.param'; % Generates the param string
@@ -201,6 +202,7 @@ data.filename=circuit.LTspice.raw.file;
 data.paramstr=paramstr;
 % data.log.file=circuit.LTspice.log.file;
 
+% datax = LTspice2Matlab(data.filename)
 circuit.LTspice.data = rawltspice(data); % Read data
 circuit = ltlogread(circuit); % Reads log file
 
