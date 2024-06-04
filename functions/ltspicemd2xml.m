@@ -2,7 +2,7 @@
 % ***
 % *** The MIT License (MIT)
 % ***
-% *** Copyright (c) 2023 AdrianoRuseler
+% *** Copyright (c) 2024 AdrianoRuseler
 % ***
 % *** Permission is hereby granted, free of charge, to any person obtaining a copy
 % *** of this software and associated documentation files (the "Software"), to deal
@@ -43,14 +43,6 @@ if ~isfield(circuit.LTspice.net,'run')
     circuit.LTspice.net.run =0;
 end
 
-if ~isfield(quiz,'modelfile') % Create file with model
-    quiz.modelfile=0;
-end
-
-if ~isfield(quiz,'scriptfile') % Create file with PSIM script
-    quiz.scriptfile=0;
-end
-
 
 % circuit.nsims=600; % Number of simulations
 [~,y]=size(circuit.Xi);
@@ -62,8 +54,6 @@ else
     X=circuit.Xi;
     circuit.nsims=y;
 end
-
-
 
 circuit.Xi=[]; % Clear
 
@@ -140,6 +130,14 @@ end
 %     tmpcircuits{n} = ltspicefromcmd(tmpcircuits{n}); % Simula via CMD
 % end
 % tmpcircuits=circuits;
+
+if ~isfield(quiz,'modelfile') % Create file with model
+    quiz.modelfile=0;
+end
+
+if ~isfield(quiz,'scriptfile') % Create file with PSIM script
+    quiz.scriptfile=0;
+end
 
 if ~isfield(quiz,'feteval')
     quiz.feteval=0;
@@ -249,6 +247,7 @@ quizopts.xmlpath = [ pwd '\xmlfiles']; % Folder for xml files
 quizopts.generalfeedback='';
 quizopts.penalty='0.25';
 quizopts.hidden='0';
+quizopts.onlyfunc=isonlyfunc(quiz);
 
 if ~isfield(quiz,'incfrom') % Increment question from
     quizopts.incfrom=0;
@@ -260,4 +259,8 @@ quizstruct = psimclozegen(circuits,quizopts); % Generate quizstruct
 % cloze2moodle(quizstruct) % Generates xml file
 
 cloze2mdl(quizstruct) % Generates xml file
+
+
+
+
 
