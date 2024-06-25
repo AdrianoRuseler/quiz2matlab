@@ -43,6 +43,10 @@ if ~isfield(circuit.LTspice.net,'run')
     circuit.LTspice.net.run =0;
 end
 
+if ~isfield(quiz,'modelfile')
+    quiz.modelfile = 0;
+end
+
 
 % circuit.nsims=600; % Number of simulations
 [~,y]=size(circuit.Xi);
