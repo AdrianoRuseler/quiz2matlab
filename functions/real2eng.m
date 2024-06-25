@@ -23,7 +23,7 @@ end
 
 if nargin < 3
     minabsval = 1e-12; % Se não informado o campo 3
-end 
+end
 
 if abs(number) < minabsval
     number =0;
@@ -32,7 +32,7 @@ end
 
 exponent = 3*floor(log10(abs(number))/3); % find exponent
 mantissa = number/(10^exponent); % find mantissa
-
+indx=exponent/3 +9;
 % disp(number)
 % disp(exponent)
 % disp(mantissa)
@@ -44,8 +44,11 @@ if isinf(exponent) % If is inf!
     expstr=[' ' unitstr];
     numstr = '0';
     mantissa = 0;
+elseif indx<18
+    expstr= [expHTML{indx} unitstr];
+    numstr = strrep(num2str(mantissa),'.',',');
 else
-    expstr= [expHTML{exponent/3 +9} unitstr];
+    expstr= ['e' num2str(exponent) unitstr];
     numstr = strrep(num2str(mantissa),'.',',');
 end
 
