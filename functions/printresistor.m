@@ -1,30 +1,30 @@
-% =========================================================================
-% ***
-% *** The MIT License (MIT)
-% ***
-% *** Copyright (c) 2018 AdrianoRuseler
-% ***
-% *** Permission is hereby granted, free of charge, to any person obtaining a copy
-% *** of this software and associated documentation files (the "Software"), to deal
-% *** in the Software without restriction, including without limitation the rights
-% *** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-% *** copies of the Software, and to permit persons to whom the Software is
-% *** furnished to do so, subject to the following conditions:
-% ***
-% *** The above copyright notice and this permission notice shall be included in all
-% *** copies or substantial portions of the Software.
-% ***
-% *** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-% *** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-% *** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-% *** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-% *** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-% *** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-% *** SOFTWARE.
-% ***
-% =========================================================================
-
 function  [Yc, A] = printresistor(f,theme)
+
+% printresistor Returns Base64 encode (Yc) and resistor image (A) in png format 
+% from band color index (f) with background color from Moodle theme.
+%
+%   Syntax:
+%   [Yc, A] = printresistor(f,theme)
+%
+%   Description:
+%   Returns Base64 encode (Yc) and resistor image (A) from band
+%   color index (f) with background color from theme.
+%
+%   Inputs:
+%   f -  Resistor color value index from colorname vector
+%   colorname={'Preto','Marrom','Vermelho','Laranja','Amarelo','Verde','Azul','Violeta','Cinza','Branco','Dourado','Prata','Ausente'};
+%   theme - Moodle theme used. 
+%
+%   Outputs:
+%   Yc - Base64 encode (Yc) resistor image in png format
+%   A - resistor image (A).
+%
+%   Example:
+%   [Yc,~] = printresistor([3 6 7 11],'boost')
+
+%   f=[2 6 7 5 11];
+%   [Yc, A] = printresistor(f,'boost');
+%   imshow(A)
 
 cor{1}=[0 0 0]; % Preto
 cor{2}=[125 67 2]; % Marrom
@@ -46,7 +46,7 @@ switch theme
     case 'boost'
         A = imread('resistor-base-boost.png');
     otherwise % boost
-        A = imread('resistor-base.png');
+       A = imread('resistor-base-boost.png');
 end
 
  
