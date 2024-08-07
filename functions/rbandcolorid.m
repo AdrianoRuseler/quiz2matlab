@@ -3,7 +3,7 @@ function  [band,quiz,valuestr,colornamestr] = rbandcolorid(Value,tol,EXX)
 % rbandcolorid Brief description of the function's purpose.
 %
 %   Syntax:
-%   [output1, output2, ..., outputN] = FUNCTIONNAME(input1, input2, ..., inputM)
+%    [band,quiz,valuestr,colornamestr] = rbandcolorid(Value,tol,EXX)
 %
 %   Description:
 %   Detailed description of the function, including its main purpose and
@@ -15,10 +15,11 @@ function  [band,quiz,valuestr,colornamestr] = rbandcolorid(Value,tol,EXX)
 %   EXX - Resistor E group, E06, E12 E24 E48...
 %
 %   Outputs:
-%   band - Description of output1, including data type and dimensions.
-%   quiz - Description of output2, including data type and dimensions.
-%   valuestr - Description of output2, including data type and dimensions.
-%   colornamestr - Description of outputN, including data type and dimensions.
+%   band - Resistor color value index from colorname vector
+%   colorname={'Preto','Marrom','Vermelho','Laranja','Amarelo','Verde','Azul','Violeta','Cinza','Branco','Dourado','Prata','Ausente'};
+%   quiz - Cloze quiz MULTICHOICE fields.
+%   valuestr - Resistor value and tolerance string.
+%   colornamestr - String with Resistor colors names.
 %
 %   Example:
 %   [band,quiz,valuestr,colornamestr] = rbandcolorid(15e3,5,'E24')
@@ -26,9 +27,6 @@ function  [band,quiz,valuestr,colornamestr] = rbandcolorid(Value,tol,EXX)
 %
 %   See also: List related functions or files, if applicable.
 %
-%   Author: Your Name
-%   Date: Date of creation or last modification
-%   Version: Version number
 
 E = geteseries(EXX); % Get E series values.
 
