@@ -15,13 +15,13 @@ function   quiz  = resistor2clozemc(Value,tol,EXX)
 %
 %   Outputs:
 %   quiz - Cloze quiz MULTICHOICE fields.
-% quiz.mulMULTICHOICE
+% quiz.mulMULTICHOICE - multiplier multichoice
 % quiz.tolMULTICHOICE - tolerance multichoice. 
 % quiz.f123MULTICHOICE - E series values multichoice.
 % quiz.colornamestr  - Resistor value and tolerance string.
 % quiz.tableMULTICHOICE
 % quiz.valuestr  - Resistor value and tolerance string. Ex: 15 k&Omega; ±5%
-% quiz.valorNUMERICAL
+% quiz.valorNUMERICAL - numerical quiz type
 % quiz.unitstr 
 % quiz.escalaMULTICHOICE 
 %
