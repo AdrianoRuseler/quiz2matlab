@@ -22,10 +22,12 @@ function  [Yc, A] = printresistor(f,theme)
 %   Example:
 %   [Yc,~] = printresistor([3 6 7 11],'boost')
 
-%   f=[2 6 7 5 11];
+%   f = getcolorid(15e3,5,'E24')
 %   [Yc, A] = printresistor(f,'boost');
 %   imshow(A)
 
+
+% Color RGB mapping
 cor{1}=[0 0 0]; % Preto
 cor{2}=[125 67 2]; % Marrom
 cor{3}=[255 0 0]; % Vermelho
