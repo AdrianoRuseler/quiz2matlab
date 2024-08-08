@@ -86,17 +86,8 @@ quiz.tolMULTICHOICE = strcat(str,'}');
 quiz.f123MULTICHOICE=strrep(['{1:MULTICHOICE:' strrep(num2str(E),'  ','~') '}'],num2str(E(eind)),['%100%' num2str(E(eind))]); % Cool
 
 
-band = getcolorid(Value,tol,EXX);
-
-colorname={'Preto','Marrom','Vermelho','Laranja','Amarelo','Verde','Azul','Violeta','Cinza','Branco','Dourado','Prata','Ausente'};
-
-if length(band)==4    
-    quiz.colornamestr=[ colorname{band(1)} ', ' colorname{band(2)} ', ' colorname{band(3)} ' e ' colorname{band(4)} ];    
-elseif length(band)==5
-    quiz.colornamestr=[ colorname{band(1)} ', ' colorname{band(2)} ', ' colorname{band(3)} ', ' colorname{band(4)} ' e ' colorname{band(5)} ];    
-elseif length(band)==6 % Somente com coeficiente de temperatura
-    quiz.colornamestr=[ colorname{band(1)} ', ' colorname{band(2)} ', ' colorname{band(3)} ', ' colorname{band(4)} ', ' colorname{band(5)} ' e ' colorname{band(6)} ];
-end
+band = getcolorid(Value,tol,EXX); % Resistor color value index from colorname vector
+quiz.colornamestr = colorid2str(band); % Returns a string of Resistor band colors
 
 % Creates color multichoice string
 for b=1:length(band) % multichoicestrresistor
