@@ -1,6 +1,6 @@
 function  colornamestr = colorid2str(band)
 
-% colorid2str Returns a string of Resistor colors
+% colorid2str Returns a string of Resistor band colors
 %
 %   Syntax:
 %    [band] = getcolorid(Value,tol,EXX)
