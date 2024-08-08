@@ -99,17 +99,7 @@ f5={9,8,7,6,2,3,11,13,13}; % Tolerance color
 
 band=[f123 f4{mind} f5{tind}];
 
-
-colorname={'Preto','Marrom','Vermelho','Laranja','Amarelo','Verde','Azul','Violeta','Cinza','Branco','Dourado','Prata','Ausente'};
-
-if length(band)==4    
-    colornamestr=[ colorname{band(1)} ', ' colorname{band(2)} ', ' colorname{band(3)} ' e ' colorname{band(4)} ];    
-elseif length(band)==5
-    colornamestr=[ colorname{band(1)} ', ' colorname{band(2)} ', ' colorname{band(3)} ', ' colorname{band(4)} ' e ' colorname{band(5)} ];    
-elseif length(band)==6 % Somente com coeficiente de temperatura
-    colornamestr=[ colorname{band(1)} ', ' colorname{band(2)} ', ' colorname{band(3)} ', ' colorname{band(4)} ', ' colorname{band(5)} ' e ' colorname{band(6)} ];
-end
-
+colornamestr = colorid2str(band);
 
 % Creates color multichoice string
 for b=1:length(band) % multichoicestrresistor
