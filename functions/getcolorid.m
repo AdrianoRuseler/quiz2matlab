@@ -1,4 +1,4 @@
-function  [band] = getcolorid(Value,tol,EXX)
+function  band = getcolorid(Value,tol,EXX)
 
 % getcolorid Resistor color value index from colorname vector
 %
@@ -19,8 +19,8 @@ function  [band] = getcolorid(Value,tol,EXX)
 %   colorname={'Preto','Marrom','Vermelho','Laranja','Amarelo','Verde','Azul','Violeta','Cinza','Branco','Dourado','Prata','Ausente'};
 %
 %   Example:
-%   [band] = getcolorid(15e3,5,'E24')
-%   [band] = getcolorid(1e3,1,'E48')
+%   band = getcolorid(15e3,5,'E24')
+%   band = getcolorid(1e3,1,'E48')
 %
 
 
