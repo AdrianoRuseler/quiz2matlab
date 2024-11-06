@@ -45,6 +45,10 @@ switch theme
         R=231;
         G=243;
         B=245;
+    case 'mdl405' % boost and classic for moodle 4.5+
+        R=204;
+        G=203;
+        B=234;
     case 'union'
         R=231;
         G=243;
