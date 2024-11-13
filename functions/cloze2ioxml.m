@@ -53,6 +53,8 @@ for q=1:nq
     % if ~isfield(clozes.q(q),'idnumber') || isempty(clozes.q(q).idnumber)
     %     clozes.q(q).idnumber='';
     % end
+
+    clozes.q(q).text = formathtml(clozes.q(q).text);
 end
 
 % Create the document node and root element, toc:
