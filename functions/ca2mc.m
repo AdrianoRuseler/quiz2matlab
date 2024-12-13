@@ -17,7 +17,7 @@ mcca=cell(1,nca);
 % mcstr=[mcstr '}'];
 
 for i=1:nca
-    n=find(strcmpi(uca,ca{1}));
+    n=find(strcmpi(uca,ca{i}));
     mcstr=['{' qpstr ':MULTICHOICE:'];
     for x=1:qp
         if x==n
