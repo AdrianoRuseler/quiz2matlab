@@ -1,6 +1,7 @@
-function camc=fi2camc(a,lmcs) % create cell array multiple choice from fi object
+function camc=fi2camc(a,lmcs,carry) % create cell array multiple choice from fi object
 
 % lmcs line multiple choices
+% carry - eliminate MSB bit from output
 
 % a = fi(1.2, 1, 8, 5); % Build fi object
 % camc=fi2camc(a,[0 0 0 0])
@@ -10,6 +11,11 @@ function camc=fi2camc(a,lmcs) % create cell array multiple choice from fi object
 % data bit peso valor
 if nargin == 1
     lmcs=[0 0 0 0]; % if is 1 (per line), return mc options
+    carry=0;
+end
+
+if nargin == 2
+    carry=0;
 end
 
 if ~isfi(a)  % Determine whether variable is fi object
@@ -26,10 +32,15 @@ T = numerictype(a); % get numeric type
 % vals=20;
 sign=issigned(a);
 wlen=T.WordLength;
+
+if carry
+    wlen=wlen-1;
+end
+
 flen=T.FractionLength;
 
 m=wlen-flen-sign; % m is the number of bits used for the integer part of the value
-n=flen;% n is the number of fraction bits
+% n=flen;% n is the number of fraction bits
 
 bd=cell(1,wlen); % Cell with bit data
 bp=cell(1,wlen); % Cell with bit position
