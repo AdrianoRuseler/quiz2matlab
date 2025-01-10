@@ -83,7 +83,6 @@ for q=1:nq
     appendChild(name,nametext);
     appendChild(question,name);
 
-
     questiontext = createElement(docNode,'questiontext');
     setAttribute(questiontext,'format','html');
     questiontexttext = createElement(docNode,'text');
@@ -136,7 +135,7 @@ XMLfile=[clozes.xmlpath '\' clozes.fname 'D' dt 'NQ' num2str(nq,'%03i') '.xml'];
 writeToFile(writer,docNode,XMLfile);
 
 % type(XMLfile);
-xml2html(XMLfile)
+xml2html(XMLfile);
 
 winopen(clozes.xmlpath)
 
