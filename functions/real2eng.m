@@ -26,7 +26,7 @@ if nargin < 3
 end
 
 if abs(number) < minabsval
-    number =0;
+    number = 0;
 end
 
 
