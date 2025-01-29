@@ -4,6 +4,11 @@ function mcca=ca2mc(ca) % create multiple choice from cell array
 % ca = arrayfun(@num2str,rand(1,5), 'UniformOutput', 0);
 uca=unique(ca);
 qp=length(uca);
+if qp==1 % MULTICHOICE with only one option!
+    warning('MULTICHOICE with only one option!')
+    disp(ca)
+end
+
 qpstr=num2str(qp);
 nca=length(ca);
 
