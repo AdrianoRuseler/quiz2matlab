@@ -6,7 +6,7 @@ function findMFiles(startDir, excludePatterns)
     
     % Default exclude patterns if none provided
     if nargin < 2
-        excludePatterns = {'func','mode'}; % Default pattern to exclude
+        excludePatterns = {'func'}; % Default pattern to exclude
     end
     
     % Ensure excludePatterns is a cell array
