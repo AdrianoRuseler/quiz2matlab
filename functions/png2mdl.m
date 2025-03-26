@@ -47,11 +47,19 @@ switch theme
         R=231;
         G=243;
         B=243;
-    case 'boost'
+    case 'boost39'
+        R=204;
+        G=230;
+        B=234;
+    case 'boost44'
         R=231;
         G=243;
-        B=245;  
-    otherwise % boost39
+        B=245;
+    case 'boost'
+        R=204;
+        G=230;
+        B=234;
+    otherwise %
         R=204;
         G=230;
         B=234;
@@ -62,9 +70,9 @@ A = imread(pngfile);
 % figure
 % imshow(A)
 % Extract RGB vectors
-Rin = A(:,:,1); 
-Gin = A(:,:,2); 
-Bin = A(:,:,3); 
+Rin = A(:,:,1);
+Gin = A(:,:,2);
+Bin = A(:,:,3);
 
 
 RB=Rin>=254;
