@@ -38,7 +38,11 @@ if ~isempty(psimExecutable)
     [statuscmd, resultcmd] = system(psimCmdExecutable);
 
     if status == 0
-        psimVersion=strtrim(result);
+        % Replace commas with periods
+        outputString = strrep(result, ',', '.');
+        % Remove extra spaces around numbers
+        psimVersion = strtrim(regexprep(outputString, '\s*\.\s*', '.'));
+
         disp(['PSIM Version: ' psimVersion]); % Display the version information
 
     else
@@ -47,7 +51,7 @@ if ~isempty(psimExecutable)
 
     if statuscmd == 4 % 4: Input file is missing
         psimCmdResult=strtrim(resultcmd);
-        disp(['PsimCmd Result: ' psimCmdResult]); % Display the version information
+        % disp(['PsimCmd Result: ' psimCmdResult]); % Display the version information
     else
         disp('Failed to run PsimCmd. Please ensure PowerShell is available and PSIM is installed correctly.');
     end
