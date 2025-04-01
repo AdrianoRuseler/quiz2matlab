@@ -35,6 +35,10 @@ circuit.LTspice.tmpfiledel = 1; % Delete tmp files?
 
 circuit.LTspice.ascfile = [circuit.LTspice.simsdir circuit.LTspice.name '.asc']; % Sim base file
 
+if ~checkSoftwareVersion('LTspice',17)
+    return
+end
+
 circuit = ltgetasc(circuit); % reads asc file
 circuit = ltasc2net(circuit); % Generates the .net file
 circuit = ltgetnet(circuit); % Reads net file
@@ -51,7 +55,7 @@ end
 % circuit.nsims=600; % Number of simulations
 [~,y]=size(circuit.Xi);
 if y>circuit.nsims
-    % nq=randperm(y,circuit.nsims); % causa problemas 
+    % nq=randperm(y,circuit.nsims); % causa problemas
     nq=1:circuit.nsims; % pega os n primeiros
     X=circuit.Xi(:,nq);
 else
