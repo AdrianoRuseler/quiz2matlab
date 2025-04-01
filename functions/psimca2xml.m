@@ -47,6 +47,11 @@ if ~isfield(circuit,'engine')
     circuit.engine ='psim'; % PSIM ou LTspice simulation
 end
 
+if ~checkSoftwareVersion('PSIM',25)
+    circuits=[];
+    return
+end
+
 % circuit.PSIMCMD.printtime=0; %Time from which simulation results are saved to the output file (default = 0). No output is saved before this time.
 circuit.PSIMCMD.printstep=1; %Print step (default = 1). If the print step is set to 1, every data point will be saved to the output file.
 % If it is 10, only one out of 10 data points will be saved. This helps to reduce the size of the output file.
