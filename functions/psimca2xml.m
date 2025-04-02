@@ -47,7 +47,7 @@ if ~isfield(circuit,'engine')
     circuit.engine ='psim'; % PSIM ou LTspice simulation
 end
 
-if ~checkSoftwareVersion('PSIM',25)
+if ~checkSoftwareVersion('PSIM',24)
     circuits=[];
     return
 end
