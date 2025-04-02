@@ -29,7 +29,7 @@ function runFilteredFiles(filteredFiles, patternFilter)
                 run(filePath);
             catch ME
                 % Handle errors during file execution
-                warning('Error running file %s: %s', filePath, ME.message);
+                error('Error running file %s: %s', filePath, ME.message);
             end
         else
             % fprintf('Skipping file: %s (does not match all patterns in full path)\n', filePath);
