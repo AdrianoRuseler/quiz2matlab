@@ -6,11 +6,11 @@ function data = rawltspice(data)
 data.error=0;
 data.errorlog='';
 
-if ~checkSoftwareVersion('LTspice',17)
-    data.errorlog='Version is NOT supported (> 17)';
-    data.error=1;
-    return
-end
+% if ~checkSoftwareVersion('LTspice',17)
+%     data.errorlog='Version is NOT supported (> 17)';
+%     data.error=1;
+%     return
+% end
 
 tstart = tic;
 fprintf('Extracting LTspice ASCII results ...\n');
