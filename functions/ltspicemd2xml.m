@@ -204,14 +204,17 @@ for c=1:length(tmpcircuits)
 end
 
 
+% pngfile=[circuit.dir circuit.name '.png']; % Fig png file
+% if isfield(circuit,'theme')
+%     imgout=[circuit.dir circuit.name circuit.theme '.png']; % Fig png file
+%     pngchangewhite(pngfile,imgout,circuit.theme)
+% else
+%     imgout=[circuit.dir circuit.name 'boost.png']; % Fig png file
+%     pngchangewhite(pngfile,imgout,'boost')
+% end
+
 pngfile=[circuit.dir circuit.name '.png']; % Fig png file
-if isfield(circuit,'theme')
-    imgout=[circuit.dir circuit.name circuit.theme '.png']; % Fig png file
-    pngchangewhite(pngfile,imgout,circuit.theme)
-else
-    imgout=[circuit.dir circuit.name 'boost.png']; % Fig png file
-    pngchangewhite(pngfile,imgout,'boost')
-end
+imgout=png2mdl(pngfile,circuit.theme);
 
 quiz.name = [circuit.name];
 
