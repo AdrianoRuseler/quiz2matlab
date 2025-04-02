@@ -1,23 +1,33 @@
 % pngchangewhite(imgin,imgout,'boost') % 
 function pngchangewhite(imgin,imgout,theme)
 
+% imgout=png2mdl(imgin,theme)
+% A2=png2mdl(imgin,theme); % Change png file backgorund
 switch theme
+    case 'clean'
+        R=217;
+        G=237;
+        B=247;
     case 'classic'
+        R=231;
+        G=243;
+        B=243;
+    case 'boost39'
+        R=204;
+        G=230;
+        B=234;
+    case 'boost44'
         R=231;
         G=243;
         B=245;
     case 'boost'
-        R=231;
-        G=243;
-        B=245;
-    case 'union'
-        R=231;
-        G=243;
-        B=245;
-    otherwise % boost
-        R=231;
-        G=243;
-        B=245;
+        R=204;
+        G=230;
+        B=234;
+    otherwise %
+        R=204;
+        G=230;
+        B=234;
 end
 
 A = imread(imgin);
