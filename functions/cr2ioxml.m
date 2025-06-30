@@ -2,6 +2,7 @@
 % *** cr2ioxml
 % crs.xmlpath=pwd;
 % crs.fname='qfilename';
+% crs.usetidy=0;
 %
 % % Create question 1
 % crs.q(1).name='Q01 name';
@@ -35,6 +36,21 @@ if isfield(crs,'q')
 else
     disp('No questions in cloze struct!')
     return
+end
+
+% Verify for usetidy
+if isfield(crs,'usetidy')
+    % https://github.com/htacg/tidy-html5
+    [status,tidyver] = system('tidy --version');
+    if status
+        disp(tidyver)
+        disp('https://github.com/htacg/tidy-html5')
+        crs.usetidy=0;
+    else
+        crs.usetidy=1;
+    end
+else
+    crs.usetidy=0;
 end
 
 % Init all nom existing or empty fields
