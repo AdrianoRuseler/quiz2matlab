@@ -92,7 +92,7 @@ for q=1:nq
     end
 
     question = createElement(docNode,'question');
-    setAttribute(question,'type','cloze');
+    setAttribute(question,'type','stack');
 
     % Question name
     name = createElement(docNode,'name');
@@ -143,6 +143,30 @@ for q=1:nq
         appendChild(idnumber,createTextNode(docNode,stacks.q(q).idnumber));
     end
     appendChild(question,idnumber);
+
+    stackversion = createElement(docNode,'stackversion');
+    stackversiontext = createElement(docNode,'text');
+    appendChild(stackversiontext,createTextNode(docNode,stacks.q(q).stackversion)); % Coloca stackversion
+    appendChild(stackversion,stackversiontext);
+    appendChild(question,stackversion);
+
+    % questionvariables
+    questionvariables = createElement(docNode,'questionvariables');
+    questionvariablestext = createElement(docNode,'text');
+    appendChild(questionvariablestext,createTextNode(docNode,stacks.q(q).questionvariables)); % Coloca stackversion
+    appendChild(questionvariables,questionvariablestext);
+    appendChild(question,questionvariables);
+
+
+    specificfeedback = createElement(docNode,'specificfeedback');
+    setAttribute(specificfeedback,'format','html');
+    specificfeedbacktext = createElement(docNode,'text');
+    % appendChild(questiontexttext,createTextNode(docNode,weekdays(i)));
+    appendChild(specificfeedbacktext,createCDATASection(docNode,stacks.q(q).specificfeedback));
+    appendChild(specificfeedback,specificfeedbacktext);
+    appendChild(question,specificfeedback);
+
+
 
     appendChild(docRootNode,question);
 end
