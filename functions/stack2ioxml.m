@@ -367,7 +367,7 @@ for q=1:nq
         nodeElementtruefeedback = createElement(docNode,'truefeedback');
         setAttribute(nodeElementtruefeedback,'format','html');
         nodeElementtruefeedbacktext = createElement(docNode,'text');
-        appendChild(nodeElementtruefeedbacktext,createTextNode(docNode,stacks.q(q).prt.node(no).truefeedback));
+        appendChild(nodeElementtruefeedbacktext,createCDATASection(docNode,stacks.q(q).prt.node(no).truefeedback));
         appendChild(nodeElementtruefeedback,nodeElementtruefeedbacktext);
         appendChild(nodeElement,nodeElementtruefeedback);
 
@@ -395,7 +395,7 @@ for q=1:nq
         nodeElementfalsefeedback = createElement(docNode,'falsefeedback');
         setAttribute(nodeElementfalsefeedback,'format','html');
         nodeElementfalsefeedbacktext = createElement(docNode,'text');
-        appendChild(nodeElementfalsefeedbacktext,createTextNode(docNode,stacks.q(q).prt.node(no).falsefeedback));
+        appendChild(nodeElementfalsefeedbacktext,createCDATASection(docNode,stacks.q(q).prt.node(no).falsefeedback));
         appendChild(nodeElementfalsefeedback,nodeElementfalsefeedbacktext);
         appendChild(nodeElement,nodeElementfalsefeedback);
 
