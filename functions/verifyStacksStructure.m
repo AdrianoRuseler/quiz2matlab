@@ -8,6 +8,21 @@ function validatedStacks = verifyStacksStructure(stacks)
 % Initialize validatedStacks with the input structure
 % validatedStacks = stacks;
 
+% Verify for usetidy
+if isfield(stacks,'usetidy')
+    % https://github.com/htacg/tidy-html5
+    [status,tidyver] = system('tidy --version');
+    if status
+        disp(tidyver)
+        disp('https://github.com/htacg/tidy-html5')
+        validatedStacks.usetidy=0;
+    else
+        validatedStacks.usetidy=1;
+    end
+else
+    validatedStacks.usetidy=0;
+end
+
 % --- Default values for top-level stacks fields ---
 
 if isfield(stacks, 'xmlpath')
@@ -133,6 +148,7 @@ for qIdx = 1:length(stacks.q)
     if ~isfield(question, 'qtest') || ~isstruct(question.qtest)
         question.qtest = struct([]); % Initialize as empty struct array if missing
     end
+
     for testIdx = 1:length(question.qtest)
         test = question.qtest(testIdx);
         test = setDefaultField(test, 'testcase', num2str(testIdx));
