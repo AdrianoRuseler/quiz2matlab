@@ -19,7 +19,7 @@
 
 function XMLfile=stack2ioxml(stacks) % Generate xml file
 
-XMLfile='';
+% XMLfile='';
 
 if isfield(stacks,'xmlpath')
     if ~exist(stacks.xmlpath,'dir')
@@ -28,9 +28,6 @@ if isfield(stacks,'xmlpath')
 else
     stacks.xmlpath=pwd;
 end
-
-stacks=stackverify(stacks);
-
 
 % Create the document node and root element, toc:
 import matlab.io.xml.dom.*
@@ -62,7 +59,6 @@ for q=1:nq
     questiontext = createElement(docNode,'questiontext');
     setAttribute(questiontext,'format','html');
     questiontexttext = createElement(docNode,'text');
-    % appendChild(questiontexttext,createTextNode(docNode,weekdays(i)));
     appendChild(questiontexttext,createCDATASection(docNode,stacks.q(q).text));
     appendChild(questiontext,questiontexttext);
     appendChild(question,questiontext);
