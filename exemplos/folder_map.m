@@ -5,10 +5,7 @@ pythonScript = 'generate_tree_md.py';
 targetDirectory = pwd; % Replace with your actual path
 
 % Construct the command to run the Python script with the target directory as an argument
-% On Windows:
 command = sprintf('python "%s" "%s"', pythonScript, targetDirectory);
-% On macOS/Linux:
-% command = sprintf('python3 "%s" "%s"', pythonScript, targetDirectory);
 
 % Execute the command
 [status, cmdout] = system(command);
